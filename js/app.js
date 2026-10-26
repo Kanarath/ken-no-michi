@@ -13,7 +13,7 @@
 
   /* ---------- Estado (localStorage, con fallback en memoria) ---------- */
   const KEY = 'ken-no-michi-v1';
-  const def = () => ({ done: {}, q: {}, cards: {}, log: [], theme: 'auto', last: null });
+  const def = () => ({ done: {}, q: {}, cards: {}, log: [], theme: 'auto', last: null, open: {} });
   function load() {
     try { const j = JSON.parse(localStorage.getItem(KEY)); return Object.assign(def(), j && typeof j === 'object' ? j : {}); } catch (e) { return def(); }
   }
@@ -48,24 +48,35 @@
     clearTimeout(toastT); toastT = setTimeout(() => el.classList.remove('show'), 2600);
   }
 
+  /* ---------- Instalación como app (PWA) ---------- */
+  let DEF = null;
+  const standalone = () => (window.matchMedia && matchMedia('(display-mode: standalone)').matches) || navigator.standalone;
+  window.addEventListener('beforeinstallprompt', e => { e.preventDefault(); DEF = e; if (['inicio', 'progreso'].indexOf(route().v) >= 0) render(); });
+  window.addEventListener('appinstalled', () => { DEF = null; toast('¡App instalada!'); render(); });
+
   /* ---------- Cabecera y navegación ---------- */
-  const NAV = [['inicio', 'Inicio', 'home'], ['ruta', 'Ruta', 'book'], ['quiz', 'Quiz', 'quiz'], ['entrenar', 'Entrenar', 'drum'], ['glosario', 'Glosario', 'torii'], ['atlas', 'Atlas', 'men'], ['progreso', 'Progreso', 'chart']];
+  const NAV = [['inicio', 'Camino', 'torii'], ['quiz', 'Repaso', 'quiz'], ['atlas', 'Colección', 'book'], ['entrenar', 'Dōjō', 'swords']];
+  const NAVMAP = { inicio: 'inicio', leccion: 'inicio', ruta: 'inicio', quiz: 'quiz', tarjetas: 'quiz', atlas: 'atlas', glosario: 'atlas', entrenar: 'entrenar', progreso: 'entrenar' };
+  const sealsDone = () => KD.modules.filter(m => m.lessons.every(l => S.done[l.id])).length;
   function paintTop() {
-    const lv = levelOf(xpParts().total);
-    $('#top').innerHTML = `<div class="in"><a class="brand" href="#/inicio" aria-label="Ken no Michi, inicio">${KArt.logo(38, true)}<span><b>Ken no Michi</b><small>剣の道 · KENDŌ</small></span></a>` +
-      `<nav class="nav" aria-label="Secciones">${NAV.map(n => `<a href="#/${n[0]}" data-nav="${n[0]}">${n[1]}</a>`).join('')}</nav>` +
-      `<a class="lvl" href="#/progreso" title="Tu nivel de estudio">${esc(lv.cur.n)} · <b>${xpParts().total}</b> XP</a></div>`;
-    markNav();
+    const xp = xpParts().total, lv = levelOf(xp);
+    const jp = lv.cur.jp.length > 2 ? lv.cur.jp.slice(0, 2) : lv.cur.jp;
+    $('#top').innerHTML = `<div class="in"><a class="badge" href="#/progreso" aria-label="Tu nivel: ${esc(lv.cur.n)}">${esc(jp)}</a>` +
+      `<a class="who" href="#/progreso"><b>${esc(lv.cur.n)}</b><small>Nivel de estudio</small></a>` +
+      `<div class="xpbar"><div class="bar" role="progressbar" aria-valuenow="${lv.pct}" aria-valuemin="0" aria-valuemax="100"><i style="width:${lv.pct}%"></i></div><small>${xp}${lv.next ? ' / ' + lv.next.xp : ''} XP</small></div>` +
+      `<a class="sealpill" href="#/progreso" title="Sellos de módulo conseguidos">${ico('star')}${sealsDone()}/${KD.modules.length}</a></div>`;
   }
   function paintBottom() {
-    const main = NAV.slice(0, 4).map(n => `<a href="#/${n[0]}" data-nav="${n[0]}">${ico(n[2])}<span>${n[1]}</span></a>`).join('');
-    $('#bottom').innerHTML = main + `<button type="button" id="moreBtn" aria-expanded="false" aria-controls="more">${ico('gear')}<span>Más</span></button>` +
-      `<div class="more" id="more">${NAV.slice(4).map(n => `<a href="#/${n[0]}">${n[1]}</a>`).join('')}</div>`;
+    $('#bottom').innerHTML = `<div class="in">${NAV.map(n => `<a href="#/${n[0]}" data-nav="${n[0]}">${ico(n[2])}<span>${n[1]}</span></a>`).join('')}</div>`;
   }
   function markNav() {
-    const v = route().v;
-    $$('[data-nav]').forEach(a => a.classList.toggle('on', a.dataset.nav === v || (v === 'leccion' && a.dataset.nav === 'ruta') || (v === 'tarjetas' && a.dataset.nav === 'glosario')));
+    const v = NAVMAP[route().v] || 'inicio';
+    $$('[data-nav]').forEach(a => { a.classList.toggle('on', a.dataset.nav === v); if (a.dataset.nav === v) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current'); });
   }
+  const seg = (items, active) => `<div class="seg">${items.map(i => `<a class="${i[2] === active ? 'on' : ''}" href="${i[0]}">${i[1]}</a>`).join('')}</div>`;
+  const segRepaso = a => seg([['#/quiz', 'Quiz', 'quiz'], ['#/tarjetas', 'Tarjetas', 'tarjetas']], a);
+  const segColeccion = a => seg([['#/atlas', 'Atlas', 'atlas'], ['#/glosario', 'Glosario', 'glosario']], a);
+  const segDojo = a => seg([['#/entrenar', 'Entrenar', 'entrenar'], ['#/progreso', 'Progreso', 'progreso']], a);
 
   /* ---------- Router ---------- */
   function route() {
@@ -73,11 +84,12 @@
     const parts = h.split('/');
     return { v: parts[0] || 'inicio', a: parts.slice(1).join('/') };
   }
-  const VIEWS = { inicio: viewHome, ruta: viewPath, leccion: viewLesson, quiz: viewQuiz, tarjetas: viewCards, glosario: viewGlossary, entrenar: viewTrain, atlas: viewAtlas, progreso: viewProgress };
+  const VIEWS = { inicio: viewHome, ruta: viewHome, leccion: viewLesson, quiz: viewQuiz, tarjetas: viewCards, glosario: viewGlossary, entrenar: viewTrain, atlas: viewAtlas, progreso: viewProgress };
   function render() {
     const r = route();
     const fn = VIEWS[r.v] || viewHome;
     const app = $('#app');
+    document.body.classList.toggle('focus', r.v === 'leccion' || (r.v === 'quiz' && r.a.indexOf('jugar') === 0));
     app.innerHTML = fn(r.a);
     const after = app.__after; app.__after = null;
     wireInteractive(app);
@@ -85,7 +97,6 @@
     markNav();
     window.scrollTo(0, 0);
     document.title = (app.dataset.title ? app.dataset.title + ' · ' : '') + 'Ken no Michi';
-    $('#more') && $('#more').classList.remove('open');
   }
   function setTitle(t) { $('#app').dataset.title = t; }
   window.addEventListener('hashchange', () => { Z = null; F = null; render(); });
@@ -104,71 +115,57 @@
     }).join('');
   }
   const modDone = m => m.lessons.filter(l => S.done[l.id]).length;
-  const tick = on => `<span class="tick ${on ? 'on' : ''}">${on ? ico('check') : ''}</span>`;
-  const seal = (m, on) => `<span class="seal ${on ? '' : 'off'}" title="${esc(m.name)}">${m.seal}</span>`;
-
-  /* ---------- Vista: Inicio ---------- */
-  function viewHome() {
-    setTitle('');
-    const xp = xpParts().total, lv = levelOf(xp);
-    const next = (S.last && LESSONS[S.last] && !S.done[S.last]) ? LESSONS[S.last] : ORDER.find(l => !S.done[l.id]);
-    const tip = KD.tips[Math.floor(Math.random() * KD.tips.length)];
-    const word = KD.glossary[Math.floor(Math.random() * KD.glossary.length)];
-    return `<section class="hero"><div><h1>Ken no Michi <span class="kanji">剣の道</span></h1>
-      <p>El camino de la espada, paso a paso: del primer saludo a las técnicas de respuesta. Con ilustraciones, vocabulario, quizzes y entrenamientos para casa. Sin prisas, sin rachas y sin presión.</p>
-      <div class="row">${next ? `<a class="btn" href="#/leccion/${next.id}">${ico('book')} ${S.done[ORDER[0].id] || S.last ? 'Seguir' : 'Empezar'}: ${esc(next.t)}</a>` : `<a class="btn" href="#/quiz">${ico('quiz')} Repasar con un quiz</a>`}
-      <a class="btn ghost" href="#/ruta">Ver toda la ruta</a></div></div>
-      <div class="logo" aria-hidden="true">${KArt.logo(150, true)}</div></section>
-      <div class="card level" style="margin-top:16px"><span class="seal">${esc(lv.cur.jp.charAt(0))}</span><div class="xp"><div class="row" style="justify-content:space-between"><b class="serif">${esc(lv.cur.n)}</b><span class="small muted">${xp} XP${lv.next ? ' · siguiente: ' + esc(lv.next.n) + ' a los ' + lv.next.xp : ' · nivel máximo de estudio'}</span></div><div class="bar" role="progressbar" aria-valuenow="${lv.pct}" aria-valuemin="0" aria-valuemax="100"><i style="width:${lv.pct}%"></i></div></div></div>
-      <h2>Qué quieres hacer hoy</h2>
-      <div class="grid g3">
-        <a class="card tile" href="#/ruta">${ico('book')}<b>Ruta de aprendizaje</b><span class="small muted">${ORDER.length} lecciones en ${KD.modules.length} módulos, abiertas desde el principio.</span></a>
-        <a class="card tile" href="#/quiz">${ico('quiz')}<b>Quiz</b><span class="small muted">${KD.quiz.length}+ preguntas, con imágenes. Rondas de 10, las que quieras.</span></a>
-        <a class="card tile" href="#/entrenar">${ico('drum')}<b>Entrenar en casa</b><span class="small muted">Rutinas, contador, metrónomo y diario de correcciones.</span></a>
-        <a class="card tile" href="#/atlas">${ico('men')}<b>Atlas visual</b><span class="small muted">Todas las ilustraciones juntas: zonas, equipo, guardias, pies…</span></a>
-        <a class="card tile" href="#/glosario">${ico('torii')}<b>Glosario</b><span class="small muted">${KD.glossary.length} términos con kanji. También como tarjetas.</span></a>
-        <a class="card tile" href="#/progreso">${ico('chart')}<b>Progreso</b><span class="small muted">Tus sellos, XP y copia de seguridad.</span></a>
-      </div>
-      <div class="grid g2" style="margin-top:16px">
-        <div class="card"><span class="pill">Palabra al azar</span><h3 style="margin:.4em 0 0;color:var(--ink)">${esc(word.t)} <span class="kanji" style="color:var(--red)">${esc(word.k)}</span></h3><p class="muted">${esc(word.e)}</p></div>
-        <div class="card"><span class="pill">Consejo del dōjō</span><p class="serif" style="font-size:1.2rem;margin:.6em 0 0">${esc(tip)}</p></div>
-      </div>
-      <h2>Tus módulos</h2>
-      <div class="grid g2">${KD.modules.map(m => { const d = modDone(m), t = m.lessons.length; return `<a class="card mod tile" href="#/ruta">${seal(m, d === t)}<div><b>${esc(m.name)}</b><div class="small muted">${d} de ${t} lecciones</div><div class="bar" style="margin-top:6px"><i style="width:${Math.round(100 * d / t)}%"></i></div></div></a>`; }).join('')}</div>
-      ${foot()}`;
-  }
   const foot = () => `<footer class="foot">Esta web es una ayuda para estudiar. No sustituye a tu sensei: si algo de aquí choca con lo que te enseñan en tu dōjō, manda tu dōjō.<br>Los niveles de la web (kyū y dan de estudio) no son grados oficiales.</footer>`;
 
-  /* ---------- Vista: Ruta ---------- */
-  function viewPath() {
-    setTitle('Ruta');
-    return `<h1>Ruta de aprendizaje</h1><p class="muted">Siete módulos, de lo básico a lo avanzado. Todo está abierto: estudia en el orden que quieras (el recomendado es de arriba abajo). Cada lección que marques como estudiada te da XP, una sola vez.</p>
-      <div class="grid">${KD.modules.map(m => {
-      const d = modDone(m), t = m.lessons.length;
-      return `<section class="card mod">${seal(m, d === t)}<div><h2 style="margin:0"><span class="kanji">${m.jp}</span> · ${esc(m.name.split('·')[0].trim())}</h2><p class="muted" style="margin:.2em 0">${esc(m.desc)}</p><div class="row small muted"><span>${d} / ${t} lecciones</span><div class="bar" style="width:140px"><i style="width:${Math.round(100 * d / t)}%"></i></div></div>
-        <ul class="lesson-list">${m.lessons.map(l => `<li><a href="#/leccion/${l.id}">${tick(S.done[l.id])}<span>${esc(l.t)}</span><span class="jp">${esc(l.jp)}</span></a></li>`).join('')}</ul>
-        <div style="margin-top:10px"><a class="btn ghost small" href="#/quiz/jugar/module:${m.id}">${ico('quiz')} Quiz de este módulo</a></div></div></section>`;
-    }).join('')}</div>${foot()}`;
+  /* ---------- Vista: Camino (inicio) ---------- */
+  function nextLesson() { return (S.last && LESSONS[S.last] && !S.done[S.last]) ? LESSONS[S.last] : ORDER.find(l => !S.done[l.id]); }
+  function viewHome() {
+    setTitle('');
+    const next = nextLesson();
+    const tip = KD.tips[Math.floor(Math.random() * KD.tips.length)];
+    const nextMod = next ? next.mod : null;
+    const isOpen = m => (S.open && S.open[m.id] !== undefined) ? S.open[m.id] : (m === nextMod || (!nextMod && m === KD.modules[KD.modules.length - 1]));
+    const installBox = (DEF && !standalone()) ? `<div class="install">${ico('install')}<p><b>Instala la app</b> en tu móvil: se abre a pantalla completa y funciona sin conexión.</p><button class="btn small" data-act="install">Instalar</button></div>` : '';
+    return `<div class="mascot-row">${KArt.mascot()}<div class="bubble">${esc(tip)}</div></div>
+      <a class="card todo" href="#/quiz/jugar/all">${ico('cup', 'big')}<div><b>Repaso rápido</b><span class="muted small">10 preguntas cuando quieras. Sin límites.</span></div><span class="chev">${ico('chev')}</span></a>
+      ${installBox}
+      ${next ? `<a class="card next" href="#/leccion/${next.id}"><span class="orb">${esc(next.jp.charAt(0))}</span><div><small>${S.last && S.done[ORDER[0].id] ? 'Siguiente lección' : 'Empieza aquí'}</small><b>${esc(next.t)}</b></div><span class="go">Ir ›</span></a>` : `<div class="card"><b>¡Has completado toda la ruta!</b><p class="muted">Repasa con quizzes y tarjetas, o entrena en el Dōjō.</p></div>`}
+      ${KD.modules.map(m => {
+      const d = modDone(m), t = m.lessons.length, open = isOpen(m);
+      return `<section><button class="modhead" data-act="mod" data-m="${m.id}" aria-expanded="${open}"><div><h2>${m.jp} · ${esc(m.name.split('·')[1] ? m.name.split('·')[1].trim() : m.name)}</h2><p>${esc(m.name.split('·')[0].trim())}</p></div><span class="pill">${d}/${t} ${ico(open ? 'down' : 'chev')}</span></button>
+        <div class="path" ${open ? '' : 'hidden'}>${m.lessons.map((l, i) => {
+        const done = !!S.done[l.id], cls = ['', 'r', 'i', 'r i'][i % 4];
+        return `<a class="node ${cls}" href="#/leccion/${l.id}"><span class="orb ${done ? 'done' : ''}">${done ? ico('check') : esc(l.jp.charAt(0))}</span><span><b>${esc(l.t)}</b><small>${esc(l.sub || '')}</small><em class="${done ? 'ok' : ''}">${done ? 'HECHA' : 'NUEVA'}</em></span></a>`;
+      }).join('')}
+        <a class="node ${['', 'r', 'i', 'r i'][t % 4]}" href="#/quiz/jugar/module:${m.id}"><span class="orb quiz">${ico('quiz')}</span><span><b>Repaso del módulo</b><small>Preguntas de ${esc(m.name.split('·')[0].trim())}</small><em>QUIZ</em></span></a></div></section>`;
+    }).join('')}
+      <p class="muted small" style="text-align:center;margin-top:22px">Todas las lecciones están abiertas: entra por donde quieras.</p>${foot()}`;
   }
 
   /* ---------- Vista: Lección ---------- */
   function viewLesson(id) {
     const L = LESSONS[id];
-    if (!L) return `<h1>No encuentro esa lección</h1><p><a class="btn" href="#/ruta">Volver a la ruta</a></p>`;
+    if (!L) return `<h1>No encuentro esa lección</h1><p><a class="btn" href="#/inicio">Volver al camino</a></p>`;
     setTitle(L.t);
     S.last = id; save();
     const idx = ORDER.indexOf(L), prev = ORDER[idx - 1], nextL = ORDER[idx + 1];
     const done = !!S.done[id];
-    return `<div class="crumb"><a href="#/ruta">Ruta</a> › ${esc(L.mod.name)}</div>
-      <header class="lesson-head"><div class="jp">${esc(L.jp)}</div><h1>${esc(L.t)}</h1><div class="muted">${esc(L.sub || '')}</div></header>
+    const mpct = Math.round(100 * modDone(L.mod) / L.mod.lessons.length);
+    return `<div class="lhead"><a class="x" href="#/inicio" aria-label="Volver al camino">${ico('x')}</a><div class="bar" aria-label="Progreso del módulo"><i style="width:${mpct}%"></i></div><span class="xpt">${done ? '✓ HECHA' : '+' + KD.XP.lesson + ' XP'}</span></div>
+      <header class="lesson-title"><div class="jp">${esc(L.jp)}</div><h1>${esc(L.t)}</h1><div class="muted">${esc(L.sub || '')}</div></header>
       ${(L.art || []).map(a => KArt.get(a)).join('')}
       <p class="lead">${L.intro}</p>
       ${blocks(L.blocks)}
       ${L.terms && L.terms.length ? `<h3>Vocabulario de esta lección</h3><div class="chips">${L.terms.map(t => `<a class="chip" href="#/glosario/${encodeURIComponent(t[0].split(' / ')[0])}"><b>${esc(t[0])}</b> <small>${esc(t[1])}</small></a>`).join('')}</div>` : ''}
       ${L.practice ? `<aside class="practice"><h3>Para el dōjō y para casa</h3><ul>${L.practice.map(p => `<li>${p}</li>`).join('')}</ul></aside>` : ''}
-      <div class="done-bar"><button class="btn ${done ? 'ghost' : 'red'}" data-act="done" data-id="${id}">${done ? '✓ Estudiada (toca para desmarcar)' : 'Marcar como estudiada · +' + KD.XP.lesson + ' XP'}</button><a class="btn ghost" href="#/quiz/jugar/lesson:${id}">${ico('quiz')} Practicar</a></div>
-      <div class="lesson-nav">${prev ? `<a class="btn ghost" href="#/leccion/${prev.id}">← ${esc(prev.t)}</a>` : '<span></span>'}${nextL ? `<a class="btn" href="#/leccion/${nextL.id}">${esc(nextL.t)} →</a>` : `<a class="btn" href="#/progreso">Ver tu progreso →</a>`}</div>
-      ${foot()}`;
+      <div class="lnav">${prev ? `<a class="btn ghost small" href="#/leccion/${prev.id}">‹ ${esc(prev.t)}</a>` : '<span></span>'}${nextL ? `<a class="btn ghost small" href="#/leccion/${nextL.id}">${esc(nextL.t)} ›</a>` : ''}</div>
+      ${foot()}
+      <div class="cta"><div class="in">
+        <a class="btn ghost" href="#/quiz/jugar/lesson:${id}" aria-label="Practicar con preguntas">${ico('quiz')}</a>
+        ${done
+        ? `<button class="btn ghost" data-act="done" data-id="${id}">Desmarcar</button>${nextL ? `<a class="btn green" href="#/leccion/${nextL.id}">Siguiente ›</a>` : `<a class="btn green" href="#/progreso">Ver progreso ›</a>`}`
+        : `<button class="btn green" data-act="done" data-id="${id}">Terminar lección</button>`}
+      </div></div>`;
   }
 
   /* ---------- Ilustraciones interactivas ---------- */
@@ -180,7 +177,7 @@
       const keys = Object.keys(info).filter(k => svg.querySelector(`[data-part="${k}"],[data-zone="${k}"]`));
       const chips = document.createElement('div'); chips.className = 'chips';
       chips.innerHTML = keys.map(k => `<button type="button" class="chip" data-k="${k}">${esc(info[k].n)}</button>`).join('');
-      const pi = document.createElement('div'); pi.className = 'partinfo'; pi.innerHTML = `<span class="muted">${KD.partsTitles[kind] || 'Toca una parte'}</span>`;
+      const pi = document.createElement('div'); pi.className = 'partinfo'; pi.innerHTML = `<span style="opacity:.7">${KD.partsTitles[kind] || 'Toca una parte'}</span>`;
       box.appendChild(chips); box.appendChild(pi);
       const pick = k => {
         $$('.sel', svg).forEach(e => e.classList.remove('sel'));
@@ -193,7 +190,7 @@
     });
   }
 
-  /* ---------- Quiz ---------- */
+  /* ---------- Repaso: quiz ---------- */
   let Z = null; // estado de la ronda
   function buildVisual() {
     const out = [];
@@ -241,35 +238,34 @@
       if (!Z || Z.mode !== mode) startRound(mode);
       return quizPlay();
     }
-    setTitle('Quiz');
+    setTitle('Repaso');
     const all = ALLQ();
     const seen = all.filter(q => S.q[q.id] && S.q[q.id].ok > 0).length;
     const fails = all.filter(q => S.q[q.id] && S.q[q.id].last === false).length;
     const cats = Object.keys(KD.quizCats).filter(c => c !== 'visual');
-    return `<h1>Quiz</h1><p class="muted">Rondas de 10 preguntas. Salen primero las que aún no has acertado. No hay límite de rondas ni de intentos: puedes repetir cuando quieras. Has acertado ${seen} de ${all.length} preguntas distintas (la primera vez que aciertas una, ganas ${KD.XP.quiz} XP).</p>
-      <div class="grid g2">
-        <a class="card tile" href="#/quiz/jugar/all">${ico('quiz')}<b>Mixto</b><span class="small muted">Preguntas de todas las categorías.</span></a>
-        <a class="card tile" href="#/quiz/jugar/visual">${ico('men')}<b>Visual</b><span class="small muted">Reconoce guardias, zonas, piezas del bōgu y partes del shinai.</span></a>
-        <a class="card tile" href="#/quiz/jugar/fails" ${fails ? '' : 'style="opacity:.55"'}>${ico('flag')}<b>Repasar fallos</b><span class="small muted">${fails ? fails + ' pregunta(s) pendientes de repasar.' : 'Aún no tienes fallos que repasar.'}</span></a>
-        <a class="card tile" href="#/tarjetas">${ico('book')}<b>Tarjetas de vocabulario</b><span class="small muted">Memoriza términos japoneses a tu ritmo.</span></a>
+    const mode = (href, icon, t, s, dim) => `<a class="card mode" href="${href}" ${dim ? 'style="opacity:.6"' : ''}><span class="orb">${ico(icon)}</span><div><b>${t}</b><small>${s}</small></div><span class="chev">${ico('chev')}</span></a>`;
+    return `${segRepaso('quiz')}<h1>Repaso</h1><p class="muted">Rondas de 10 preguntas, sin límite de rondas ni de intentos. Salen primero las que aún no has acertado. Llevas ${seen} de ${all.length} preguntas acertadas (la primera vez que aciertas una, ganas ${KD.XP.quiz} XP).</p>
+      <div class="grid">
+        ${mode('#/quiz/jugar/all', 'quiz', 'Mixto', 'Preguntas de todas las categorías')}
+        ${mode('#/quiz/jugar/visual', 'men', 'Visual', 'Guardias, zonas, piezas del bōgu y del shinai')}
+        ${mode('#/quiz/jugar/fails', 'flag', 'Repasar fallos', fails ? fails + ' pregunta(s) pendientes' : 'Aún no tienes fallos que repasar', !fails)}
       </div>
       <h2>Por categoría</h2>
-      <div class="row">${cats.map(c => `<a class="chip" href="#/quiz/jugar/cat:${c}">${esc(KD.quizCats[c])} <small>${KD.quiz.filter(q => q.cat === c).length}</small></a>`).join('')}</div>
-      ${foot()}`;
+      <div class="row">${cats.map(c => `<a class="chip" href="#/quiz/jugar/cat:${c}">${esc(KD.quizCats[c])} <small>${KD.quiz.filter(q => q.cat === c).length}</small></a>`).join('')}</div>${foot()}`;
   }
   function quizPlay() {
-    setTitle('Quiz');
-    if (!Z.round.length) return `<h1>Sin preguntas</h1><p class="muted">No hay preguntas para este modo todavía (o ya no te quedan fallos pendientes).</p><a class="btn" href="#/quiz">Volver</a>`;
+    setTitle('Repaso');
+    if (!Z.round.length) return `<div class="qtop"><a class="x" href="#/quiz" aria-label="Salir">${ico('x')}</a></div><h1>Sin preguntas</h1><p class="muted">No hay preguntas para este modo todavía (o ya no te quedan fallos pendientes).</p><a class="btn" href="#/quiz">Volver</a>`;
     if (Z.i >= Z.round.length) {
       const pct = Math.round(100 * Z.ok / Z.round.length);
       const msg = pct === 100 ? '¡Ronda perfecta!' : pct >= 70 ? 'Muy bien.' : pct >= 40 ? 'Buen progreso. Repasa las lecciones de los fallos.' : 'No pasa nada: así es como se aprende.';
-      return `<div class="result card"><span class="pill">Ronda terminada</span><div class="score">${Z.ok}/${Z.round.length}</div><p class="serif" style="font-size:1.2rem">${msg}</p>
-        <div class="row" style="justify-content:center"><button class="btn red" data-act="again">Otra ronda</button><a class="btn ghost" href="#/quiz/jugar/fails">Repasar fallos</a><a class="btn ghost" href="#/quiz">Menú</a></div></div>${foot()}`;
+      return `<div class="qtop"><a class="x" href="#/quiz" aria-label="Salir">${ico('x')}</a><div class="bar"><i style="width:100%"></i></div></div><div class="result card"><span class="pill">Ronda terminada</span><div class="score">${Z.ok}/${Z.round.length}</div><p class="serif" style="font-size:1.2rem">${msg}</p>
+        <div class="grid" style="margin-top:14px"><button class="btn block green" data-act="again">Otra ronda</button><a class="btn block ghost" href="#/quiz/jugar/fails">Repasar fallos</a><a class="btn block ghost" href="#/quiz">Menú</a></div></div>`;
     }
     const q = Z.cur, n = Z.i + 1, N = Z.round.length;
     const answered = Z.ans != null;
     $('#app').__after = () => { $$('.qsel').forEach(b => { const s = $(b.dataset.sel, b); if (s) s.classList.add('sel'); }); };
-    return `<div class="q-head"><a class="btn ghost small" href="#/quiz">←</a><div class="bar"><i style="width:${Math.round(100 * Z.i / N)}%"></i></div><span class="small muted">${n}/${N}</span></div>
+    return `<div class="qtop"><a class="x" href="#/quiz" aria-label="Salir del quiz">${ico('x')}</a><div class="bar"><i style="width:${Math.round(100 * Z.i / N)}%"></i></div><span class="small muted">${n}/${N}</span></div>
       ${q.fig ? q.fig() : ''}
       <div class="question">${esc(q.q)}</div>
       <div class="opts">${q.opts.map((o, k) => {
@@ -277,11 +273,10 @@
       if (answered) { if (o === q.a[0]) cls = 'ok'; else if (k === Z.ans) cls = 'bad'; }
       return `<button class="opt ${cls}" data-act="ans" data-k="${k}" ${answered ? 'disabled' : ''}>${esc(o)}</button>`;
     }).join('')}</div>
-      ${answered ? `<div class="feedback ${Z.good ? 'ok' : 'bad'}"><b>${Z.good ? '¡Correcto!' : 'No era esa.'}</b> ${esc(q.why || '')}${!Z.good ? ` <br>La respuesta es <b>${esc(q.a[0])}</b>.` : ''}${q.lesson && LESSONS[q.lesson] ? ` <a href="#/leccion/${q.lesson}">Repasar: ${esc(LESSONS[q.lesson].t)}</a>` : ''}</div>
-      <div class="row" style="margin-top:14px"><button class="btn" data-act="next">${n === N ? 'Ver resultado' : 'Siguiente'} →</button></div>` : ''}`;
+      ${answered ? `<div style="height:170px"></div><div class="sheet ${Z.good ? 'ok' : 'bad'}"><div class="in"><h3>${Z.good ? '¡Correcto!' : 'No era esa'}</h3><p>${esc(q.why || '')}${!Z.good ? ` La respuesta es <b>${esc(q.a[0])}</b>.` : ''}${q.lesson && LESSONS[q.lesson] ? ` <a href="#/leccion/${q.lesson}">Repasar: ${esc(LESSONS[q.lesson].t)}</a>` : ''}</p><button class="btn block ${Z.good ? 'green' : ''}" data-act="next">${n === N ? 'Ver resultado' : 'Continuar'}</button></div></div>` : ''}`;
   }
 
-  /* ---------- Tarjetas ---------- */
+  /* ---------- Repaso: tarjetas ---------- */
   let F = null;
   function viewCards(a) {
     setTitle('Tarjetas');
@@ -292,27 +287,27 @@
       F = { cat, deck: shuffle(list).sort((x, y) => (S.cards[x.id] ? 1 : 0) - (S.cards[y.id] ? 1 : 0)), i: 0, flip: false };
     }
     const known = F.deck.filter(g => S.cards[g.id]).length;
-    const head = `<h1>Tarjetas de vocabulario</h1><p class="muted">Toca la tarjeta para ver el significado. Marca "La sabía" para ganar ${KD.XP.card} XP (una vez por término). Sin límites ni contadores de racha.</p>
+    const head = `${segRepaso('tarjetas')}<h1>Tarjetas</h1><p class="muted">Toca la tarjeta para ver el significado. "La sabía" da ${KD.XP.card} XP (una vez por término). Sin límites ni rachas.</p>
       <div class="row" style="margin-bottom:6px"><a class="chip ${cat === 'todas' ? 'on' : ''}" href="#/tarjetas">Todas</a>${cats.map(c => `<a class="chip ${cat === c ? 'on' : ''}" href="#/tarjetas/${c}">${esc(KD.catNames[c])}</a>`).join('')}</div>`;
     if (!F.deck.length) return head + '<p>No hay términos en esta categoría.</p>';
-    if (F.i >= F.deck.length) return head + `<div class="card result"><div class="score">${known}/${F.deck.length}</div><p>Dominas ${known} de ${F.deck.length} términos de esta selección.</p><div class="row" style="justify-content:center"><button class="btn red" data-act="fc-restart">Volver a barajar</button><a class="btn ghost" href="#/glosario">Ver glosario</a></div></div>`;
+    if (F.i >= F.deck.length) return head + `<div class="card result"><div class="score">${known}/${F.deck.length}</div><p>Dominas ${known} de ${F.deck.length} términos de esta selección.</p><div class="grid"><button class="btn block green" data-act="fc-restart">Volver a barajar</button><a class="btn block ghost" href="#/glosario">Ver glosario</a></div></div>`;
     const g = F.deck[F.i];
     return head + `<div class="small muted" style="text-align:center">${F.i + 1} de ${F.deck.length} · ${known} sabidas</div>
       <div class="flash"><div class="face" data-act="flip" role="button" tabindex="0" aria-label="Girar tarjeta">${F.flip ? `<div class="t">${esc(g.t)}</div><div class="k">${esc(g.k)}</div><div class="e">${esc(g.e)}</div>` : `<div class="k">${esc(g.k)}</div><div class="t">${esc(g.t)}</div><div class="hint">Toca para ver el significado</div>`}</div></div>
-      <div class="row" style="justify-content:center">${F.flip ? `<button class="btn" data-act="fc-yes">La sabía</button><button class="btn ghost" data-act="fc-no">Repasar</button>` : `<button class="btn ghost" data-act="flip">Girar</button>`}</div>`;
+      <div class="grid">${F.flip ? `<button class="btn block green" data-act="fc-yes">La sabía</button><button class="btn block ghost" data-act="fc-no">Repasar</button>` : `<button class="btn block ghost" data-act="flip">Girar</button>`}</div>`;
   }
 
-  /* ---------- Glosario ---------- */
+  /* ---------- Colección: glosario ---------- */
   function viewGlossary(a) {
     setTitle('Glosario');
     const cats = Object.keys(KD.catNames);
     $('#app').__after = () => {
       const inp = $('#gq'), box = $('#glist');
       let cat = 'todas';
+      const norm = s => s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
       const upd = () => {
-        const q = inp.value.trim().toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
-        const rows = KD.glossary.filter(g => (cat === 'todas' || g.c === cat) &&
-          (!q || (g.t + ' ' + g.k + ' ' + g.e).toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').indexOf(q) >= 0));
+        const q = norm(inp.value.trim());
+        const rows = KD.glossary.filter(g => (cat === 'todas' || g.c === cat) && (!q || norm(g.t + ' ' + g.k + ' ' + g.e).indexOf(q) >= 0));
         box.innerHTML = rows.length ? rows.map(g => `<div class="it"><b>${esc(g.t)}</b><span class="k">${esc(g.k)}</span><p>${esc(g.e)}</p><span class="cat">${esc(KD.catNames[g.c])}</span></div>`).join('') : '<p class="muted">Nada coincide. Prueba otra palabra.</p>';
         $('#gcount').textContent = rows.length + ' término' + (rows.length === 1 ? '' : 's');
       };
@@ -320,14 +315,14 @@
       $$('[data-gc]').forEach(c => c.addEventListener('click', () => { cat = c.dataset.gc; $$('[data-gc]').forEach(x => x.classList.toggle('on', x === c)); upd(); }));
       upd();
     };
-    return `<h1>Glosario</h1><p class="muted">Busca por término, kanji o significado (no hace falta escribir las tildes).</p>
+    return `${segColeccion('glosario')}<h1>Glosario</h1><p class="muted">Busca por término, kanji o significado (no hace falta escribir las tildes).</p>
       <input id="gq" class="search" type="search" placeholder="Buscar: chūdan, 面, guardia…" value="${esc(a || '')}" autocomplete="off">
       <div class="row" style="margin-top:10px"><button class="chip on" data-gc="todas">Todos</button>${cats.map(c => `<button class="chip" data-gc="${c}">${esc(KD.catNames[c])}</button>`).join('')}</div>
-      <div class="row small muted" style="margin:10px 0 0;justify-content:space-between"><span id="gcount"></span><a href="#/tarjetas">Practicar con tarjetas →</a></div>
+      <div class="row small muted" style="margin:10px 0 0;justify-content:space-between"><span id="gcount"></span><a href="#/tarjetas">Practicar con tarjetas ›</a></div>
       <div class="gl" id="glist"></div>${foot()}`;
   }
 
-  /* ---------- Atlas ---------- */
+  /* ---------- Colección: atlas ---------- */
   function viewAtlas() {
     setTitle('Atlas');
     const items = [
@@ -337,57 +332,54 @@
       ['Okuri-ashi', 'footwork:okuri', 'ashi-sabaki'], ['Ayumi-ashi', 'footwork:ayumi', 'ashi-sabaki'], ['Hiraki-ashi', 'footwork:hiraki', 'ashi-sabaki'], ['Tsugi-ashi', 'footwork:tsugi', 'ashi-sabaki'], ['Fumikomi-ashi', 'footwork:fumikomi', 'ashi-sabaki'],
       ['Las tres distancias (ma-ai)', 'maai', 'maai'], ['Esquiva lateral (nuki-waza)', 'topview:nuki', 'oji-waza'], ['Jōdan', 'solo:jodan', 'jodan']
     ];
-    return `<h1>Atlas visual</h1><p class="muted">Todas las ilustraciones en un solo sitio. Toca una imagen para ver la lección completa; en las interactivas, toca las partes.</p>
-      ${items.map(i => `<section><h2>${i[0]} <a class="small" href="#/leccion/${i[2]}">lección →</a></h2>${KArt.get(i[1])}</section>`).join('')}${foot()}`;
+    return `${segColeccion('atlas')}<h1>Atlas visual</h1><p class="muted">Todas las ilustraciones en un solo sitio. En las interactivas, toca las partes para ver su nombre.</p>
+      ${items.map(i => `<section><h2>${i[0]} <a class="small" href="#/leccion/${i[2]}">lección ›</a></h2>${KArt.get(i[1])}</section>`).join('')}${foot()}`;
   }
 
-  /* ---------- Entrenar ---------- */
+  /* ---------- Dōjō: entrenar ---------- */
   let tab = 'rutinas';
   const RS = {}; // pasos marcados en cada rutina (solo sesión)
   const CT = { n: 0, goal: 30 };
   const MT = { bpm: 60, on: false, t: null, ctx: null, beat: 0 };
   function viewTrain(a) {
-    setTitle('Entrenar');
+    setTitle('Dōjō');
     if (a) tab = a;
     const tabs = [['rutinas', 'Rutinas'], ['herramientas', 'Contador y metrónomo'], ['diario', 'Diario']];
-    let body = '';
-    if (tab === 'rutinas') body = trainRoutines();
-    else if (tab === 'herramientas') body = trainTools();
-    else body = trainLog();
-    return `<h1>Entrenar en casa</h1><p class="muted">Rutinas cortas, un contador, un metrónomo y un diario. Nada te obliga a entrenar todos los días: aquí solo se suma, nunca se resta.</p>
-      <div class="note warn"><b>Antes de empezar</b>Espacio libre de al menos 3 × 3 m y techo alto (cuidado con lámparas). Descalzo o con calzado antideslizante, sin objetos cerca. Calienta primero. Si algo duele, para. Y enséñale a tu sensei lo que practicas: es mejor repetir poco y bien corregido que mucho con vicios.</div>
+    const body = tab === 'rutinas' ? trainRoutines() : tab === 'herramientas' ? trainTools() : trainLog();
+    return `${segDojo('entrenar')}<h1>Entrenar en casa</h1><p class="muted">Rutinas cortas, un contador, un metrónomo y un diario. Nada te obliga a entrenar todos los días: aquí solo se suma, nunca se resta.</p>
+      <div class="note warn"><b>Antes de empezar</b>Espacio libre de al menos 3 × 3 m y techo alto (cuidado con lámparas). Descalzo o con calzado antideslizante. Calienta primero y, si algo duele, para. Enséñale a tu sensei lo que practicas: es mejor repetir poco y bien corregido que mucho con vicios.</div>
       <div class="tabs" role="tablist">${tabs.map(t => `<button role="tab" class="${tab === t[0] ? 'on' : ''}" data-act="tab" data-t="${t[0]}">${t[1]}</button>`).join('')}</div>${body}${foot()}`;
   }
   function trainRoutines() {
-    return `<div class="grid g2">${KD.routines.map(r => {
+    return `<div class="grid">${KD.routines.map(r => {
       const st = RS[r.id] || (RS[r.id] = {});
       return `<section class="card routine"><div class="row" style="justify-content:space-between"><h3>${esc(r.t)}</h3><span class="pill">${r.min} min</span></div><p class="muted small">${esc(r.desc)}</p>
         <ul class="steps">${r.steps.map((s, i) => `<li class="${st[i] ? 'on' : ''}" data-act="step" data-r="${r.id}" data-i="${i}"><span class="tick ${st[i] ? 'on' : ''}">${st[i] ? ico('check') : ''}</span><span class="nm">${esc(s[0])}</span><span class="am">${esc(s[1])}</span>${s[2] ? `<span class="hn">${esc(s[2])}</span>` : ''}</li>`).join('')}</ul>
-        <button class="btn small" data-act="routine-done" data-r="${r.id}">Registrar en el diario (+${KD.XP.log} XP)</button></section>`;
+        <button class="btn block small" data-act="routine-done" data-r="${r.id}">Anotar en el diario (+${KD.XP.log} XP)</button></section>`;
     }).join('')}</div>`;
   }
   function trainTools() {
-    return `<div class="grid g2"><section class="card counter"><h3>Contador de repeticiones</h3><p class="muted small">Toca el círculo en cada golpe. Objetivo opcional: te avisa al llegar, sin presión.</p>
+    return `<div class="grid"><section class="card counter"><h3 style="margin-top:0;color:var(--ink)">Contador de repeticiones</h3><p class="muted small">Toca el círculo en cada golpe. El objetivo es opcional: te avisa al llegar, sin presión.</p>
       <div class="n" id="ctn">${CT.n}</div><div class="small muted" id="ctg">${CT.goal ? 'Objetivo: ' + CT.goal : 'Sin objetivo'}</div>
       <button class="tap" id="ctap" data-act="ct-add">Golpe</button>
       <div class="row" style="justify-content:center"><button class="btn ghost small" data-act="ct-sub">−1</button><button class="btn ghost small" data-act="ct-reset">Reiniciar</button>
-      <label class="small">Objetivo <input type="number" min="0" max="999" value="${CT.goal}" data-act="ct-goal" style="width:72px;padding:6px;border-radius:8px;border:2px solid var(--line);background:var(--card);color:var(--ink)"></label></div></section>
-      <section class="card counter"><h3>Metrónomo</h3><p class="muted small">Para marcar el ritmo de tus suburi o de tus pasos. Un pitido por golpe.</p>
+      <label class="small">Objetivo <input type="number" min="0" max="999" value="${CT.goal}" data-act="ct-goal" style="width:72px;padding:7px;border-radius:12px;border:2px solid var(--line);background:var(--card);color:var(--ink)"></label></div></section>
+      <section class="card counter"><h3 style="margin-top:0;color:var(--ink)">Metrónomo</h3><p class="muted small">Para marcar el ritmo de tus suburi o de tus pasos. Un pitido por golpe.</p>
       <div class="n" id="mtn">${MT.bpm}</div><div class="small muted">golpes por minuto</div>
       <input type="range" min="30" max="160" value="${MT.bpm}" data-act="mt-bpm" style="width:80%;margin:14px 0" aria-label="Golpes por minuto">
-      <div class="row" style="justify-content:center"><button class="btn ${MT.on ? 'ghost' : 'red'}" data-act="mt-toggle" id="mtb">${MT.on ? 'Parar' : 'Empezar'}</button></div></section></div>`;
+      <div><button class="btn ${MT.on ? 'ghost' : ''}" data-act="mt-toggle" id="mtb">${MT.on ? 'Parar' : 'Empezar'}</button></div></section></div>`;
   }
   function trainLog() {
     const mins = S.log.reduce((s, x) => s + (+x.min || 0), 0);
     const today = new Date().toISOString().slice(0, 10);
-    return `<div class="grid g3" style="margin-bottom:14px"><div class="card stat"><b>${S.log.length}</b><span>sesiones registradas</span></div><div class="card stat"><b>${mins}</b><span>minutos en total</span></div><div class="card stat"><b>${S.log.length * KD.XP.log}</b><span>XP por práctica</span></div></div>
-      <div class="grid g2"><form class="card" data-act="log-form"><h3 style="margin-top:0">Anotar una práctica</h3>
+    return `<div class="stats" style="margin-bottom:14px"><div class="card stat"><b>${S.log.length}</b><span>sesiones anotadas</span></div><div class="card stat"><b>${mins}</b><span>minutos en total</span></div></div>
+      <form class="card" data-act="log-form"><h3 style="margin-top:0">Anotar una práctica</h3>
         <div class="field"><label for="ld">Fecha</label><input type="date" id="ld" value="${today}" required></div>
         <div class="field"><label for="lm">Minutos</label><input type="number" id="lm" min="1" max="600" value="15" required></div>
         <div class="field"><label for="lt">Tipo</label><select id="lt"><option>Suburi en casa</option><option>Pies y postura</option><option>Clase en el dōjō</option><option>Estudio (lecciones, vídeo)</option><option>Otro</option></select></div>
         <div class="field"><label for="ln">Qué me ha corregido el sensei / qué he aprendido</label><textarea id="ln" placeholder="Ej.: Mano izquierda más abajo; el pie izquierdo debe seguir al derecho…"></textarea></div>
-        <button class="btn red" type="submit">Guardar (+${KD.XP.log} XP)</button></form>
-        <div><h3 style="margin-top:0">Tus anotaciones</h3>${S.log.length ? S.log.slice().sort((a, b) => b.date.localeCompare(a.date) || b.id - a.id).slice(0, 40).map(x => `<div class="log-item"><div><b>${new Date(x.date + 'T12:00').toLocaleDateString('es-ES', { day: 'numeric', month: 'short', year: 'numeric' })}</b> · ${esc(x.type)} · ${x.min} min</div><button class="btn ghost small" data-act="log-del" data-id="${x.id}" aria-label="Borrar anotación">Borrar</button>${x.notes ? `<div class="nt">${esc(x.notes)}</div>` : ''}</div>`).join('') : '<p class="muted">Aún no hay nada. Cuando entrenes o tengas clase, apunta aquí lo que aprendes: dentro de unos meses será oro.</p>'}</div></div>`;
+        <button class="btn block green" type="submit">Guardar (+${KD.XP.log} XP)</button></form>
+        <h3>Tus anotaciones</h3>${S.log.length ? S.log.slice().sort((a, b) => b.date.localeCompare(a.date) || b.id - a.id).slice(0, 40).map(x => `<div class="log-item"><div><b>${new Date(x.date + 'T12:00').toLocaleDateString('es-ES', { day: 'numeric', month: 'short', year: 'numeric' })}</b> · ${esc(x.type)} · ${x.min} min</div><button class="btn ghost small" data-act="log-del" data-id="${x.id}" aria-label="Borrar anotación">Borrar</button>${x.notes ? `<div class="nt">${esc(x.notes)}</div>` : ''}</div>`).join('') : '<p class="muted">Aún no hay nada. Cuando entrenes o tengas clase, apunta aquí lo que aprendes: dentro de unos meses será oro.</p>'}`;
   }
   function beep() {
     try {
@@ -400,41 +392,48 @@
   function mtRestart() { clearInterval(MT.t); if (MT.on) { beep(); MT.t = setInterval(beep, 60000 / MT.bpm); } }
   window.addEventListener('hashchange', () => { if (route().v !== 'entrenar' && MT.on) { MT.on = false; clearInterval(MT.t); } });
 
-  /* ---------- Progreso ---------- */
+  /* ---------- Dōjō: progreso ---------- */
   function viewProgress() {
     setTitle('Progreso');
     const p = xpParts(), lv = levelOf(p.total), all = ALLQ();
     const tr = Object.values(S.q).filter(x => x && x.ok > 0).length;
-    return `<h1>Tu progreso</h1>
-      <div class="card level"><span class="seal">${esc(lv.cur.jp.charAt(0))}</span><div class="xp"><div class="row" style="justify-content:space-between"><b class="serif" style="font-size:1.4rem">${esc(lv.cur.n)}</b><span class="small muted">${p.total} XP${lv.next ? ' · próximo: ' + esc(lv.next.n) + ' (' + lv.next.xp + ')' : ''}</span></div><div class="bar"><i style="width:${lv.pct}%"></i></div></div></div>
+    const installCard = standalone() ? '' : `<h2>Instalar en el móvil</h2><div class="card">${DEF ? `<p style="margin-top:0">Instálala para abrirla como una app, a pantalla completa y sin conexión.</p><button class="btn block" data-act="install">Instalar app</button>` : `<p style="margin:0"><b>Chrome en Android:</b> abre el menú <b>⋮</b> y elige <b>Instalar app</b> (o <b>Añadir a pantalla de inicio</b>). Te quedará un icono con el torii y el tomoe.</p>`}</div>`;
+    return `${segDojo('progreso')}<h1>Tu progreso</h1>
+      <div class="card level"><span class="seal">${esc(lv.cur.jp.charAt(0))}</span><div class="xp"><div class="row" style="justify-content:space-between"><b class="serif" style="font-size:1.35rem">${esc(lv.cur.n)}</b><span class="small muted">${p.total} XP${lv.next ? ' · próximo: ' + esc(lv.next.n) + ' (' + lv.next.xp + ')' : ''}</span></div><div class="bar"><i style="width:${lv.pct}%"></i></div></div></div>
       <p class="small muted">Los niveles de estudio (kyū → dan) son solo una forma de seguir tu avance en esta web. No son grados oficiales ni sustituyen a un examen.</p>
-      <h2>Sellos</h2><div class="grid g3">${KD.modules.map(m => { const d = modDone(m); return `<div class="card mod">${seal(m, d === m.lessons.length)}<div><b>${esc(m.name.split('·')[0].trim())}</b><div class="small muted">${d}/${m.lessons.length} lecciones${d === m.lessons.length ? ' · ¡completo!' : ''}</div></div></div>`; }).join('')}</div>
+      <h2>Sellos</h2><div class="grid">${KD.modules.map(m => { const d = modDone(m), ok = d === m.lessons.length; return `<div class="card sealrow"><span class="seal ${ok ? '' : 'off'}">${m.seal}</span><div><b>${esc(m.name.split('·')[0].trim())}</b><div class="small muted">${d}/${m.lessons.length} lecciones${ok ? ' · ¡completo!' : ''}</div></div></div>`; }).join('')}</div>
       <h2>De dónde sale tu XP</h2>
-      <div class="grid g3"><div class="card stat"><b>${p.lessons}/${ORDER.length}</b><span>lecciones estudiadas (+${p.lessons * KD.XP.lesson})</span></div><div class="card stat"><b>${tr}/${all.length}</b><span>preguntas acertadas (+${p.quiz * KD.XP.quiz})</span></div><div class="card stat"><b>${p.cards}/${KD.glossary.length}</b><span>términos sabidos (+${p.cards * KD.XP.card})</span></div><div class="card stat"><b>${p.mods}/${KD.modules.length}</b><span>módulos completos (+${p.mods * KD.XP.module})</span></div><div class="card stat"><b>${p.logs}</b><span>prácticas anotadas (+${p.logs * KD.XP.log})</span></div></div>
+      <div class="stats"><div class="card stat"><b>${p.lessons}/${ORDER.length}</b><span>lecciones (+${p.lessons * KD.XP.lesson})</span></div><div class="card stat"><b>${tr}/${all.length}</b><span>preguntas (+${p.quiz * KD.XP.quiz})</span></div><div class="card stat"><b>${p.cards}/${KD.glossary.length}</b><span>términos (+${p.cards * KD.XP.card})</span></div><div class="card stat"><b>${p.mods}/${KD.modules.length}</b><span>módulos (+${p.mods * KD.XP.module})</span></div><div class="card stat"><b>${p.logs}</b><span>prácticas (+${p.logs * KD.XP.log})</span></div></div>
+      ${installCard}
       <h2>Ajustes y copia de seguridad</h2>
       <div class="card"><div class="field"><label for="th">Tema</label><select id="th" data-act="theme"><option value="auto" ${S.theme === 'auto' ? 'selected' : ''}>Automático (según tu dispositivo)</option><option value="light" ${S.theme === 'light' ? 'selected' : ''}>Claro</option><option value="dark" ${S.theme === 'dark' ? 'selected' : ''}>Oscuro</option></select></div>
-      <p class="small muted">Tu progreso se guarda solo en este navegador. Para pasarlo al móvil u otro ordenador, exporta un archivo e impórtalo allí.</p>
-      <div class="row"><button class="btn" data-act="export">Exportar progreso</button><label class="btn ghost" style="cursor:pointer">Importar<input type="file" accept="application/json" data-act="import" hidden></label><button class="btn ghost" data-act="reset">Borrar todo</button></div></div>${foot()}`;
+      <p class="small muted">Tu progreso se guarda solo en este navegador (en el móvil y en el ordenador por separado). Para pasarlo de uno a otro, exporta un archivo e impórtalo allí.</p>
+      <div class="grid"><button class="btn block" data-act="export">Exportar progreso</button><label class="btn block ghost" style="cursor:pointer">Importar progreso<input type="file" accept="application/json" data-act="import" hidden></label><button class="btn block ghost" data-act="reset">Borrar todo</button></div></div>${foot()}`;
   }
 
   /* ---------- Eventos ---------- */
   document.addEventListener('click', e => {
-    const mb = e.target.closest('#moreBtn');
-    if (mb) { const m = $('#more'); m.classList.toggle('open'); mb.setAttribute('aria-expanded', m.classList.contains('open')); return; }
-    if (!e.target.closest('#more')) $('#more') && $('#more').classList.remove('open');
     const t = e.target.closest('[data-act]');
     if (!t || t.tagName === 'FORM' || t.tagName === 'INPUT' || t.tagName === 'SELECT') return;
     const act = t.dataset.act, before = xpParts().total;
     const redo = () => { const y = window.scrollY; render(); window.scrollTo(0, y); };
     switch (act) {
+      case 'mod': {
+        const m = KD.modules.find(x => x.id === t.dataset.m);
+        const cur = t.getAttribute('aria-expanded') === 'true';
+        S.open[m.id] = !cur; save(); redo(); break;
+      }
+      case 'install':
+        if (DEF) { DEF.prompt(); DEF.userChoice.then(() => { DEF = null; render(); }); }
+        break;
       case 'done': {
         const id = t.dataset.id, L = LESSONS[id];
-        if (S.done[id]) { delete S.done[id]; save(); render(); paintTop(); break; }
+        if (S.done[id]) { delete S.done[id]; save(); redo(); paintTop(); break; }
         const mWas = L.mod.lessons.every(x => S.done[x.id]);
         S.done[id] = Date.now(); save();
-        render();
+        redo();
         const mNow = L.mod.lessons.every(x => S.done[x.id]);
-        gain(before, !mWas && mNow ? '🔴 ¡Sello de módulo conseguido!' : 'Lección estudiada');
+        gain(before, !mWas && mNow ? '🔴 ¡Sello de módulo conseguido!' : 'Lección terminada');
         break;
       }
       case 'ans': {
@@ -443,7 +442,7 @@
         Z.ans = k; Z.good = good; if (good) Z.ok++;
         const s = S.q[q.id] || (S.q[q.id] = { ok: 0, bad: 0, last: null });
         if (good) s.ok++; else s.bad++; s.last = good; save();
-        const keep = window.scrollY; render(); window.scrollTo(0, keep);
+        redo();
         gain(before);
         break;
       }
@@ -506,6 +505,8 @@
   function applyTheme() {
     const r = document.documentElement;
     if (S.theme === 'light' || S.theme === 'dark') r.dataset.theme = S.theme; else r.removeAttribute('data-theme');
+    const m = document.querySelector('meta[name="theme-color"]');
+    if (m) m.setAttribute('content', getComputedStyle(document.body).backgroundColor ? (S.theme === 'dark' || (S.theme === 'auto' && window.matchMedia('(prefers-color-scheme: dark)').matches) ? '#1c1923' : '#fbf3e8') : '#1c1923');
   }
 
   /* ---------- Arranque ---------- */

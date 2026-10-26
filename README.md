@@ -37,3 +37,7 @@ npx serve .
 ## Aviso
 
 Es una ayuda de estudio y no sustituye a un sensei. Los niveles de la web no son grados oficiales.
+
+## Instalar en el móvil (Android)
+
+Abre la web en Chrome → menú ⋮ → **Instalar app** (o *Añadir a pantalla de inicio*). Los iconos están en `icons/` (192, 512, maskable y Apple) y se generan a partir del logo de `js/art.js`. El diseño usa botones 3D, camino de lecciones y navegación inferior (Camino · Repaso · Colección · Dōjō).

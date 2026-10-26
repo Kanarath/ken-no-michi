@@ -10,12 +10,12 @@ window.KArt = (function () {
 
   /* ---------- Tomoe y torii ---------- */
   function tomoeShape(R) {
-    const k = R / 35, rc = 20 * k, hw = 15 * k, N = 22;
-    const a0 = -Math.PI / 2, a1 = 10 * Math.PI / 180;
+    const k = R / 35, rc = 20 * k, hw = 12.5 * k, N = 32;
+    const a0 = -Math.PI / 2, a1 = 40 * Math.PI / 180;
     const P = (r, a) => [r * Math.cos(a), r * Math.sin(a)];
     const pts = [];
-    for (let i = 0; i <= N; i++) { const t = i / N; pts.push(P(rc + hw * (1 - t), a0 + (a1 - a0) * t)); }
-    for (let i = N; i >= 0; i--) { const t = i / N; pts.push(P(rc - hw * (1 - t), a0 + (a1 - a0) * t)); }
+    for (let i = 0; i <= N; i++) { const t = i / N; pts.push(P(rc + hw * Math.pow(1 - t, 1.15), a0 + (a1 - a0) * t)); }
+    for (let i = N; i >= 0; i--) { const t = i / N; pts.push(P(rc - hw * Math.pow(1 - t, 1.15), a0 + (a1 - a0) * t)); }
     const h = P(rc, a0);
     return `<path d="M${pts.map(pt).join('L')}Z"/><circle cx="${f(h[0])}" cy="${f(h[1])}" r="${f(hw)}"/>`;
   }
@@ -358,6 +358,28 @@ window.KArt = (function () {
     return `<svg viewBox="0 0 440 190" role="img" aria-label="Esquiva lateral (nuki-waza)">${g}</svg>`;
   }
 
+  /* ---------- Mascota ---------- */
+  function mascot() {
+    let g = '';
+    g += `<path d="M104,132 L121,42" stroke="${C.ink}" stroke-width="8" stroke-linecap="round"/><path d="M106,120 L120,48" stroke="${C.bamb}" stroke-width="5" stroke-linecap="round"/><path d="M104,130 L108,110" stroke="${C.leather}" stroke-width="5.4" stroke-linecap="round"/><path d="M99,113 L113,116" stroke="${C.ink}" stroke-width="4" stroke-linecap="round"/>`;
+    g += `<path d="M40,104 h50 l9,36 h-68 z" fill="${C.indigoD}" stroke="${C.ink}" stroke-width="1.4"/>`;
+    g += `<path d="M52,106 l-3,34 M65,106 v34 M78,106 l3,34" stroke="${C.indigoL}" stroke-width="1.2" opacity=".6"/>`;
+    g += `<rect x="42" y="90" width="46" height="20" rx="8" fill="${C.indigo}" stroke="${C.ink}" stroke-width="1.2"/><rect x="41" y="104" width="48" height="6" rx="3" fill="${C.white}"/>`;
+    g += `<ellipse cx="52" cy="144" rx="13" ry="5" fill="${C.skin}" stroke="${C.ink}"/><ellipse cx="80" cy="144" rx="13" ry="5" fill="${C.skin}" stroke="${C.ink}"/>`;
+    g += `<path d="M44,98 L26,82" stroke="${C.indigo}" stroke-width="10" stroke-linecap="round"/><circle cx="25" cy="80" r="9" fill="${C.indigoD}" stroke="${C.white}" stroke-width="1.2"/>`;
+    g += `<path d="M86,98 L103,120" stroke="${C.indigo}" stroke-width="10" stroke-linecap="round"/><circle cx="104" cy="122" r="9" fill="${C.indigoD}" stroke="${C.white}" stroke-width="1.2"/>`;
+    g += `<path d="M31,76 Q65,98 99,76 L108,96 Q65,114 22,96 Z" fill="${C.men}" stroke="${C.ink}" stroke-width="1.4"/>`;
+    g += `<ellipse cx="65" cy="52" rx="44" ry="42" fill="#2b3a6b" stroke="${C.ink}" stroke-width="1.6"/>`;
+    g += `<path d="M23,42 Q65,4 107,42 L107,50 Q65,14 23,50 Z" fill="${C.red}" stroke="${C.ink}" stroke-width="1"/>`;
+    g += mitsudomoe(65, 24, 6.5, C.white);
+    g += `<rect x="29" y="43" width="72" height="36" rx="13" fill="#0f1126" stroke="${C.steel}" stroke-width="3"/>`;
+    g += [47, 52, 68, 73].map(y => `<line x1="30" y1="${y}" x2="100" y2="${y}" stroke="${C.steel}" stroke-width="2"/>`).join('');
+    g += [44, 65, 86].map(x => `<line x1="${x}" y1="44" x2="${x}" y2="78" stroke="${C.steel}" stroke-width="1.4" opacity=".7"/>`).join('');
+    g += `<ellipse cx="49" cy="60" rx="8.5" ry="9.5" fill="#fff"/><ellipse cx="81" cy="60" rx="8.5" ry="9.5" fill="#fff"/><circle cx="51" cy="61" r="5" fill="${C.ink}"/><circle cx="83" cy="61" r="5" fill="${C.ink}"/><circle cx="53" cy="58.5" r="1.7" fill="#fff"/><circle cx="85" cy="58.5" r="1.7" fill="#fff"/>`;
+    g += `<path d="M58,68 Q65,73 72,68" stroke="#e98a86" stroke-width="2" fill="none" stroke-linecap="round" opacity=".0"/>`;
+    return `<svg viewBox="0 0 130 152" role="img" aria-label="Mascota kendōka"><g class="mascot">${g}</g></svg>`;
+  }
+
   /* ---------- Iconos 24x24 ---------- */
   const ICONS = {
     torii: '<path d="M2 6q10 3 20 0M5 9h14M7 9v12M17 9v12M4 14h16" />',
@@ -373,7 +395,13 @@ window.KArt = (function () {
     gear: '<circle cx="12" cy="12" r="3"/><path d="M12 2v4M12 18v4M2 12h4M18 12h4M5 5l3 3M16 16l3 3M19 5l-3 3M8 16l-3 3"/>',
     drum: '<ellipse cx="12" cy="8" rx="8" ry="3"/><path d="M4 8v8c0 2 4 3 8 3s8-1 8-3V8"/>',
     check: '<path d="M5 12l5 5 9-10"/>',
-    lock: '<rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 018 0v3"/>'
+    lock: '<rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 018 0v3"/>',
+    x: '<path d="M6 6l12 12M18 6L6 18"/>',
+    chev: '<path d="M9 6l6 6-6 6"/>',
+    down: '<path d="M6 9l6 6 6-6"/>',
+    install: '<path d="M12 4v11M7 11l5 5 5-5M5 20h14"/>',
+    cup: '<path d="M5 9h12v5a5 5 0 01-5 5H10a5 5 0 01-5-5zM17 10h2a2 2 0 010 4h-2M8 3v3M12 3v3"/>',
+    star: '<path d="M12 3l2.7 5.6 6.1.8-4.5 4.2 1.2 6L12 16.6 6.5 19.6l1.2-6L3.2 9.4l6.1-.8z"/>'
   };
   function icon(name, cls) {
     return `<svg class="ico ${cls || ''}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICONS[name] || ''}</svg>`;
@@ -401,5 +429,5 @@ window.KArt = (function () {
     }
   }
 
-  return { get, logo, icon, mitsudomoe, scene, solo, front, shinai, POSES, C };
+  return { get, logo, icon, mitsudomoe, scene, solo, front, shinai, mascot, POSES, C };
 })();
