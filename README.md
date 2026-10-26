@@ -14,7 +14,8 @@ Web para aprender **kendō** de básico a avanzado: lecciones ilustradas, glosar
 | `index.html` | Página única, carga los scripts |
 | `css/style.css` | Estilos (claro/oscuro automático) |
 | `js/art.js` | Motor de figuras y todas las ilustraciones |
-| `js/data-lessons-1.js`, `js/data-lessons-2.js` | Lecciones por módulos |
+| `js/data-lessons-1.js`, `js/data-lessons-2.js` | Lecciones de la base (equipo, etiqueta, reglas…) |
+| `js/data-tech-1.js`, `js/data-tech-2.js` | Lecciones de técnica con plantilla (`KD.T`): guardias, pies, suburi, golpes, waza, ōji-waza, y el orden final de módulos |
 | `js/data-glossary.js` | Glosario (término, kanji, significado, categoría) |
 | `js/data-extra.js` | Quiz, partes interactivas, rutinas, consejos, niveles |
 | `js/app.js` | Router, estado, vistas, quiz, tarjetas, entrenar |
@@ -41,3 +42,7 @@ Es una ayuda de estudio y no sustituye a un sensei. Los niveles de la web no son
 ## Instalar en el móvil (Android)
 
 Abre la web en Chrome → menú ⋮ → **Instalar app** (o *Añadir a pantalla de inicio*). Los iconos están en `icons/` (192, 512, maskable y Apple) y se generan a partir del logo de `js/art.js`. El diseño usa botones 3D, camino de lecciones y navegación inferior (Camino · Repaso · Colección · Dōjō).
+
+## Técnica: cómo añadir una lección
+
+En `js/data-tech-*.js`, `KD.add({ id, t, jp, sub, art, intro, why, steps, keys, errors, drills, check, terms })` genera automáticamente las secciones (cómo se hace, puntos clave, errores y cómo corregirlos, ejercicios, autoevaluación). Las ilustraciones salen de `KArt.get`: `seq:<clave>` (secuencias en `SEQ` de `js/art.js`, con `touch` para que el golpe alcance el blanco), `vs:<pose>`, `solo:<pose>`, `footwork:<tipo>`, `kirikaeshi`, etc. Después añade el id a su módulo al final de `data-tech-2.js`.

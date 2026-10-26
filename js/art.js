@@ -68,7 +68,27 @@ window.KArt = (function () {
     rei30: { head: [146, 64], sh: [128, 82], hip: [104, 116], ff: [112, 214], bf: [94, 214], lh: [118, 124], rh: [116, 140], noShinai: true },
     seiza: { head: [108, 100], sh: [104, 130], hip: [96, 172], legs: { k: [150, 212], f: [100, 220] }, lh: [140, 168], rh: [134, 172], noShinai: true },
     zarei: { head: [150, 132], sh: [132, 142], hip: [96, 172], legs: { k: [150, 212], f: [100, 220] }, lh: [172, 214], rh: [180, 214], noShinai: true },
-    sonkyo: { head: [124, 78], sh: [112, 108], hip: [96, 164], legs: { k: [146, 178], f: [128, 220] }, L: [160, 146], ang: -30, rh: [150, 150] }
+    sonkyo: { head: [124, 78], sh: [112, 108], hip: [96, 164], legs: { k: [146, 178], f: [128, 220] }, L: [160, 146], ang: -30, rh: [150, 150] },
+    yokomen: { head: [166, 54], sh: [160, 84], hip: [150, 126], L: [196, 34], ang: 16, ff: [188, 208], bf: [118, 198] },
+    koteHi: { head: [160, 58], sh: [152, 88], hip: [142, 128], L: [186, 52], ang: 4, ff: [180, 210], bf: [110, 200] },
+    suburiEnd: { head: [120, 52], sh: [116, 84], hip: [104, 128], L: [158, 100], ang: 2, ff: [140, 214], bf: [68, 206] },
+    hayaUp: { head: [118, 52], sh: [114, 84], hip: [104, 128], L: [150, 52], ang: -62, ff: [140, 214], bf: [68, 206] },
+    hayaDn: { head: [120, 52], sh: [116, 84], hip: [104, 128], L: [158, 84], ang: 22, ff: [140, 214], bf: [68, 206] },
+    okuri1: { head: [126, 50], sh: [122, 82], hip: [112, 128], L: [154, 112], ang: -14, ff: [172, 208], bf: [68, 206] },
+    tsugi1: { head: [120, 52], sh: [116, 84], hip: [106, 128], L: [148, 112], ang: -14, ff: [140, 214], bf: [118, 204] },
+    fumi1: { head: [126, 48], sh: [124, 80], hip: [120, 126], L: [148, 20], ang: 150, ff: [178, 186], bf: [78, 204] },
+    chudanLean: { head: [136, 58], sh: [128, 88], hip: [102, 130], L: [150, 112], ang: -14, ff: [140, 214], bf: [68, 206] },
+    chudanFlat: { head: [118, 50], sh: [114, 82], hip: [104, 128], L: [146, 112], ang: -14, ff: [140, 214], bf: [68, 217] },
+    chudanHigh: { head: [118, 50], sh: [114, 82], hip: [104, 128], L: [146, 84], ang: -2, ff: [140, 214], bf: [68, 206] },
+    chudanLow: { head: [118, 52], sh: [114, 84], hip: [104, 128], L: [148, 136], ang: 22, ff: [140, 214], bf: [68, 206] },
+    tsuba: { head: [140, 56], sh: [138, 86], hip: [124, 128], L: [170, 92], ang: -52, ff: [150, 214], bf: [90, 208] },
+    hikiUp: { head: [122, 56], sh: [122, 86], hip: [114, 128], L: [140, 26], ang: 148, ff: [152, 214], bf: [88, 208] },
+    hikiMen: { head: [118, 56], sh: [118, 86], hip: [112, 128], L: [190, 30], ang: 8, ff: [150, 206], bf: [84, 206] },
+    hikiDo: { head: [118, 58], sh: [118, 88], hip: [112, 128], L: [166, 104], ang: 2, ff: [150, 206], bf: [84, 206] },
+    haraiP: { head: [118, 50], sh: [114, 82], hip: [104, 128], L: [150, 116], ang: 2, ff: [140, 214], bf: [68, 206] },
+    suriageP: { head: [118, 52], sh: [114, 84], hip: [104, 128], L: [150, 94], ang: -50, ff: [140, 214], bf: [68, 206] },
+    blockP: { head: [118, 52], sh: [114, 84], hip: [104, 128], L: [136, 52], ang: -58, ff: [140, 214], bf: [68, 206] },
+    uchiotoshiP: { head: [120, 54], sh: [116, 86], hip: [106, 128], L: [160, 66], ang: 52, ff: [142, 212], bf: [70, 204] }
   };
 
   function figure(p, o) {
@@ -151,25 +171,48 @@ window.KArt = (function () {
 
   const FLOOR = `<rect x="-200" y="226" width="1000" height="16" fill="${C.wood}"/><rect x="-200" y="226" width="1000" height="3" fill="${C.woodD}"/>`;
   const W = 520;
-  const TARGETS = { men: [398, 36, 17], kote: [361, 110, 14], do: [392, 106, 18], tsuki: [385, 82, 12], yokomen: [380, 52, 15] };
   const OPP_TINT = { key: '#6b7da8', hak: '#2a3566', men: '#2a3050' };
 
-  function scene(att, opts) {
+  /* Anclajes de un figurín (para que un golpe "toque" el blanco del otro) */
+  function geom(key, dx, flip) {
+    const p = POSES[key], S = a => [a[0] + dx, a[1]], F = a => flip ? [W - a[0], a[1]] : a;
+    const head = F(S(p.head)), sh = F(S(p.sh)), hip = F(S(p.hip)), s = flip ? -1 : 1;
+    let L = p.L ? S(p.L) : S(p.lh), R;
+    if (p.L) { const a = p.ang * Math.PI / 180; R = p.rh ? S(p.rh) : [L[0] + Math.cos(a) * 14, L[1] + Math.sin(a) * 14]; } else R = S(p.rh);
+    R = F(R);
+    return { men: [head[0], head[1] - 21], yokomen: [head[0] + s * 8, head[1] - 12], kote: R, do: [(hip[0] + sh[0]) / 2 + s * 14, (hip[1] + sh[1]) / 2], tsuki: [head[0] + s * 19, head[1] + 20] };
+  }
+  function touchDx(f, tp) {
+    const p = POSES[f.pose], a = p.ang * Math.PI / 180, len = f.len || 83;
+    const rx = p.L[0] + Math.cos(a) * len;
+    return f.flip ? (W - tp[0] - rx) : (tp[0] - rx);
+  }
+
+  function scene(figs, opts) {
     opts = opts || {};
-    const a = att.map(x => (typeof x === 'string' ? { pose: x } : x));
+    const list = figs.map(x => Object.assign({}, typeof x === 'string' ? { pose: x } : x));
+    if (opts.opp !== false && !opts.solo && !list.some(f => f.opp)) list.unshift(Object.assign({ opp: true, pose: 'chudan' }, typeof opts.opp === 'string' ? { pose: opts.opp } : (opts.opp || {})));
+    list.forEach(f => { if (f.flip === undefined) f.flip = !!f.opp; if (f.dx === undefined && !f.touch) f.dx = 0; });
+    const hits = [];
+    // primero los que fijan posición, después los que "tocan" un blanco
+    list.forEach((f, i) => {
+      if (!f.touch) return;
+      let tg;
+      if (f.vs) tg = { pose: f.vs.pose, dx: f.vs.dx || 0, flip: f.vs.flip !== undefined ? f.vs.flip : !f.flip };
+      else { const g = list.find((g, j) => j !== i && !!g.opp !== !!f.opp && g.dx !== undefined); tg = g; }
+      if (!tg) return;
+      const tp = geom(tg.pose, tg.dx, tg.flip)[f.touch];
+      f.dx = touchDx(f, tp);
+      if (!f.nohl) hits.push(tp);
+    });
     let g = FLOOR;
-    if (opts.opp !== false) {
-      const op = opts.opp || { pose: 'chudan' };
-      const o = typeof op === 'string' ? { pose: op } : op;
-      g += `<g transform="translate(${W} 0) scale(-1 1)">${figure(POSES[o.pose], { dx: o.dx || 0, tint: OPP_TINT })}</g>`;
-    }
-    a.forEach((x, i) => { g += `<g opacity="${x.ghost ? 0.28 : 1}">${figure(POSES[x.pose], { dx: x.dx || 0 })}</g>`; });
-    if (opts.hl) {
-      const t = TARGETS[opts.hl];
-      g += `<circle class="pulse" cx="${t[0]}" cy="${t[1]}" r="${t[2]}" fill="${C.red}" fill-opacity=".28" stroke="${C.red}" stroke-width="2.2" stroke-dasharray="4 3"/>`;
-    }
-    if (opts.arrow) g += opts.arrow;
-    return `<svg viewBox="${opts.vb || '48 -42 452 284'}" role="img" aria-label="${opts.label || 'Ilustración de kendo'}">${g}</svg>`;
+    list.forEach(f => {
+      const inner = figure(POSES[f.pose], { dx: f.dx || 0, tint: (f.opp || f.tint) ? OPP_TINT : undefined });
+      g += `<g opacity="${f.ghost ? 0.28 : 1}">${f.flip ? `<g transform="translate(${W} 0) scale(-1 1)">${inner}</g>` : inner}</g>`;
+    });
+    hits.forEach(t => { g += `<circle class="pulse" cx="${f(t[0])}" cy="${f(t[1])}" r="15" fill="${C.red}" fill-opacity=".28" stroke="${C.red}" stroke-width="2.2" stroke-dasharray="4 3"/>`; });
+    (opts.arrows || []).forEach(a => { g += arrow(a[0], a[1], a[2], a[3], a[4] || C.red); });
+    return `<svg viewBox="${opts.vb || (opts.solo ? '36 -42 300 284' : '48 -42 452 284')}" role="img" aria-label="${opts.label || 'Ilustración de kendo'}">${g}</svg>`;
   }
 
   function solo(key, label) {
@@ -179,16 +222,144 @@ window.KArt = (function () {
     return `<div class="grid-art">${keys.map((k, i) => `<figure>${solo(k, labels[i])}<figcaption>${labels[i]}</figcaption></figure>`).join('')}</div>`;
   }
 
-  const STRIPS = {
-    men: { frames: [[{ pose: 'chudan' }], [{ pose: 'furikaburi', dx: 70 }], [{ pose: 'men', dx: 117 }]], hl: [null, null, 'men'], caps: ['1 · Chūdan: kensen al cuello del rival', '2 · Furikaburi: sube el shinai al avanzar', '3 · Datotsu: extiende, golpea y pisa (fumikomi)'] },
-    kote: { frames: [[{ pose: 'chudan' }], [{ pose: 'koteUp', dx: 50 }], [{ pose: 'kote', dx: 96 }]], hl: [null, null, 'kote'], caps: ['1 · Chūdan', '2 · Eleva el shinai solo lo justo', '3 · Corta pequeño y rápido a la muñeca'] },
-    do: { frames: [[{ pose: 'chudan' }], [{ pose: 'furikaburi', dx: 70 }], [{ pose: 'do', dx: 130 }]], hl: [null, null, 'do'], caps: ['1 · Chūdan', '2 · Furikaburi (puede ser algo menor)', '3 · Corte al lado derecho del dō, con filo'] },
-    tsuki: { frames: [[{ pose: 'chudan' }], [{ pose: 'tsukiPrep', dx: 40 }], [{ pose: 'tsuki', dx: 62 }]], hl: [null, null, 'tsuki'], caps: ['1 · Chūdan', '2 · Recoge ligeramente, sin levantar', '3 · Estocada recta a la garganta (tsuki-dare)'] }
+  /* ---------- Secuencias paso a paso ---------- */
+  const SO = { solo: true };
+  const A = (pose, extra) => Object.assign({ pose }, extra || {});
+  const O = (pose, extra) => Object.assign({ pose, opp: true }, extra || {});
+  const SEQ = {
+    men: { t: 'Men-uchi', quiz: 1, fr: [
+      { figs: [A('chudan')], cap: '1 · Chūdan: kensen al cuello del rival' },
+      { figs: [A('furikaburi', { dx: 70 })], cap: '2 · Furikaburi: sube el shinai al avanzar' },
+      { figs: [A('men', { touch: 'men' })], cap: '3 · Extiende, golpea con el monouchi y pisa (fumikomi)' }] },
+    yokomen: { t: 'Yokomen-uchi', quiz: 1, fr: [
+      { figs: [A('chudan')], cap: '1 · Chūdan' },
+      { figs: [A('furikaburi', { dx: 70 })], cap: '2 · Furikaburi' },
+      { figs: [A('yokomen', { touch: 'yokomen' })], cap: '3 · Corte en diagonal al lateral de la cabeza' }] },
+    kote: { t: 'Kote-uchi', quiz: 1, fr: [
+      { figs: [A('chudan')], cap: '1 · Chūdan' },
+      { figs: [A('koteUp', { dx: 50 })], cap: '2 · Eleva el shinai solo lo justo' },
+      { figs: [A('kote', { touch: 'kote' })], cap: '3 · Corta pequeño y rápido a la muñeca' }] },
+    do: { t: 'Dō-uchi', quiz: 1, fr: [
+      { figs: [A('chudan')], cap: '1 · Chūdan' },
+      { figs: [A('furikaburi', { dx: 70 })], cap: '2 · Furikaburi (puede ser algo menor)' },
+      { figs: [A('do', { touch: 'do' })], cap: '3 · Corte al lado derecho del dō, con filo' }] },
+    tsuki: { t: 'Tsuki', quiz: 1, fr: [
+      { figs: [A('chudan')], cap: '1 · Chūdan' },
+      { figs: [A('tsukiPrep', { dx: 40 })], cap: '2 · Recoge ligeramente, sin levantar' },
+      { figs: [A('tsuki', { touch: 'tsuki', len: 122 })], cap: '3 · Estocada recta a la garganta (tsuki-dare)' }] },
+    'kote-men': { t: 'Kote-men', quiz: 1, fr: [
+      { figs: [A('chudan')], cap: '1 · Chūdan' },
+      { figs: [A('kote', { touch: 'kote' })], cap: '2 · Kote con kiai' },
+      { figs: [A('furikaburi', { dx: 118 })], cap: '3 · Recoge el shinai sin parar' },
+      { figs: [A('men', { touch: 'men' })], cap: '4 · Men: el pie izquierdo sigue al derecho' }] },
+    'debana-kote': { t: 'Debana-kote', quiz: 1, fr: [
+      { figs: [A('chudan')], cap: '1 · Ambos en chūdan: observa el kensen y el peso del rival' },
+      { figs: [O('koteUp', { dx: 50 }), A('chudan')], cap: '2 · El rival empieza a subir el shinai: ese es el momento' },
+      { figs: [O('koteUp', { dx: 50 }), A('koteHi', { touch: 'kote' })], cap: '3 · Golpeas kote antes de que complete su ataque' }] },
+    'debana-men': { t: 'Debana-men', quiz: 1, fr: [
+      { figs: [A('chudan')], cap: '1 · Ambos en chūdan' },
+      { figs: [O('koteUp', { dx: 50 }), A('chudan')], cap: '2 · El rival inicia su movimiento' },
+      { figs: [O('koteUp', { dx: 50 }), A('men', { touch: 'men' })], cap: '3 · Men justo en su inicio' }] },
+    'harai-men': { t: 'Harai-men', quiz: 1, fr: [
+      { figs: [A('chudan')], cap: '1 · Chūdan' },
+      { figs: [A('haraiP', { dx: 30 })], cap: '2 · Barrido corto y firme: apartas su shinai' },
+      { figs: [A('men', { touch: 'men' })], cap: '3 · Men por el hueco que se abre' }] },
+    'hiki-men': { t: 'Hiki-men', quiz: 1, fr: [
+      { figs: [O('tsuba', { dx: 77 }), A('tsuba', { dx: 77 })], cap: '1 · Tsubazeriai: guardas en contacto' },
+      { figs: [O('tsuba', { dx: 77 }), A('hikiUp', { dx: 60 })], cap: '2 · Empujas, el rival reacciona, subes el shinai' },
+      { figs: [O('tsuba', { dx: 77 }), A('hikiMen', { touch: 'men' })], cap: '3 · Golpeas men mientras retrocedes' }] },
+    'hiki-do': { t: 'Hiki-dō', quiz: 1, fr: [
+      { figs: [O('tsuba', { dx: 77 }), A('tsuba', { dx: 77 })], cap: '1 · Tsubazeriai' },
+      { figs: [O('tsuba', { dx: 77 }), A('hikiUp', { dx: 60 })], cap: '2 · Empuja y sube el shinai' },
+      { figs: [O('tsuba', { dx: 77 }), A('hikiDo', { touch: 'do' })], cap: '3 · Corta dō al retroceder' }] },
+    'men-nuki-do': { t: 'Men-nuki-dō', quiz: 1, fr: [
+      { figs: [A('chudan')], cap: '1 · Chūdan: haces seme y esperas' },
+      { figs: [O('furikaburi', { dx: 60 }), A('chudan', { ghost: true })], cap: '2 · El rival ataca men: sales en diagonal (hiraki-ashi)' },
+      { figs: [O('men', { touch: 'men', nohl: 1, vs: { pose: 'chudan' } }), A('do', { touch: 'do' })], cap: '3 · Su golpe falla y tú cortas dō' }] },
+    'kote-suriage-men': { t: 'Kote-suriage-men', quiz: 1, fr: [
+      { figs: [A('chudan')], cap: '1 · Chūdan' },
+      { figs: [O('kote', { touch: 'kote', vs: { pose: 'chudan' } }), A('suriageP')], cap: '2 · Desvías su kote subiendo el shinai (suriage)' },
+      { figs: [O('kote', { touch: 'kote', nohl: 1, vs: { pose: 'chudan' } }), A('men', { touch: 'men' })], cap: '3 · Respondes con men en el mismo gesto' }] },
+    'men-kaeshi-do': { t: 'Men-kaeshi-dō', quiz: 1, fr: [
+      { figs: [A('chudan')], cap: '1 · Chūdan' },
+      { figs: [O('men', { touch: 'men', vs: { pose: 'blockP' } }), A('blockP')], cap: '2 · Recibes su men con el shinai en alto (bloqueo)' },
+      { figs: [O('men', { touch: 'men', nohl: 1, vs: { pose: 'blockP' } }), A('do', { touch: 'do' })], cap: '3 · Giras el shinai y devuelves dō' }] },
+    'dou-uchiotoshi-men': { t: 'Dō-uchiotoshi-men', quiz: 1, fr: [
+      { figs: [A('chudan')], cap: '1 · Chūdan' },
+      { figs: [O('do', { touch: 'do', vs: { pose: 'chudan' } }), A('uchiotoshiP')], cap: '2 · Golpeas hacia abajo su shinai (uchiotoshi)' },
+      { figs: [O('do', { touch: 'do', nohl: 1, vs: { pose: 'chudan' } }), A('men', { touch: 'men' })], cap: '3 · Sin pausa, men' }] },
+    zanshin: { t: 'Zanshin', fr: [
+      { figs: [A('men', { touch: 'men' })], cap: '1 · Golpe correcto con kiai' },
+      { figs: [O('chudan', { flip: false }), A('chudan', { flip: true })], cap: '2 · Tras pasar, te giras y vuelves a chūdan de cara al rival' }] },
+    // Solos (sin rival)
+    joge: { t: 'Jōge-buri', solo: 1, fr: [
+      { figs: [A('chudan')], cap: '1 · Chūdan' },
+      { figs: [A('furikaburi')], cap: '2 · Sube hasta sobre la cabeza' },
+      { figs: [A('suburiEnd')], cap: '3 · Baja y para con el kensen a la altura de chūdan' }] },
+    sayu: { t: 'Sayū-men', solo: 1, fr: [
+      { figs: [A('furikaburi')], cap: '1 · Arriba' },
+      { figs: [A('yokomen', { dx: -46 })], cap: '2 · Baja en diagonal a unos 45°; sube de nuevo y repite al otro lado' }] },
+    zenshin: { t: 'Zenshin-kōtai-suburi', solo: 1, fr: [
+      { figs: [A('furikaburi')], cap: '1 · Sube' },
+      { figs: [A('men', { dx: -10 })], cap: '2 · Golpea avanzando con okuri-ashi' },
+      { figs: [A('furikaburi', { dx: -34 })], cap: '3 · Sube retrocediendo y golpea de nuevo' }] },
+    haya: { t: 'Haya-suburi', solo: 1, fr: [
+      { figs: [A('hayaUp')], cap: '1 · Sube corto' },
+      { figs: [A('hayaDn')], cap: '2 · Baja con las muñecas' },
+      { figs: [A('hayaUp')], cap: '3 · Y vuelve rápido' }] },
+    okuri: { t: 'Okuri-ashi', solo: 1, fr: [
+      { figs: [A('chudan')], cap: '1 · Chūdan' },
+      { figs: [A('okuri1')], cap: '2 · El pie derecho avanza primero' },
+      { figs: [A('chudan', { dx: 32 })], cap: '3 · El izquierdo le sigue y vuelves a la postura' }] },
+    tsugi: { t: 'Tsugi-ashi', solo: 1, fr: [
+      { figs: [A('chudan')], cap: '1 · Chūdan' },
+      { figs: [A('tsugi1')], cap: '2 · El pie trasero se acerca al delantero' },
+      { figs: [A('okuri1', { dx: 20 })], cap: '3 · El delantero sale de golpe' },
+      { figs: [A('chudan', { dx: 52 })], cap: '4 · El trasero le sigue' }] },
+    fumikomi: { t: 'Fumikomi-ashi', solo: 1, fr: [
+      { figs: [A('furikaburi')], cap: '1 · Furikaburi' },
+      { figs: [A('fumi1')], cap: '2 · El pie delantero avanza alto y corto' },
+      { figs: [A('men', { dx: -20 })], cap: '3 · Pisada con el pie plano y golpe a la vez' }] },
+    'kamae-toru': { t: 'Taitō → sonkyō → chūdan', solo: 1, fr: [
+      { figs: [A('taito')], cap: '1 · Taitō: shinai en la mano izquierda' },
+      { figs: [A('sonkyo')], cap: '2 · Sonkyō: cuclillas, shinai al frente' },
+      { figs: [A('chudan')], cap: '3 · Te levantas en chūdan' }] },
+    seiza: { t: 'Seiza y zarei', solo: 1, fr: [
+      { figs: [A('shisei')], cap: '1 · De pie' },
+      { figs: [A('seiza')], cap: '2 · Seiza: espalda recta, manos en los muslos' },
+      { figs: [A('zarei')], cap: '3 · Zarei: manos al suelo, inclinas desde la cadera' }] },
+    'chudan-errores': { t: 'Errores en chūdan', solo: 1, fr: [
+      { figs: [A('chudan')], cap: '✓ Correcto' },
+      { figs: [A('chudanLean')], cap: '✗ Cuerpo inclinado hacia delante' },
+      { figs: [A('chudanFlat')], cap: '✗ Talón izquierdo apoyado' },
+      { figs: [A('chudanHigh')], cap: '✗ Kensen demasiado alto' },
+      { figs: [A('chudanLow')], cap: '✗ Kensen demasiado bajo' }] }
   };
-  function strip(key) {
-    const s = STRIPS[key];
-    return `<div class="strip">${s.frames.map((fr, i) =>
-      `<figure>${scene(fr, { hl: s.hl[i], label: s.caps[i] })}<figcaption>${s.caps[i]}</figcaption></figure>`).join('')}</div>`;
+  SEQ.kotemen = SEQ['kote-men'];
+  function seq(key) {
+    const s = SEQ[key];
+    if (!s) return '';
+    const n = s.fr.length;
+    return `<div class="strip ${s.solo ? "solo" : ""} c${n}">${s.fr.map(fr =>
+      `<figure>${scene(fr.figs, { solo: !!s.solo, label: fr.cap, arrows: fr.arrows })}<figcaption>${fr.cap}</figcaption></figure>`).join('')}</div>`;
+  }
+  const strip = seq;
+
+  /* ---------- Kirikaeshi (vista cenital) ---------- */
+  function kirikaeshi() {
+    let g = `<rect width="480" height="210" rx="10" fill="${C.wood}" opacity=".35"/>`;
+    g += `<g font-family="sans-serif" fill="${C.ink}"><text x="14" y="22" font-size="13" font-weight="700">Kirikaeshi</text><text x="14" y="38" font-size="10.5">Shōmen · 4 yokomen avanzando · 5 yokomen retrocediendo · shōmen final</text></g>`;
+    g += `<circle cx="400" cy="100" r="16" fill="#6b7da8" stroke="${C.ink}"/><text x="400" y="104" text-anchor="middle" font-size="11" font-weight="700" fill="${C.white}" font-family="sans-serif">M</text>`;
+    g += `<text x="400" y="132" text-anchor="middle" font-size="10" fill="${C.ink}" font-family="sans-serif">motodachi</text>`;
+    g += `<circle cx="60" cy="100" r="16" fill="${C.indigo}" stroke="${C.ink}"/><text x="60" y="104" text-anchor="middle" font-size="11" font-weight="700" fill="${C.white}" font-family="sans-serif">K</text>`;
+    g += `<text x="60" y="132" text-anchor="middle" font-size="10" fill="${C.ink}" font-family="sans-serif">kakarite</text>`;
+    g += arrow(86, 80, 360, 80, C.red);
+    g += arrow(360, 124, 86, 124, C.indigo);
+    const fw = ['I', 'D', 'I', 'D'], bw = ['I', 'D', 'I', 'D', 'I'];
+    fw.forEach((s, i) => { const x = 130 + i * 62; g += `<circle cx="${x}" cy="80" r="11" fill="${C.red}"/><text x="${x}" y="84" text-anchor="middle" font-size="10.5" font-weight="700" fill="${C.white}" font-family="sans-serif">${s}</text>`; });
+    bw.forEach((s, i) => { const x = 330 - i * 52; g += `<circle cx="${x}" cy="124" r="11" fill="${C.indigo}"/><text x="${x}" y="128" text-anchor="middle" font-size="10.5" font-weight="700" fill="${C.white}" font-family="sans-serif">${s}</text>`; });
+    g += `<g font-family="sans-serif" font-size="10.5" fill="${C.ink}"><text x="14" y="168">I = yokomen izquierdo del rival · D = yokomen derecho</text><text x="14" y="184">Avanzas con okuri-ashi golpeando en cada paso; al retroceder, también.</text><text x="14" y="200">Al final, un shōmen y pasas.</text></g>`;
+    return `<svg viewBox="0 0 480 210" role="img" aria-label="Esquema del kirikaeshi">${g}</svg>`;
   }
 
   /* ---------- Figura frontal: bogu, zonas, keikogi ---------- */
@@ -412,7 +583,10 @@ window.KArt = (function () {
     const [k, arg] = spec.split(':');
     switch (k) {
       case 'logo': return logo(120, true);
-      case 'strip': return strip(arg);
+      case 'strip': case 'seq': return seq(arg);
+      case 'vs': return `<div class="art one">${scene([{ pose: arg }])}</div>`;
+      case 'kirikaeshi': return `<div class="art one wide">${kirikaeshi()}</div>`;
+      case 'frontchudan': return `<div class="art one small">${front('bogu')}</div>`;
       case 'solo': return `<div class="art one">${solo(arg, arg)}</div>`;
       case 'kamae5': return soloRow(['chudan', 'jodan', 'gedan', 'hasso', 'waki'], ['Chūdan', 'Jōdan', 'Gedan', 'Hassō', 'Waki']);
       case 'rei': return soloRow(['shisei', 'rei15', 'rei30', 'zarei', 'sonkyo'], ['Shisei (de pie)', 'Ritsurei ~15°', 'Ritsurei ~30°', 'Zarei (seiza)', 'Sonkyo']);
@@ -429,5 +603,5 @@ window.KArt = (function () {
     }
   }
 
-  return { get, logo, icon, mitsudomoe, scene, solo, front, shinai, mascot, POSES, C };
+  return { get, logo, icon, mitsudomoe, scene, solo, front, shinai, mascot, seq, SEQ, POSES, C };
 })();

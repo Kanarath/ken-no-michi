@@ -147,6 +147,75 @@ KD.quizCats = { vocab: 'Vocabulario', equipo: 'Equipo', postura: 'Postura y pies
   Q('mente', '¿Qué es "fudōshin"?', 'La mente inmóvil y firme', ['La mente en blanco', 'La mente curiosa', 'La mente alegre'], '', 'mentalidad');
   Q('mente', '¿Qué es "mushin"?', 'Una mente sin ataduras', ['Una mente enfadada', 'Una mente dormida', 'Una mente rápida'], '', 'mentalidad');
   Q('mente', '¿Qué significa "shu-ha-ri"?', 'Obedecer, romper los moldes y crear lo propio', ['Atacar, defender y huir', 'Saludar, practicar y despedir', 'Golpear, esquivar y devolver'], '', 'consejos');
+  // Técnica: postura y guardias
+  Q('postura', '¿A qué distancia lateral van los pies en chūdan?', 'Aproximadamente un puño', ['Un paso entero', 'Pegados', 'El ancho de los hombros'], '', 'chudan');
+  Q('postura', '¿Cuánto se levanta el talón izquierdo en chūdan?', 'Lo justo para pasar una hoja de papel (1–2 cm)', ['Todo lo que se pueda', 'Nada, va apoyado', 'Unos 10 cm'], '', 'chudan');
+  Q('postura', '¿Dónde va la mano izquierda en chūdan?', 'En el centro, a un puño del ombligo', ['A un lado del cuerpo', 'A la altura del pecho', 'Pegada al abdomen'], '', 'chudan');
+  Q('postura', '¿A dónde apunta el kensen en chūdan?', 'A la garganta del rival', ['Al suelo', 'A la frente del rival', 'A sus rodillas'], '', 'chudan');
+  Q('postura', '¿Hacia dónde queda el tsuru en la guardia?', 'Hacia arriba', ['Hacia abajo', 'Hacia el rival', 'Hacia ti'], '', 'chudan');
+  Q('postura', '¿Qué mano manda el shinai?', 'La izquierda', ['La derecha', 'Ambas igual', 'Depende del golpe'], '', 'tenouchi');
+  Q('postura', '¿Qué se mira al rival en kendō?', 'Los ojos, con visión amplia', ['El shinai', 'Los pies', 'El blanco que vas a golpear'], '', 'metsuke');
+  Q('postura', '¿Qué es enzan-no-metsuke?', 'Mirar al rival como a una montaña lejana', ['Mirar solo el kensen', 'Cerrar los ojos', 'Mirar el suelo'], '', 'metsuke');
+  Q('postura', '¿Por dónde respiras en kendō?', 'Por el abdomen (tanden)', ['Por los hombros', 'Solo por la boca', 'Por el pecho alto'], '', 'respiracion');
+  Q('postura', '¿Cuándo se espira con fuerza?', 'En el golpe, con el kiai', ['Al subir el shinai', 'Al saludar', 'Nunca'], '', 'respiracion');
+  Q('postura', '¿Para qué sirve gedan?', 'Para provocar, esperar o recuperar iniciativa', ['Para atacar men', 'Para golpear tsuki', 'Para descansar'], '', 'gedan');
+  Q('postura', '¿A dónde apunta el kensen en gedan?', 'A las rodillas del rival', ['A su garganta', 'Al cielo', 'A sus ojos'], '', 'gedan');
+  Q('postura', '¿Cómo se sube el shinai en jōdan?', 'Por el centro hasta sobre la cabeza', ['Por un lado', 'Solo hasta el pecho', 'Hacia atrás de la espalda'], '', 'jodan');
+  Q('postura', '¿Qué guardia mantiene el shinai vertical junto al lado derecho de la cara?', 'Hassō', ['Waki', 'Gedan', 'Chūdan'], '', 'hasso');
+  Q('postura', '¿Qué guardia esconde la longitud del shinai?', 'Waki-gamae', ['Chūdan', 'Jōdan', 'Hassō'], '', 'waki');
+  Q('postura', '¿Qué es taitō?', 'El shinai en la mano izquierda, al cinto', ['La guardia media', 'Un tipo de golpe', 'El saludo sentado'], '', 'taito-sonkyo');
+  Q('postura', '¿Qué es nuki-tō?', 'Desenvainar (sacar el shinai)', ['Envainar', 'Un golpe', 'Una esquiva'], '', 'taito-sonkyo');
+  Q('postura', '¿Qué es osame-tō?', 'Envainar (guardar el shinai)', ['Desenvainar', 'Un golpe', 'Un saludo'], '', 'taito-sonkyo');
+  Q('postura', '¿Cómo debe ir la espalda en sonkyō?', 'Recta', ['Inclinada hacia delante', 'Arqueada', 'Apoyada en los talones'], '', 'taito-sonkyo');
+  Q('postura', '¿Qué es hidari-jōdan?', 'Jōdan con el pie izquierdo delante', ['Jōdan con el pie derecho delante', 'Una guardia baja', 'Un golpe'], '', 'jodan');
+  // Pies
+  Q('postura', '¿Qué pie sale primero en okuri-ashi al avanzar?', 'El derecho (delantero)', ['El izquierdo', 'Los dos a la vez', 'Depende'], '', 'okuri-ashi');
+  Q('postura', '¿Qué no debe pasar con los pies en okuri-ashi?', 'Que se crucen', ['Que se deslicen', 'Que el izquierdo siga al derecho', 'Que mantengan la distancia'], '', 'okuri-ashi');
+  Q('postura', '¿Qué pasa con la cabeza al hacer okuri-ashi?', 'Se mantiene a la misma altura', ['Sube y baja', 'Se inclina', 'Se gira'], '', 'okuri-ashi');
+  Q('postura', '¿Cuándo se usa hiraki-ashi?', 'Para salir de la línea de ataque (esquivar)', ['Para golpear men', 'Para saludar', 'Para retroceder'], '', 'hiraki-ashi');
+  Q('postura', '¿Cuándo se usa tsugi-ashi?', 'Para cubrir una distancia larga', ['Para caminar', 'Para esquivar', 'Para saludar'], '', 'tsugi-ashi');
+  Q('postura', '¿Con qué parte del pie se pisa en fumikomi?', 'Con la planta entera', ['Con el talón', 'Con la punta', 'Con el borde exterior'], '', 'fumikomi-ashi');
+  Q('postura', '¿Qué es hikitsuke?', 'Tirar rápido del pie trasero tras el fumikomi', ['Un golpe', 'Un tipo de guardia', 'La pisada delantera'], '', 'fumikomi-ashi');
+  Q('postura', '¿Cuándo se usa ayumi-ashi?', 'Para caminar al entrar, salir y en kata', ['Para golpear', 'Para esquivar', 'Para pisar'], '', 'ayumi-ashi');
+  Q('postura', '¿Qué hay que evitar en tsugi-ashi?', 'Saltar', ['Deslizar', 'Mantener la mano izquierda en el centro', 'Acercar el pie trasero'], '', 'tsugi-ashi');
+  // Suburi
+  Q('tecnica', '¿Hasta dónde baja el shinai en jōge-buri?', 'Hasta que el kensen queda a la altura de chūdan', ['Hasta el suelo', 'Hasta la cadera', 'Hasta la rodilla'], '', 'joge-buri');
+  Q('tecnica', '¿Por dónde sube el shinai en sayū-men?', 'Siempre por el centro', ['Por el lado izquierdo', 'Por el lado derecho', 'Por detrás'], '', 'sayu-men');
+  Q('tecnica', '¿En qué ángulo baja el shinai en sayū-men?', 'Unos 45° en diagonal', ['Totalmente vertical', 'Totalmente horizontal', 'Hacia atrás'], '', 'sayu-men');
+  Q('tecnica', '¿De dónde sale el movimiento en haya-suburi?', 'De las muñecas', ['De los hombros', 'De la cintura', 'De las rodillas'], '', 'haya-suburi');
+  Q('tecnica', '¿Qué se entrena en zenshin-kōtai-suburi?', 'La coordinación de pies y golpe', ['Solo la fuerza', 'Solo la velocidad', 'Solo la mirada'], '', 'zenshin-kotai');
+  Q('tecnica', '¿Cuánto se debería aumentar el suburi por semana?', 'Un 10–20% como máximo', ['El doble', 'Nada, nunca', 'Lo que aguante'], '', 'suburi-plan');
+  Q('tecnica', '¿Qué haces si sientes dolor agudo en muñecas o codos?', 'Paro y descanso', ['Sigo con más fuerza', 'Aumento la serie', 'Lo ignoro'], '', 'suburi-plan');
+  // Golpes
+  Q('tecnica', '¿Cuál es la subida en men?', 'Por el centro hasta sobre la cabeza', ['Solo hasta la frente', 'Por un lado', 'Hasta la cintura'], '', 'men');
+  Q('tecnica', '¿Con qué zona del shinai se golpea men?', 'Con el monouchi', ['Con la tsuba', 'Con el nakayui', 'Con la empuñadura'], '', 'men');
+  Q('tecnica', '¿Qué ocurre a la vez en un golpe correcto?', 'Impacto, kiai y pisada', ['Solo el impacto', 'El impacto y luego la pisada', 'La pisada y luego el kiai'], '', 'men');
+  Q('tecnica', '¿Qué hace el pie izquierdo tras la pisada?', 'Llega rápido (hikitsuke)', ['Se queda atrás', 'Se cruza', 'Se levanta mucho'], '', 'men');
+  Q('tecnica', '¿Cuánto se sube el shinai en kote?', 'Solo lo justo, hasta la frente', ['Hasta sobre la cabeza y atrás', 'Nada', 'Hasta la cintura'], '', 'kote');
+  Q('tecnica', '¿Qué kote es el blanco habitual?', 'La muñeca derecha del rival', ['La muñeca izquierda siempre', 'El codo', 'El hombro'], '', 'kote');
+  Q('tecnica', '¿Con qué se corta el dō?', 'Con el filo del shinai', ['Con el plano', 'Con la tsuba', 'Con la punta'], '', 'do');
+  Q('tecnica', '¿Qué indica un "toc" hueco en dō?', 'Que has golpeado con el plano', ['Que ha sido un golpe perfecto', 'Que falta kiai', 'Que has golpeado la tsuba'], '', 'do');
+  Q('tecnica', '¿Cómo se mueve el shinai en tsuki?', 'En línea recta hacia la garganta', ['En diagonal', 'De arriba abajo', 'De lado'], '', 'tsuki');
+  Q('tecnica', '¿Cuándo se practica tsuki?', 'Con supervisión y cuando el sensei lo indica', ['Siempre sin supervisión', 'Solo en casa', 'Cuando quieras'], '', 'tsuki');
+  Q('tecnica', '¿Cuántos yokomen se golpean al avanzar en kirikaeshi?', '4', ['3', '5', '9'], 'Avanzas 4 y retrocedes 5.', 'kirikaeshi');
+  Q('tecnica', '¿Cuántos yokomen se golpean al retroceder en kirikaeshi?', '5', ['4', '3', '9'], '', 'kirikaeshi');
+  Q('tecnica', '¿Cómo empieza y termina un kirikaeshi?', 'Con un shōmen', ['Con un kote', 'Con un dō', 'Con un tsuki'], '', 'kirikaeshi');
+  Q('tecnica', '¿Qué tiene que ser el primer golpe de kote-men?', 'Un golpe real, con intención', ['Un trámite', 'Una amenaza sin golpe', 'Un golpe sin kiai'], '', 'kote-men');
+  Q('tecnica', '¿Qué debe suceder entre kote y men?', 'Nada: es un solo movimiento continuo', ['Una pausa para respirar', 'Un paso atrás', 'Un saludo'], '', 'kote-men');
+  Q('tecnica', '¿Qué hace el motodachi en kirikaeshi?', 'Recibe los golpes con el shinai y marca la distancia', ['Golpea a su compañero', 'Observa sin moverse', 'Retrocede sin parar'], '', 'kirikaeshi');
+  // Waza
+  Q('tecnica', '¿Qué es tsubazeriai?', 'Las guardas en contacto, con presión controlada', ['Un tipo de golpe', 'Una guardia', 'Un saludo'], '', 'tsubazeriai');
+  Q('tecnica', '¿De dónde sale el empuje en tai-atari?', 'De la cadera', ['De los brazos', 'Del hombro', 'De la cabeza'], '', 'tai-atari');
+  Q('tecnica', '¿Qué hiki-waza se hace al dō?', 'Hiki-dō', ['Hiki-men', 'Hiki-kote', 'Hiki-tsuki'], '', 'hiki-do');
+  Q('tecnica', '¿Cuándo sube el shinai en hiki-men?', 'Cuando el rival reacciona al empuje', ['Antes del tsubazeriai', 'Al final', 'Nunca'], '', 'hiki-men');
+  Q('tecnica', '¿Qué se hace en harai-men?', 'Se aparta con un barrido corto el shinai del rival y se golpea men', ['Se bloquea y se devuelve', 'Se esquiva con un paso', 'Se golpea hacia abajo'], '', 'harai-men');
+  Q('tecnica', '¿Cuándo se golpea en debana-kote?', 'Justo cuando el rival empieza a subir el shinai', ['Cuando termina su ataque', 'Antes de que se mueva', 'Cuando retrocede'], '', 'debana-kote');
+  Q('tecnica', '¿Qué es maki-waza?', 'Girar el shinai alrededor del del rival para desviarlo y golpear', ['Esquivar con el cuerpo', 'Golpear hacia abajo', 'Un tipo de saludo'], '', 'maki-waza');
+  Q('tecnica', '¿Cómo se desvía el golpe en suriage?', 'Subiendo el shinai rozando el del rival', ['Golpeándolo hacia abajo', 'Con un paso atrás', 'Con las manos'], '', 'kote-suriage-men');
+  Q('tecnica', '¿Con qué paso se esquiva en men-nuki-dō?', 'Hiraki-ashi', ['Fumikomi-ashi', 'Tsugi-ashi', 'Ayumi-ashi'], '', 'men-nuki-do');
+  Q('tecnica', '¿Qué se hace en men-kaeshi-dō?', 'Se bloquea el men, se gira el shinai y se devuelve dō', ['Se esquiva y se corta men', 'Se golpea kote', 'Se retrocede'], '', 'men-kaeshi-do');
+  Q('tecnica', '¿Qué familia incluye men-nuki-dō?', 'Nuki-waza', ['Suriage-waza', 'Kaeshi-waza', 'Harai-waza'], '', 'oji-waza');
+  Q('tecnica', '¿Qué familia incluye dō-uchiotoshi-men?', 'Uchiotoshi-waza', ['Nuki-waza', 'Suriage-waza', 'Maki-waza'], '', 'do-uchiotoshi-men');
   KD.quiz = out;
 })();
 
@@ -198,3 +267,44 @@ KD.levels = [
   { xp: 1800, n: 'Shodan', jp: '初段' }, { xp: 2400, n: 'Nidan', jp: '二段' }, { xp: 3100, n: 'Sandan', jp: '三段' }
 ];
 KD.XP = { lesson: 20, quiz: 5, card: 2, module: 50, log: 10 };
+
+/* ---------- Plan de 8 semanas (técnica) ---------- */
+KD.plan = [
+  { n: 1, t: 'Semana 1 · Postura, mirada y agarre', focus: 'Construir una base limpia antes de golpear: espalda, chūdan, tenouchi y respiración.',
+    lessons: ['shisei', 'metsuke', 'respiracion', 'tenouchi', 'chudan', 'chudan-ajustes'],
+    tasks: ['Estudiar las lecciones de la semana.', 'Sesión A (10 min): shisei contra la pared 2 min + chūdan frente al espejo 3 × 1 min.', 'Sesión B (10 min): respiración abdominal 3 min + 20 golpes lentos solo para sentir el agarre (tenouchi).', 'Sesión C (10 min): repasa los 4 errores de chūdan con el espejo y corrige uno.', 'Preguntar a tu sensei: "¿cómo ves mi chūdan y mi agarre?" y anotar la respuesta en el diario.'] },
+  { n: 2, t: 'Semana 2 · Pies', focus: 'Okuri-ashi limpio y programa de pies diario.',
+    lessons: ['ashi-sabaki', 'okuri-ashi', 'ayumi-ashi', 'maai', 'ashi-ejercicios'],
+    tasks: ['Estudiar las lecciones de la semana.', 'Programa de pies (lección "Programa de pies") 3 veces esta semana.', 'Okuri-ashi con shinai en chūdan: 3 series de 10 adelante y atrás.', 'Grabarte de lado y comprobar que la cabeza no sube ni baja.', 'Pedir a tu sensei que revise tu okuri-ashi.'] },
+  { n: 3, t: 'Semana 3 · Suburi base', focus: 'Jōge-buri y sayū-men con el recorrido central y el filo correcto.',
+    lessons: ['suburi', 'joge-buri', 'sayu-men', 'suburi-plan'],
+    tasks: ['Estudiar las lecciones de la semana.', 'Sesión A: 30 jōge-buri lentos con kiai.', 'Sesión B: 30 sayū-men lentos, subiendo siempre por el centro.', 'Sesión C: 20 jōge-buri + 20 sayū-men + estiramientos de muñecas.', 'Grabar 20 golpes y comparar con la semana anterior.'] },
+  { n: 4, t: 'Semana 4 · Men completo', focus: 'Men con pies, kiai y zanshin.',
+    lessons: ['men', 'fumikomi-ashi', 'zenshin-kotai', 'kiai-zanshin'],
+    tasks: ['Estudiar las lecciones de la semana.', 'Zenshin-kōtai-suburi: 3 series de 10.', 'Men sin rival con fumikomi suave: 3 series de 10 (solo si tu sensei ya te lo ha enseñado).', 'Fijarte solo en que golpe, kiai y pisada coincidan.', 'En el dōjō: 10 men a un compañero y pedir una corrección.'] },
+  { n: 5, t: 'Semana 5 · Kote y yokomen', focus: 'Golpes cortos y diagonales.',
+    lessons: ['kote', 'yokomen', 'haya-suburi', 'kirikaeshi'],
+    tasks: ['Estudiar las lecciones de la semana.', 'Kote en el aire: 3 series de 15, con subida pequeña.', 'Haya-suburi: 3 series de 20.', 'Kirikaeshi en el aire: 5 series (4 adelante, 5 atrás).', 'Hacer kirikaeshi con tu motodachi en el dōjō.'] },
+  { n: 6, t: 'Semana 6 · Dō y combinaciones', focus: 'Corte al dō y kote-men.',
+    lessons: ['do', 'kote-men', 'tsuki'],
+    tasks: ['Estudiar las lecciones de la semana.', 'Dō en el aire: 3 series de 15, escuchando el sonido del corte.', 'Kote-men en el aire: 3 series de 15, sin pausa.', 'Revisar la lección de tsuki (solo teoría salvo indicación del sensei).', 'En el dōjō: pedir hacer kote-men con un compañero.'] },
+  { n: 7, t: 'Semana 7 · Iniciativa y contacto', focus: 'Hiki-waza, debana-kote y tai-atari.',
+    lessons: ['tai-atari', 'tsubazeriai', 'hiki-men', 'hiki-do', 'debana-kote', 'harai-men'],
+    tasks: ['Estudiar las lecciones de la semana.', 'Hiki-men e hiki-dō en el aire: 3 series de 10.', 'Debana-kote en el aire: 3 series de 10, imaginando el instante.', 'En el dōjō: tsubazeriai y hiki-waza con tu sensei.', 'Ver un combate completo en vídeo e identificar tres debana.'] },
+  { n: 8, t: 'Semana 8 · Repaso y respuesta', focus: 'Consolidar y mirar hacia ōji-waza.',
+    lessons: ['oji-waza', 'men-nuki-do', 'kote-suriage-men', 'sen', 'seme'],
+    tasks: ['Estudiar las lecciones de la semana.', 'Repasar todas las autoevaluaciones y repetir las que no tengas marcadas.', 'Hacer un quiz visual de secuencias.', 'Hacer una serie completa grabada: suburi + kirikaeshi + kote-men.', 'Escribir en el diario tus tres mejoras y tus tres puntos a trabajar; enseñárselos a tu sensei.'] }
+];
+
+KD.routines.push(
+  { id: 'tec-kamae', t: 'Kamae y postura', min: 10, desc: 'Chūdan limpio y respiración.',
+    steps: [['Shisei contra la pared', '2 min', 'Talones, glúteos, hombros y cabeza.'], ['Chūdan frente al espejo', '3 × 1 min', 'Mano izquierda, talón, kensen.'], ['Respiración abdominal', '3 min', 'Inspira 4, espira 6.'], ['Taitō → sonkyō → chūdan', '5 veces', 'Con calma.']] },
+  { id: 'tec-pies', t: 'Pies en profundidad', min: 15, desc: 'Los cinco desplazamientos.',
+    steps: [['Okuri-ashi adelante y atrás', '10 × 3', 'Cabeza a la misma altura.'], ['Hiraki-ashi', '10 a cada lado', ''], ['Tsugi-ashi', '10', 'Primer movimiento discreto.'], ['Fumikomi suave', '10', 'Solo si tu sensei ya te lo enseñó.'], ['Estiramientos', '3 min', 'Gemelos y tobillos.']] },
+  { id: 'tec-golpes', t: 'Golpes básicos en el aire', min: 20, desc: 'Men, kote, dō y combinaciones sin rival.',
+    steps: [['Calentamiento', '3 min', ''], ['Jōge-buri', '20', 'Con kiai.'], ['Men con pies', '20', 'Golpe, kiai y pisada coinciden.'], ['Kote', '20', 'Subida corta.'], ['Dō', '20', 'Escucha el corte.'], ['Kote-men', '15', 'Sin pausa.'], ['Estiramientos', '2 min', 'Muñecas y hombros.']] },
+  { id: 'tec-kirikaeshi', t: 'Kirikaeshi en el aire', min: 10, desc: 'Resistencia y ritmo.',
+    steps: [['Calentamiento', '2 min', ''], ['Kirikaeshi', '5 series', '4 yokomen adelante, 5 atrás, shōmen final.'], ['Descanso', '1 min entre series', ''], ['Estiramientos', '2 min', '']] },
+  { id: 'tec-waza', t: 'Waza en la sombra', min: 15, desc: 'Iniciativa y respuesta, sin rival y a cámara lenta.',
+    steps: [['Debana-kote', '10', 'Imagina el instante del rival.'], ['Harai-men', '10', 'Barrido corto.'], ['Hiki-men / hiki-dō', '10 + 10', ''], ['Men-nuki-dō', '10', 'Hiraki-ashi y corte.'], ['Kote-suriage-men', '10', 'Desvío y men en un gesto.']] }
+);

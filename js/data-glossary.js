@@ -169,5 +169,27 @@ KD.glossary = [
   // Números
   ['Ichi', '一', 'Uno', 'num'], ['Ni', '二', 'Dos', 'num'], ['San', '三', 'Tres', 'num'], ['Shi / Yon', '四', 'Cuatro', 'num'],
   ['Go', '五', 'Cinco', 'num'], ['Roku', '六', 'Seis', 'num'], ['Shichi / Nana', '七', 'Siete', 'num'], ['Hachi', '八', 'Ocho', 'num'],
-  ['Kyū / Ku', '九', 'Nueve', 'num'], ['Jū', '十', 'Diez', 'num']
+  ['Kyū / Ku', '九', 'Nueve', 'num'], ['Jū', '十', 'Diez', 'num'],
+  ['Hikitsuke', '引きつけ', 'Tirar rápido del pie trasero tras la pisada.', 'pies'],
+  ['Suri-ashi', '摺り足', 'Deslizar los pies sobre el suelo.', 'pies'],
+  ['Nuki-tō', '抜刀', 'Desenvainar: sacar el shinai.', 'etiqueta'],
+  ['Kamae-o-toru', '構えをとる', 'Adoptar la guardia.', 'postura'],
+  ['Hidari-jōdan', '左上段', 'Jōdan con el pie izquierdo delante.', 'postura'],
+  ['Migi-jōdan', '右上段', 'Jōdan con el pie derecho delante.', 'postura'],
+  ['Nakasen', '中心線', 'Línea central entre tú y el rival.', 'postura'],
+  ['Tanden', '丹田', 'Centro de energía bajo el ombligo; hacia allí se dirige la respiración.', 'mente'],
+  ['Kokyū', '呼吸', 'Respiración.', 'mente'],
+  ['Ōkiku', '大きく', 'Grande: golpes amplios.', 'golpe'],
+  ['Chiisaku', '小さく', 'Pequeño.', 'golpe'],
+  ['Hayaku', '速く', 'Rápido.', 'golpe'],
+  ['Migi-dō', '右胴', 'Costado derecho del dō (el blanco habitual).', 'golpe'],
+  ['Hiki-men', '引き面', 'Men al retirarse.', 'waza'],
+  ['Hiki-dō', '引き胴', 'Dō al retirarse.', 'waza'],
+  ['Hiki-kote', '引き小手', 'Kote al retirarse.', 'waza'],
+  ['Harai-men', '払い面', 'Apartar el shinai del rival y golpear men.', 'waza'],
+  ['Debana-kote', '出ばな小手', 'Kote en el inicio del movimiento del rival.', 'waza'],
+  ['Debana-men', '出ばな面', 'Men en el inicio del movimiento del rival.', 'waza'],
+  ['Men-suriage-men', '面すり上げ面', 'Desviar el men y devolver men.', 'waza'],
+  ['Kote-suriage-men', '小手すり上げ面', 'Desviar el kote y golpear men.', 'waza'],
+  ['Dō-uchiotoshi-men', '胴打ち落とし面', 'Golpear hacia abajo el shinai del rival y responder con men.', 'waza']
 ].map(x => ({ id: x[0].toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, ''), t: x[0], k: x[1], e: x[2], c: x[3] }));

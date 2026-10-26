@@ -13,7 +13,7 @@
 
   /* ---------- Estado (localStorage, con fallback en memoria) ---------- */
   const KEY = 'ken-no-michi-v1';
-  const def = () => ({ done: {}, q: {}, cards: {}, log: [], theme: 'auto', last: null, open: {} });
+  const def = () => ({ done: {}, q: {}, cards: {}, log: [], theme: 'auto', last: null, open: {}, checks: {} });
   function load() {
     try { const j = JSON.parse(localStorage.getItem(KEY)); return Object.assign(def(), j && typeof j === 'object' ? j : {}); } catch (e) { return def(); }
   }
@@ -102,13 +102,16 @@
   window.addEventListener('hashchange', () => { Z = null; F = null; render(); });
 
   /* ---------- Bloques de contenido ---------- */
-  function blocks(bs) {
+  function blocks(bs, lid) {
     return bs.map(b => {
+      const chk = (S.checks && S.checks[lid]) || {};
       let h = '';
       if (b.h) h += `<h3>${b.h}</h3>`;
       if (b.p) h += [].concat(b.p).map(x => `<p>${x}</p>`).join('');
       if (b.ul) h += `<ul>${b.ul.map(x => `<li>${x}</li>`).join('')}</ul>`;
       if (b.ol) h += `<ol>${b.ol.map(x => `<li>${x}</li>`).join('')}</ol>`;
+      if (b.err) h += `<ul class="errs">${b.err.map(e => `<li><b>✗ ${e[0]}</b><span>✓ ${e[1]}</span></li>`).join('')}</ul>`;
+      if (b.check) h += `<ul class="checks">${b.check.map((c, i) => `<li class="${chk[i] ? 'on' : ''}" data-act="chk" data-l="${lid}" data-i="${i}"><span class="tick ${chk[i] ? 'on' : ''}">${chk[i] ? ico('check') : ''}</span><span>${c}</span></li>`).join('')}</ul>`;
       if (b.tip) h += `<aside class="note"><b>Consejo</b>${b.tip}</aside>`;
       if (b.warn) h += `<aside class="note warn"><b>Ojo</b>${b.warn}</aside>`;
       return `<section class="blk">${h}</section>`;
@@ -155,7 +158,7 @@
       <header class="lesson-title"><div class="jp">${esc(L.jp)}</div><h1>${esc(L.t)}</h1><div class="muted">${esc(L.sub || '')}</div></header>
       ${(L.art || []).map(a => KArt.get(a)).join('')}
       <p class="lead">${L.intro}</p>
-      ${blocks(L.blocks)}
+      ${blocks(L.blocks, id)}
       ${L.terms && L.terms.length ? `<h3>Vocabulario de esta lección</h3><div class="chips">${L.terms.map(t => `<a class="chip" href="#/glosario/${encodeURIComponent(t[0].split(' / ')[0])}"><b>${esc(t[0])}</b> <small>${esc(t[1])}</small></a>`).join('')}</div>` : ''}
       ${L.practice ? `<aside class="practice"><h3>Para el dōjō y para casa</h3><ul>${L.practice.map(p => `<li>${p}</li>`).join('')}</ul></aside>` : ''}
       <div class="lnav">${prev ? `<a class="btn ghost small" href="#/leccion/${prev.id}">‹ ${esc(prev.t)}</a>` : '<span></span>'}${nextL ? `<a class="btn ghost small" href="#/leccion/${nextL.id}">${esc(nextL.t)} ›</a>` : ''}</div>
@@ -204,6 +207,13 @@
     mparts.forEach(b => out.push({ id: 'v-men-' + b[0], cat: 'visual', q: '¿Qué parte del men está resaltada?', a: [b[1]].concat(shuffle(mparts.filter(x => x[0] !== b[0]).map(x => x[1]))), why: KD.parts.bogu[b[0]].d, lesson: 'bogu', fig: () => `<div class="art one small qsel" data-sel='[data-part="${b[0]}"]'>${KArt.front('bogu')}</div>` }));
     const sp = [['tsuka', 'Tsuka'], ['tsuba', 'Tsuba'], ['tsuru', 'Tsuru'], ['nakayui', 'Nakayui'], ['sakigawa', 'Saki-gawa'], ['datotsubu', 'Datotsu-bu'], ['tsubadome', 'Tsuba-dome']];
     sp.forEach(b => out.push({ id: 'v-shinai-' + b[0], cat: 'visual', q: '¿Qué parte del shinai está resaltada?', a: [b[1]].concat(shuffle(sp.filter(x => x[0] !== b[0]).map(x => x[1])).slice(0, 3)), why: KD.parts.shinai[b[0]].d, lesson: 'shinai', fig: () => `<div class="art one qsel" data-sel='[data-part="${b[0]}"]'>${KArt.shinai()}</div>` }));
+    // Secuencias de técnica: ¿qué técnica es?
+    const seqLesson = { men: 'men', yokomen: 'yokomen', kote: 'kote', do: 'do', tsuki: 'tsuki', 'kote-men': 'kote-men', 'debana-kote': 'debana-kote', 'debana-men': 'debana-men', 'harai-men': 'harai-men', 'hiki-men': 'hiki-men', 'hiki-do': 'hiki-do', 'men-nuki-do': 'men-nuki-do', 'kote-suriage-men': 'kote-suriage-men', 'men-kaeshi-do': 'men-kaeshi-do', 'dou-uchiotoshi-men': 'do-uchiotoshi-men' };
+    const sk = Object.keys(KArt.SEQ).filter(k => KArt.SEQ[k].quiz && seqLesson[k]);
+    sk.forEach(k => out.push({ id: 'v-seq-' + k, cat: 'visual', q: '¿Qué técnica muestra esta secuencia? (desliza las imágenes)', a: [KArt.SEQ[k].t].concat(shuffle(sk.filter(x => x !== k).map(x => KArt.SEQ[x].t)).slice(0, 3)), why: 'Es ' + KArt.SEQ[k].t + '.', lesson: seqLesson[k], fig: () => KArt.get('seq:' + k) }));
+    // Errores de chūdan
+    const errs = [['chudanLean', 'Cuerpo inclinado hacia delante'], ['chudanFlat', 'Talón izquierdo apoyado en el suelo'], ['chudanHigh', 'Kensen demasiado alto'], ['chudanLow', 'Kensen demasiado bajo']];
+    errs.forEach(e => out.push({ id: 'v-err-' + e[0], cat: 'visual', q: '¿Qué error de chūdan se ve en la figura?', a: [e[1]].concat(shuffle(errs.filter(x => x[0] !== e[0]).map(x => x[1]))), why: 'Compáralo con tu chūdan frente al espejo.', lesson: 'chudan-ajustes', fig: () => `<div class="art one small">${KArt.solo(e[0], 'Error de chūdan')}</div>` }));
     return out;
   }
   KD.visual = buildVisual();
@@ -337,18 +347,28 @@
   }
 
   /* ---------- Dōjō: entrenar ---------- */
-  let tab = 'rutinas';
+  let tab = 'plan';
   const RS = {}; // pasos marcados en cada rutina (solo sesión)
   const CT = { n: 0, goal: 30 };
   const MT = { bpm: 60, on: false, t: null, ctx: null, beat: 0 };
   function viewTrain(a) {
     setTitle('Dōjō');
     if (a) tab = a;
-    const tabs = [['rutinas', 'Rutinas'], ['herramientas', 'Contador y metrónomo'], ['diario', 'Diario']];
-    const body = tab === 'rutinas' ? trainRoutines() : tab === 'herramientas' ? trainTools() : trainLog();
+    const tabs = [['plan', 'Plan de 8 semanas'], ['rutinas', 'Rutinas'], ['herramientas', 'Contador y metrónomo'], ['diario', 'Diario']];
+    const body = tab === 'plan' ? trainPlan() : tab === 'rutinas' ? trainRoutines() : tab === 'herramientas' ? trainTools() : trainLog();
     return `${segDojo('entrenar')}<h1>Entrenar en casa</h1><p class="muted">Rutinas cortas, un contador, un metrónomo y un diario. Nada te obliga a entrenar todos los días: aquí solo se suma, nunca se resta.</p>
       <div class="note warn"><b>Antes de empezar</b>Espacio libre de al menos 3 × 3 m y techo alto (cuidado con lámparas). Descalzo o con calzado antideslizante. Calienta primero y, si algo duele, para. Enséñale a tu sensei lo que practicas: es mejor repetir poco y bien corregido que mucho con vicios.</div>
       <div class="tabs" role="tablist">${tabs.map(t => `<button role="tab" class="${tab === t[0] ? 'on' : ''}" data-act="tab" data-t="${t[0]}">${t[1]}</button>`).join('')}</div>${body}${foot()}`;
+  }
+  function trainPlan() {
+    return `<p class="muted small">Un camino de 8 semanas centrado en técnica. Sin fechas ni rachas: cada semana es un bloque, avanza a tu ritmo. Marca lo que vayas haciendo y toca los enlaces para estudiar la lección.</p>
+      ${KD.plan.map(w => {
+      const st = S.checks['plan:' + w.n] || {};
+      const done = w.tasks.every((_, i) => st[i]);
+      return `<section class="card week ${done ? 'done' : ''}"><h3>${esc(w.t)}</h3><p class="muted small" style="margin:0 0 6px">${esc(w.focus)}</p>
+        <div class="lk small">${w.lessons.map(id => LESSONS[id] ? `<a class="chip" href="#/leccion/${id}">${esc(LESSONS[id].t)}</a>` : '').join('')}</div>
+        <ul class="checks">${w.tasks.map((x, i) => `<li class="${st[i] ? 'on' : ''}" data-act="chk" data-l="plan:${w.n}" data-i="${i}"><span class="tick ${st[i] ? 'on' : ''}">${st[i] ? ico('check') : ''}</span><span>${x}</span></li>`).join('')}</ul></section>`;
+    }).join('')}`;
   }
   function trainRoutines() {
     return `<div class="grid">${KD.routines.map(r => {
@@ -435,6 +455,11 @@
         const mNow = L.mod.lessons.every(x => S.done[x.id]);
         gain(before, !mWas && mNow ? '🔴 ¡Sello de módulo conseguido!' : 'Lección terminada');
         break;
+      }
+      case 'chk': {
+        const k = t.dataset.l, i = t.dataset.i;
+        const st = S.checks[k] || (S.checks[k] = {});
+        st[i] = !st[i]; save(); redo(); break;
       }
       case 'ans': {
         if (Z.ans != null) break;

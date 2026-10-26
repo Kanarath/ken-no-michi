@@ -1,6 +1,6 @@
 /* Service worker: red primero, caché como respaldo (para usar sin conexión en el dōjō) */
-const CACHE = 'ken-no-michi-v2';
-const SHELL = ['./', 'index.html', 'css/style.css', 'js/art.js', 'js/data-glossary.js', 'js/data-lessons-1.js', 'js/data-lessons-2.js', 'js/data-extra.js', 'js/app.js', 'favicon.svg', 'manifest.webmanifest', 'icons/icon-192.png', 'icons/icon-512.png', 'icons/icon-maskable-512.png', 'icons/apple-touch-icon.png'];
+const CACHE = 'ken-no-michi-v3';
+const SHELL = ['./', 'index.html', 'css/style.css', 'js/art.js', 'js/data-glossary.js', 'js/data-lessons-1.js', 'js/data-lessons-2.js', 'js/data-tech-1.js', 'js/data-tech-2.js', 'js/data-extra.js', 'js/app.js', 'favicon.svg', 'manifest.webmanifest', 'icons/icon-192.png', 'icons/icon-512.png', 'icons/icon-maskable-512.png', 'icons/apple-touch-icon.png'];
 
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(CACHE).then(c => c.addAll(SHELL)).then(() => self.skipWaiting()));
