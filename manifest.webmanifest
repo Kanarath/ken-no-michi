@@ -1,0 +1,14 @@
+{
+  "name": "Ken no Michi · Aprende kendō",
+  "short_name": "Ken no Michi",
+  "description": "Aprende kendō de básico a avanzado.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f6f0e1",
+  "theme_color": "#1b2547",
+  "lang": "es",
+  "icons": [
+    { "src": "favicon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }
+  ]
+}
