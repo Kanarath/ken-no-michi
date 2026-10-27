@@ -201,5 +201,19 @@ KD.glossary = [
   ['Ippon-shōbu', '一本勝負', 'Combate a un solo punto.', 'shiai'],
   ['Aka / Shiro', '赤 / 白', 'Rojo / blanco: los colores de la cinta (tasuki) de cada combatiente.', 'shiai'],
   ['Tasuki', '襷', 'Cinta de color que llevan los combatientes en la espalda.', 'shiai'],
-  ['Torikeshi', '取り消し', 'Anular una decisión de los árbitros.', 'shiai']
+  ['Torikeshi', '取り消し', 'Anular una decisión de los árbitros.', 'shiai'],
+  ['Kamae wo toku', '構えを解く', 'Al final de una forma de kata, bajar el bokutō girándolo hacia la derecha.', 'etiqueta'],
+  ['Hiraseigan', '平青眼', 'Chūdan con la punta dirigida a la mano izquierda del rival (kata 5 y 6).', 'postura'],
+  ['Kurai-zeme', '位攻め', 'Presión sin golpe, avanzando con la punta a distintas alturas (kata 3).', 'mente'],
+  ['Nayashi', '撓し', 'Desvío flexible de una estocada (kata 3).', 'waza'],
+  ['Ukenagashi', '受け流し', 'Desvío flexible del corte, no un bloqueo (kata con kodachi).', 'waza'],
+  ['Maki-kaeshi', '巻き返し', 'Desvío con giro del bokutō (kata 4).', 'waza'],
+  ['Furiage', '振り上げ', 'Subir el bokutō sobre la cabeza tras un suriage sin dejar caer el kensen.', 'waza'],
+  ['Shinogi', '鎬', 'Borde o lomo lateral de la hoja del bokutō.', 'equipo'],
+  ['Kodachi', '小太刀', 'Espada corta.', 'equipo'],
+  ['Tachi', '太刀', 'Espada larga.', 'equipo'],
+  ['Hanmi', '半身', 'Postura de medio cuerpo, de lado.', 'postura'],
+  ['Irimi', '入身', 'Entrar en la distancia del atacante.', 'pies'],
+  ['Omote / Ura', '表 / 裏', 'Lado frontal / lado posterior (por ejemplo, el lado izquierdo o derecho del shinai al hacer suriage).', 'waza'],
+  ['Katsugi', '担ぎ', 'Llevar el bokutō al hombro.', 'postura']
 ].map(x => ({ id: x[0].toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, ''), t: x[0], k: x[1], e: x[2], c: x[3] }));

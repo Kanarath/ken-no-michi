@@ -345,9 +345,15 @@
     mod(old['kihon-waza'] && { id: 'kihon-waza', name: 'Kihon-waza · Golpes básicos', jp: '基本技', seal: '技', icon: 'shinai', desc: 'Los blancos, el golpe válido y los golpes fundamentales: men, yokomen, kote, dō, tsuki, kirikaeshi y kote-men.' },
       ['datotsu-yuko', 'men', 'yokomen', 'kote', 'do', 'tsuki', 'kirikaeshi', 'kote-men']),
     mod({ id: 'waza-medio', name: 'Waza · Iniciativa', jp: '応用技', seal: '応', icon: 'swords', desc: 'Contacto cuerpo a cuerpo, golpes al retirarse, apartar el shinai y golpear al inicio del rival.' },
-      ['tai-atari', 'tsubazeriai', 'hiki-waza', 'hiki-men', 'hiki-do', 'hiki-kote', 'harai-debana', 'harai-men', 'debana-kote', 'debana-men', 'maki-waza', 'tipos-practica']),
+      ['tai-atari', 'tsubazeriai', 'hiki-waza', 'hiki-men', 'hiki-do', 'hiki-kote', 'harai-debana', 'harai-men', 'debana-kote', 'debana-men', 'maki-waza']),
     mod({ id: 'avanzado', name: 'Ōji-waza · Respuesta y estrategia', jp: '応じ技', seal: '極', icon: 'chart', desc: 'Esquivar, desviar y devolver golpes; iniciativa (sen), presión (seme) y kata.' },
-      ['oji-waza', 'men-nuki-do', 'kote-nuki-men', 'kote-suriage-men', 'men-suriage-men', 'men-kaeshi-do', 'do-uchiotoshi-men', 'sen', 'seme', 'nakasen', 'kake-hiki', 'kata']),
+      ['oji-waza', 'men-nuki-do', 'kote-nuki-men', 'kote-suriage-men', 'men-suriage-men', 'men-kaeshi-do', 'do-uchiotoshi-men', 'sen', 'seme', 'nakasen', 'kake-hiki']),
+    mod({ id: 'pareja', name: 'Pareja · Práctica y defensa', jp: '稽古', seal: '稽', icon: 'swords', desc: 'Cómo practicar con compañero: motodachi, uchikomi, kakari, ji-geiko, recibir golpes y cerrar el hueco tras atacar.' },
+      ['tipos-practica', 'motodachi', 'uchikomi-geiko', 'kakari-geiko', 'ji-geiko', 'ukeru', 'tras-el-ataque']),
+    mod({ id: 'kata', name: 'Kata · Las diez formas', jp: '形', seal: '形', icon: 'book', desc: 'El Nihon Kendō Kata: reglas comunes y una lección por forma, con aviso de lo que debes confirmar con tu sensei.' },
+      ['kata', 'kata-etiqueta', 'kata-1', 'kata-2', 'kata-3', 'kata-4', 'kata-5', 'kata-6', 'kata-7', 'kata-kodachi']),
+    mod({ id: 'cuerpo', name: 'Cuerpo · Preparación', jp: '身体', seal: '体', icon: 'feet', desc: 'Calentamiento, movilidad, fuerza, cuidado de los pies, prevención de lesiones y resistencia.' },
+      ['calentamiento-kendo', 'movilidad', 'fuerza-kendo', 'cuidado-pies', 'prevencion-lesiones', 'resistencia']),
     mod(old.shiai, ['reglas-shiai', 'flujo-shiai', 'arbitraje', 'faltas-shiai', 'patrones-combate', 'preparacion-torneo', 'mentalidad', 'grados', 'consejos'])
   ];
 })();

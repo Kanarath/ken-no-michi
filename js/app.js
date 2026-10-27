@@ -48,6 +48,20 @@
     clearTimeout(toastT); toastT = setTimeout(() => el.classList.remove('show'), 2600);
   }
 
+  /* ---------- Pronunciación (voz japonesa del dispositivo) ---------- */
+  function speak(txt) {
+    try {
+      if (!('speechSynthesis' in window)) { toast('Tu navegador no puede leer en voz alta'); return; }
+      const vs = speechSynthesis.getVoices();
+      const ja = vs.find(v => /^ja/i.test(v.lang));
+      if (vs.length && !ja) toast('No hay voz japonesa: Ajustes › Sistema › Idioma › Salida de texto a voz');
+      const u = new SpeechSynthesisUtterance(txt); u.lang = 'ja-JP'; u.rate = .85;
+      if (ja) u.voice = ja;
+      speechSynthesis.cancel(); speechSynthesis.speak(u);
+    } catch (e) { /* sin voz */ }
+  }
+  const say = g => `<button type="button" class="say" data-act="say" data-t="${esc(g.k.split(' / ')[0])}" aria-label="Escuchar ${esc(g.t)}">${ico('sound')}</button>`;
+
   /* ---------- Instalación como app (PWA) ---------- */
   let DEF = null;
   const standalone = () => (window.matchMedia && matchMedia('(display-mode: standalone)').matches) || navigator.standalone;
@@ -227,13 +241,28 @@
     if (k === 'cat') p = all.filter(q => q.cat === v);
     else if (k === 'visual') p = KD.visual;
     else if (k === 'fails') p = all.filter(q => S.q[q.id] && S.q[q.id].last === false);
+    else if (k === 'due') p = all.filter(q => isDue(q));
     else if (k === 'lesson') { p = all.filter(q => q.lesson === v); if (p.length < 3) { const L = LESSONS[v]; p = all.filter(q => L && q.lesson && LESSONS[q.lesson] && LESSONS[q.lesson].mod === L.mod); } }
     else if (k === 'module') p = all.filter(q => q.lesson && LESSONS[q.lesson] && LESSONS[q.lesson].mod.id === v);
     else p = all;
     return p;
   }
+  const DAY = 864e5, INTV = [0, 1, 3, 7, 14, 30].map(d => d * DAY);
+  function isDue(q) {
+    const s = S.q[q.id];
+    if (!s || s.last === null || s.last === undefined) return false;
+    if (s.last === false) return true;
+    return Date.now() >= (s.t || 0) + INTV[Math.min(s.box || 0, 5)];
+  }
+  function dueScore(q) {
+    const s = S.q[q.id];
+    if (!s) return 0 + Math.random();
+    if (s.last === false) return -2 + Math.random();
+    if (isDue(q)) return -1 + Math.random();
+    return 5 + ((s.t || 0) + INTV[Math.min(s.box || 0, 5)] - Date.now()) / DAY + Math.random();
+  }
   function pickRound(pool) {
-    const w = q => { const s = S.q[q.id]; return (!s ? 0 : s.last === false ? -1 : 1 + Math.min(s.ok, 5)) + Math.random() * 1.6; };
+    const w = q => dueScore(q);
     return pool.slice().sort((a, b) => w(a) - w(b)).slice(0, 10);
   }
   function startRound(mode) {
@@ -253,12 +282,14 @@
     const all = ALLQ();
     const seen = all.filter(q => S.q[q.id] && S.q[q.id].ok > 0).length;
     const fails = all.filter(q => S.q[q.id] && S.q[q.id].last === false).length;
+    const due = all.filter(q => isDue(q)).length;
     const cats = Object.keys(KD.quizCats).filter(c => c !== 'visual');
     const mode = (href, icon, t, s, dim) => `<a class="card mode" href="${href}" ${dim ? 'style="opacity:.6"' : ''}><span class="orb">${ico(icon)}</span><div><b>${t}</b><small>${s}</small></div><span class="chev">${ico('chev')}</span></a>`;
     return `${segRepaso('quiz')}<h1>Repaso</h1><p class="muted">Rondas de 10 preguntas, sin límite de rondas ni de intentos. Salen primero las que aún no has acertado. Llevas ${seen} de ${all.length} preguntas acertadas (la primera vez que aciertas una, ganas ${KD.XP.quiz} XP).</p>
       <div class="grid">
         ${mode('#/quiz/jugar/all', 'quiz', 'Mixto', 'Preguntas de todas las categorías')}
         ${mode('#/quiz/jugar/visual', 'men', 'Visual', 'Guardias, zonas, piezas del bōgu y del shinai')}
+        ${mode('#/quiz/jugar/due', 'cup', 'Toca repasar', due ? due + ' pregunta(s) listas para repasar (repetición espaciada)' : 'Nada pendiente por ahora', !due)}
         ${mode('#/quiz/jugar/fails', 'flag', 'Repasar fallos', fails ? fails + ' pregunta(s) pendientes' : 'Aún no tienes fallos que repasar', !fails)}
       </div>
       <h2>Por categoría</h2>
@@ -304,7 +335,7 @@
     if (F.i >= F.deck.length) return head + `<div class="card result"><div class="score">${known}/${F.deck.length}</div><p>Dominas ${known} de ${F.deck.length} términos de esta selección.</p><div class="grid"><button class="btn block green" data-act="fc-restart">Volver a barajar</button><a class="btn block ghost" href="#/glosario">Ver glosario</a></div></div>`;
     const g = F.deck[F.i];
     return head + `<div class="small muted" style="text-align:center">${F.i + 1} de ${F.deck.length} · ${known} sabidas</div>
-      <div class="flash"><div class="face" data-act="flip" role="button" tabindex="0" aria-label="Girar tarjeta">${F.flip ? `<div class="t">${esc(g.t)}</div><div class="k">${esc(g.k)}</div><div class="e">${esc(g.e)}</div>` : `<div class="k">${esc(g.k)}</div><div class="t">${esc(g.t)}</div><div class="hint">Toca para ver el significado</div>`}</div></div>
+      <div class="flash"><div class="face" data-act="flip" role="button" tabindex="0" aria-label="Girar tarjeta">${F.flip ? `<div class="t">${esc(g.t)}</div><div class="k">${esc(g.k)}</div><div class="e">${esc(g.e)}</div>${say(g)}` : `<div class="k">${esc(g.k)}</div><div class="t">${esc(g.t)}</div>${say(g)}<div class="hint">Toca para ver el significado</div>`}</div></div>
       <div class="grid">${F.flip ? `<button class="btn block green" data-act="fc-yes">La sabía</button><button class="btn block ghost" data-act="fc-no">Repasar</button>` : `<button class="btn block ghost" data-act="flip">Girar</button>`}</div>`;
   }
 
@@ -319,7 +350,7 @@
       const upd = () => {
         const q = norm(inp.value.trim());
         const rows = KD.glossary.filter(g => (cat === 'todas' || g.c === cat) && (!q || norm(g.t + ' ' + g.k + ' ' + g.e).indexOf(q) >= 0));
-        box.innerHTML = rows.length ? rows.map(g => `<div class="it"><b>${esc(g.t)}</b><span class="k">${esc(g.k)}</span><p>${esc(g.e)}</p><span class="cat">${esc(KD.catNames[g.c])}</span></div>`).join('') : '<p class="muted">Nada coincide. Prueba otra palabra.</p>';
+        box.innerHTML = rows.length ? rows.map(g => `<div class="it"><b>${esc(g.t)} ${say(g)}</b><span class="k">${esc(g.k)}</span><p>${esc(g.e)}</p><span class="cat">${esc(KD.catNames[g.c])}</span></div>`).join('') : '<p class="muted">Nada coincide. Prueba otra palabra.</p>';
         $('#gcount').textContent = rows.length + ' término' + (rows.length === 1 ? '' : 's');
       };
       inp.addEventListener('input', upd);
@@ -413,6 +444,25 @@
   function mtRestart() { clearInterval(MT.t); if (MT.on) { beep(); MT.t = setInterval(beep, 60000 / MT.bpm); } }
   window.addEventListener('hashchange', () => { if (route().v !== 'entrenar' && MT.on) { MT.on = false; clearInterval(MT.t); } });
 
+  function weakHtml() {
+    const all = ALLQ(), byId = {};
+    all.forEach(q => { byId[q.id] = q; });
+    const agg = {}, cat = {};
+    Object.keys(S.q).forEach(id => {
+      const q = byId[id], s = S.q[id];
+      if (!q || !s) return;
+      const c = cat[q.cat] || (cat[q.cat] = { ok: 0, bad: 0 }); c.ok += s.ok; c.bad += s.bad;
+      if (!q.lesson) return;
+      const a = agg[q.lesson] || (agg[q.lesson] = { ok: 0, bad: 0 }); a.ok += s.ok; a.bad += s.bad;
+    });
+    const rows = Object.keys(agg).filter(l => LESSONS[l] && agg[l].bad > 0)
+      .map(l => ({ l, ok: agg[l].ok, bad: agg[l].bad, r: agg[l].bad / (agg[l].ok + agg[l].bad) }))
+      .sort((a, b) => b.r - a.r || b.bad - a.bad).slice(0, 5);
+    const cats = Object.keys(cat).filter(c => cat[c].ok + cat[c].bad >= 3);
+    if (!rows.length && !cats.length) return `<h2>Tus puntos débiles</h2><div class="card"><p class="muted" style="margin:0">Cuando hagas algunos quizzes, aquí verás qué lecciones y categorías te cuestan más, con enlaces para repasarlas.</p></div>`;
+    return `<h2>Tus puntos débiles</h2><div class="grid">${rows.map(x => `<div class="card"><b>${esc(LESSONS[x.l].t)}</b><div class="small muted">${Math.round(100 * x.ok / (x.ok + x.bad))}% de aciertos · ${x.bad} fallo(s)</div><div class="row" style="margin-top:8px"><a class="btn small" href="#/leccion/${x.l}">Repasar lección</a><a class="btn ghost small" href="#/quiz/jugar/lesson:${x.l}">Practicar</a></div></div>`).join('')}</div>
+      ${cats.length ? `<div class="card" style="margin-top:12px"><b>Acierto por categoría</b>${cats.map(c => { const p = Math.round(100 * cat[c].ok / (cat[c].ok + cat[c].bad)); return `<div class="small" style="margin-top:8px">${esc(KD.quizCats[c] || c)} · ${p}%</div><div class="bar"><i style="width:${p}%"></i></div>`; }).join('')}</div>` : ''}`;
+  }
   /* ---------- Dōjō: progreso ---------- */
   function viewProgress() {
     setTitle('Progreso');
@@ -422,6 +472,7 @@
     return `${segDojo('progreso')}<h1>Tu progreso</h1>
       <div class="card level"><span class="seal">${esc(lv.cur.jp.charAt(0))}</span><div class="xp"><div class="row" style="justify-content:space-between"><b class="serif" style="font-size:1.35rem">${esc(lv.cur.n)}</b><span class="small muted">${p.total} XP${lv.next ? ' · próximo: ' + esc(lv.next.n) + ' (' + lv.next.xp + ')' : ''}</span></div><div class="bar"><i style="width:${lv.pct}%"></i></div></div></div>
       <p class="small muted">Los niveles de estudio (kyū → dan) son solo una forma de seguir tu avance en esta web. No son grados oficiales ni sustituyen a un examen.</p>
+      ${weakHtml()}
       <h2>Sellos</h2><div class="grid">${KD.modules.map(m => { const d = modDone(m), ok = d === m.lessons.length; return `<div class="card sealrow"><span class="seal ${ok ? '' : 'off'}">${m.seal}</span><div><b>${esc(m.name.split('·')[0].trim())}</b><div class="small muted">${d}/${m.lessons.length} lecciones${ok ? ' · ¡completo!' : ''}</div></div></div>`; }).join('')}</div>
       <h2>De dónde sale tu XP</h2>
       <div class="stats"><div class="card stat"><b>${p.lessons}/${ORDER.length}</b><span>lecciones (+${p.lessons * KD.XP.lesson})</span></div><div class="card stat"><b>${tr}/${all.length}</b><span>preguntas (+${p.quiz * KD.XP.quiz})</span></div><div class="card stat"><b>${p.cards}/${KD.glossary.length}</b><span>términos (+${p.cards * KD.XP.card})</span></div><div class="card stat"><b>${p.mods}/${KD.modules.length}</b><span>módulos (+${p.mods * KD.XP.module})</span></div><div class="card stat"><b>${p.logs}</b><span>prácticas (+${p.logs * KD.XP.log})</span></div></div>
@@ -457,6 +508,7 @@
         gain(before, !mWas && mNow ? '🔴 ¡Sello de módulo conseguido!' : 'Lección terminada');
         break;
       }
+      case 'say': speak(t.dataset.t); break;
       case 'chk': {
         const k = t.dataset.l, i = t.dataset.i;
         const st = S.checks[k] || (S.checks[k] = {});
@@ -467,7 +519,7 @@
         const q = Z.cur, k = +t.dataset.k, good = q.opts[k] === q.a[0];
         Z.ans = k; Z.good = good; if (good) Z.ok++;
         const s = S.q[q.id] || (S.q[q.id] = { ok: 0, bad: 0, last: null });
-        if (good) s.ok++; else s.bad++; s.last = good; save();
+        if (good) s.ok++; else s.bad++; s.last = good; s.box = good ? Math.min(5, (s.box || 0) + 1) : 0; s.t = Date.now(); save();
         redo();
         gain(before);
         break;

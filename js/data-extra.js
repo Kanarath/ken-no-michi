@@ -151,7 +151,6 @@ KD.quizCats = { vocab: 'Vocabulario', equipo: 'Equipo', postura: 'Postura y pies
   Q('postura', '¿A qué distancia lateral van los pies en chūdan?', 'Aproximadamente un puño', ['Un paso entero', 'Pegados', 'El ancho de los hombros'], '', 'chudan');
   Q('postura', '¿Cuánto se levanta el talón izquierdo en chūdan?', 'Lo justo para pasar una hoja de papel (1–2 cm)', ['Todo lo que se pueda', 'Nada, va apoyado', 'Unos 10 cm'], '', 'chudan');
   Q('postura', '¿Dónde va la mano izquierda en chūdan?', 'En el centro, a un puño del ombligo', ['A un lado del cuerpo', 'A la altura del pecho', 'Pegada al abdomen'], '', 'chudan');
-  Q('postura', '¿A dónde apunta el kensen en chūdan?', 'A la garganta del rival', ['Al suelo', 'A la frente del rival', 'A sus rodillas'], '', 'chudan');
   Q('postura', '¿Hacia dónde queda el tsuru en la guardia?', 'Hacia arriba', ['Hacia abajo', 'Hacia el rival', 'Hacia ti'], '', 'chudan');
   Q('postura', '¿Qué mano manda el shinai?', 'La izquierda', ['La derecha', 'Ambas igual', 'Depende del golpe'], '', 'tenouchi');
   Q('postura', '¿Qué se mira al rival en kendō?', 'Los ojos, con visión amplia', ['El shinai', 'Los pies', 'El blanco que vas a golpear'], '', 'metsuke');
@@ -236,7 +235,6 @@ KD.quizCats = { vocab: 'Vocabulario', equipo: 'Equipo', postura: 'Postura y pies
   Q('tecnica', '¿Cuántas técnicas necesitas para empezar a combatir?', 'Unas pocas, bien afianzadas', ['Todas las que conozcas', 'Cuarenta', 'Ninguna'], '', 'patrones-combate');
   Q('shiai', '¿Qué llevas en la espalda para identificarte en el combate?', 'Una cinta (tasuki) roja o blanca', ['Un número', 'Tu nombre en un papel', 'Nada'], '', 'flujo-shiai');
   Q('shiai', '¿Cuántos pasos se avanzan tras el saludo en el tachiai?', 'Tres', ['Uno', 'Cinco', 'Diez'], 'Confírmalo con tu sensei: puede variar.', 'flujo-shiai');
-  Q('shiai', '¿Qué haces cuando oyes "yame"?', 'Paras y vuelves a tu posición', ['Terminas el golpe', 'Sigues atacando', 'Te sientas'], '', 'flujo-shiai');
   Q('shiai', '¿Qué puede pasar si celebras un punto?', 'Que se anule', ['Que te den otro', 'Nada', 'Que ganes el combate'], '', 'flujo-shiai');
   Q('shiai', '¿Cómo termina el combate cuando alguien gana?', 'Con "shōbu-ari"', ['Con "hajime"', 'Con "mate"', 'Con "wakare"'], '', 'flujo-shiai');
   Q('shiai', '¿Qué es osame-tō en el combate?', 'Guardar el shinai al terminar', ['Sacarlo', 'Golpear', 'Saludar'], '', 'flujo-shiai');
@@ -246,6 +244,51 @@ KD.quizCats = { vocab: 'Vocabulario', equipo: 'Equipo', postura: 'Postura y pies
   Q('shiai', '¿Qué hay que revisar antes de un torneo?', 'Que el shinai cumple el reglamento y está en buen estado', ['Solo el color de la cinta', 'Nada', 'Que pese más'], '', 'preparacion-torneo');
   Q('shiai', '¿Qué objetivo es mejor para tu primer torneo?', 'Atacar con claridad, con kiai y zanshin', ['Ganar a toda costa', 'No atacar', 'Evitar el contacto'], '', 'preparacion-torneo');
   Q('shiai', '¿Cuándo conviene cambiar de equipo para un torneo?', 'Semanas antes, no el mismo día', ['El mismo día', 'En mitad del combate', 'Nunca'], '', 'preparacion-torneo');
+  // Práctica en pareja y defensa
+  Q('tecnica', '¿Quién es el motodachi?', 'Quien recibe los ataques y guía al compañero', ['Quien ataca', 'El árbitro', 'El maestro del dōjō'], '', 'motodachi');
+  Q('tecnica', '¿Qué hace un buen motodachi?', 'Ofrece los blancos en el momento correcto y controla la distancia', ['Esquiva siempre', 'Golpea más fuerte', 'Se queda quieto sin moverse'], '', 'motodachi');
+  Q('tecnica', '¿Qué se entrena en uchikomi-geiko?', 'Precisión, distancia y potencia con golpes repetidos', ['Solo resistencia', 'Solo esquivas', 'Kata'], '', 'uchikomi-geiko');
+  Q('tecnica', '¿Cómo es un ataque en kakari-geiko?', 'Continuo y enérgico, sin pausas largas', ['Lento y con pausas', 'Solo a men', 'Sin kiai'], '', 'kakari-geiko');
+  Q('tecnica', '¿Qué haces si te mareas en kakari-geiko?', 'Paras y avisas', ['Sigues más fuerte', 'Cierras los ojos', 'Ignoras el mareo'], '', 'kakari-geiko');
+  Q('tecnica', '¿Qué es ji-geiko?', 'Práctica libre con un compañero', ['Un tipo de golpe', 'Un saludo', 'Una competición oficial'], '', 'ji-geiko');
+  Q('tecnica', '¿Qué conviene hacer en cada ji-geiko?', 'Elegir una idea y aplicarla', ['Probar todas las técnicas', 'Esperar sin atacar', 'Solo defender'], '', 'ji-geiko');
+  Q('tecnica', '¿Qué es ukeru?', 'Recibir o parar el golpe con el shinai', ['Esquivar con el cuerpo', 'Golpear hacia abajo', 'Un saludo'], '', 'ukeru');
+  Q('tecnica', '¿Qué haces con los ojos al recibir un golpe?', 'Los mantienes abiertos', ['Los cierras', 'Miras al suelo', 'Miras el shinai'], '', 'ukeru');
+  Q('tecnica', '¿Qué debes hacer tras recibir?', 'Volver a chūdan o contraatacar', ['Quedarte quieto', 'Retroceder siempre', 'Soltar el shinai'], '', 'ukeru');
+  Q('tecnica', '¿Qué es lo más peligroso tras un ataque?', 'Quedarte parado tras fallar', ['Ser demasiado rápido', 'Hacer kiai', 'Mirar al rival'], '', 'tras-el-ataque');
+  Q('tecnica', '¿Cómo te giras tras pasar al rival?', 'De cara a él, sin dar la espalda', ['Dándole la espalda', 'Corriendo', 'Sin girarte'], '', 'tras-el-ataque');
+  // Cuerpo
+  Q('postura', '¿Cuánto dura un buen calentamiento específico?', 'Unos 10 minutos', ['1 minuto', '45 minutos', 'No hace falta'], '', 'calentamiento-kendo');
+  Q('postura', '¿Qué va primero: estirar con fuerza o movilidad?', 'Movilidad', ['Estirar con fuerza en frío', 'Saltar la movilidad', 'Golpear fuerte'], '', 'calentamiento-kendo');
+  Q('postura', '¿Qué se estira para mejorar el talón izquierdo en chūdan?', 'Gemelos y tobillos', ['Cuello', 'Dedos de la mano', 'Orejas'], '', 'movilidad');
+  Q('postura', '¿Cuántas sesiones de fuerza por semana al empezar?', 'Dos', ['Siete', 'Ninguna', 'Diez'], '', 'fuerza-kendo');
+  Q('postura', '¿Qué zonas conviene fortalecer para kendō?', 'Piernas, core, antebrazos y espalda', ['Solo bíceps', 'Solo pecho', 'Solo cuello'], '', 'fuerza-kendo');
+  Q('postura', '¿Qué haces con una ampolla en el pie?', 'La limpias y la cubres, y reduces la intensidad', ['La revientas y sigues', 'La ignoras', 'Entrenas más fuerte'], '', 'cuidado-pies');
+  Q('postura', '¿Cuándo consultas con un médico por un dolor en el talón?', 'Si dura más de una o dos semanas', ['Nunca', 'Al primer segundo', 'Solo si es nocturno'], '', 'cuidado-pies');
+  Q('postura', '¿Qué haces ante un dolor agudo que no cede?', 'Paras y consultas con un profesional', ['Aprietas los dientes', 'Entrenas más', 'Lo ignoras'], '', 'prevencion-lesiones');
+  Q('postura', '¿Para qué sirve una "semana suave" cada cuatro semanas?', 'Para recuperarte y evitar el agotamiento', ['Para no entrenar nunca', 'Para ganar peso', 'Para saltar clases'], '', 'prevencion-lesiones');
+  Q('postura', '¿Cuántas horas de sueño son recomendables?', '7–9', ['2–3', '4–5', '12–14'], '', 'resistencia');
+  // Kata
+  Q('tecnica', '¿Cuántas formas tiene el Nihon Kendō Kata con tachi?', 'Siete', ['Tres', 'Diez', 'Cinco'], '', 'kata');
+  Q('tecnica', '¿Cuántas formas tiene con kodachi?', 'Tres', ['Siete', 'Una', 'Diez'], '', 'kata');
+  Q('tecnica', '¿Qué rol inicia la acción en el kata?', 'Uchidachi', ['Shidachi', 'Motodachi', 'El árbitro'], '', 'kata');
+  Q('tecnica', '¿Cuántos pasos grandes se dan al empezar cada forma?', 'Tres', ['Uno', 'Cinco', 'Siete'], '', 'kata-etiqueta');
+  Q('tecnica', '¿Cuántos pasos pequeños hacia atrás se dan al terminar una forma?', 'Cinco', ['Tres', 'Siete', 'Dos'], '', 'kata-etiqueta');
+  Q('tecnica', '¿Con qué pie se empieza a retroceder al final de cada forma?', 'Con el izquierdo', ['Con el derecho', 'Con los dos', 'Da igual'], '', 'kata-etiqueta');
+  Q('tecnica', '¿Qué es "kamae wo toku"?', 'Bajar el bokutō al final de la forma', ['Adoptar la guardia', 'Un golpe', 'Un saludo'], '', 'kata-etiqueta');
+  Q('tecnica', '¿Qué guardias toman ambos en el kata 1?', 'Jōdan', ['Chūdan', 'Gedan', 'Hassō'], '', 'kata-1');
+  Q('tecnica', '¿Qué técnica muestra el kata 1?', 'Men-nuki-men', ['Kote-nuki-kote', 'Men-nuki-dō', 'Tsuki'], '', 'kata-1');
+  Q('tecnica', '¿Qué técnica muestra el kata 2?', 'Kote-nuki-kote', ['Men-nuki-men', 'Suriage-men', 'Maki-kaeshi'], '', 'kata-2');
+  Q('tecnica', '¿Con qué guardia parten ambos en el kata 3?', 'Gedan', ['Jōdan', 'Chūdan', 'Hassō'], '', 'kata-3');
+  Q('tecnica', '¿Qué es kurai-zeme?', 'Presión sin golpe, avanzando con la punta en distintas alturas', ['Un golpe fuerte', 'Un tipo de saludo', 'Una falta'], '', 'kata-3');
+  Q('tecnica', '¿Qué guardias toman en el kata 4?', 'Hassō y waki-gamae', ['Jōdan y gedan', 'Chūdan y chūdan', 'Gedan y hassō'], '', 'kata-4');
+  Q('tecnica', '¿Qué es hiraseigan?', 'Una chūdan con la punta dirigida a la mano izquierda del rival', ['Una guardia alta', 'Un golpe', 'Un saludo'], '', 'kata-5');
+  Q('tecnica', '¿Qué es furiage?', 'Subir el bokutō tras el suriage sin dejar caer el kensen', ['Un golpe a men', 'Un saludo', 'Una falta'], '', 'kata-5');
+  Q('tecnica', '¿Qué técnica muestra el kata 6?', 'Kote-suriage-kote', ['Men-suriage-men', 'Men-nuki-dō', 'Tsuki-kaeshi'], '', 'kata-6');
+  Q('tecnica', '¿Cómo termina el kata 7?', 'Shidachi arrodillado en waki-gamae y luego se levanta', ['Con una estocada', 'En jōdan', 'Con un saludo'], '', 'kata-7');
+  Q('tecnica', '¿Qué técnica muestra el kata 7?', 'Men-nuki-dō', ['Kote-nuki-kote', 'Suriage-men', 'Maki-kaeshi'], '', 'kata-7');
+  Q('tecnica', '¿Qué espada usa shidachi en las formas 8 a 10?', 'Kodachi (espada corta)', ['Tachi', 'Dos tachi', 'Ninguna'], '', 'kata-kodachi');
+  Q('tecnica', '¿Qué es ukenagashi?', 'Un desvío flexible del corte, no un bloqueo', ['Un golpe fuerte', 'Un saludo', 'Una guardia'], '', 'kata-kodachi');
   KD.quiz = out;
 })();
 
@@ -350,4 +393,21 @@ KD.plan.push(
 KD.routines.push(
   { id: 'tec-combate', t: 'Combate: seme y reacción', min: 15, desc: 'Ejercicios con compañero (o en la sombra) para presionar, leer y golpear.',
     steps: [['Calentamiento', '3 min', ''], ['Entrar y salir (kake-hiki)', '2 min', 'Sin atacar; observa su reacción.'], ['Seme + debana-kote', '10', 'Golpea solo si hay reacción.'], ['Seme + men', '10', 'Con kiai y zanshin.'], ['Una sola técnica en ji-geiko', '3 min', 'Por ejemplo, solo kote-men.'], ['Anotar en el diario', '2 min', 'Qué funcionó y qué no.']] }
+);
+
+KD.plan.push(
+  { n: 11, t: 'Semana 11 · Compañero y defensa', focus: 'Practicar bien con otros: motodachi, uchikomi, recibir y cerrar el hueco.',
+    lessons: ['motodachi', 'uchikomi-geiko', 'kakari-geiko', 'ji-geiko', 'ukeru', 'tras-el-ataque'],
+    tasks: ['Estudiar las lecciones de la semana.', 'En el dōjō: hacer de motodachi con tu sensei o un veterano y pedir una corrección.', 'Uchikomi: men × 10, kote × 10, kote-men × 10, con calidad.', 'Practicar recibir men, kote y dō a cámara lenta con un compañero.', 'Anotar en el diario una idea para tu siguiente ji-geiko y cómo te fue.'] },
+  { n: 12, t: 'Semana 12 · Cuerpo y kata', focus: 'Cuidar el cuerpo y empezar a conocer el kata.',
+    lessons: ['calentamiento-kendo', 'movilidad', 'fuerza-kendo', 'cuidado-pies', 'kata', 'kata-etiqueta'],
+    tasks: ['Estudiar las lecciones de la semana.', 'Hacer el calentamiento específico antes de cada sesión.', 'Dos sesiones de fuerza (piernas/core y antebrazos/espalda).', 'Revisar tus pies tras cada práctica.', 'Preguntar a tu sensei cuándo empezaréis kata y ver un kata completo en vídeo.'] }
+);
+KD.routines.push(
+  { id: 'cuerpo-fuerza', t: 'Fuerza para kendō (A)', min: 20, desc: 'Piernas y core, para una sesión de fuerza en casa.',
+    steps: [['Calentamiento', '5 min', 'Movilidad y pulso.'], ['Sentadillas', '3 × 10', ''], ['Zancadas', '3 × 8 por pierna', ''], ['Elevaciones de talón a una pierna', '3 × 10', ''], ['Plancha', '3 × 30 s', ''], ['Plancha lateral', '2 × 20 s por lado', ''], ['Estiramientos', '3 min', 'Gemelos y caderas.']] },
+  { id: 'cuerpo-brazos', t: 'Fuerza para kendō (B)', min: 15, desc: 'Antebrazos, espalda y hombros.',
+    steps: [['Calentamiento', '4 min', ''], ['Curl de muñeca con peso ligero', '2 × 15', ''], ['Agarre de toalla retorcida', '3 × 20 s', ''], ['Remo con goma', '3 × 12', ''], ['Elevaciones laterales ligeras', '2 × 12', ''], ['Estiramientos', '3 min', 'Hombros y muñecas.']] },
+  { id: 'pareja-sombra', t: 'Compañero en la sombra', min: 15, desc: 'Ejercicios de uchikomi y recepción sin compañero.',
+    steps: [['Calentamiento', '3 min', ''], ['Men + zanshin', '10', 'Vuelve a chūdan cada vez.'], ['Kote-men', '10', 'Sin pausa.'], ['Recibir men, kote y dō', '10 de cada', 'Ojos abiertos.'], ['Kirikaeshi', '3 series', '4 adelante, 5 atrás.']] }
 );

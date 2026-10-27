@@ -15,7 +15,8 @@ Web para aprender **kendō** de básico a avanzado: lecciones ilustradas, glosar
 | `css/style.css` | Estilos (claro/oscuro automático) |
 | `js/art.js` | Motor de figuras y todas las ilustraciones |
 | `js/data-lessons-1.js`, `js/data-lessons-2.js` | Lecciones de la base (equipo, etiqueta, reglas…) |
-| `js/data-tech-1.js`, `js/data-tech-2.js` | Lecciones de técnica con plantilla (`KD.T`): guardias, pies, suburi, golpes, waza, ōji-waza, y el orden final de módulos |
+| `js/data-tech-1.js` … `js/data-tech-4.js` | Lecciones de técnica con plantilla (`KD.T`): guardias, pies, suburi, golpes, waza, ōji-waza, combate, práctica en pareja, cuerpo y kata |
+| `js/data-tech-2.js` | Se carga el último de los tech: define el orden final de los módulos |
 | `js/data-glossary.js` | Glosario (término, kanji, significado, categoría) |
 | `js/data-extra.js` | Quiz, partes interactivas, rutinas, consejos, niveles |
 | `js/app.js` | Router, estado, vistas, quiz, tarjetas, entrenar |
@@ -46,3 +47,10 @@ Abre la web en Chrome → menú ⋮ → **Instalar app** (o *Añadir a pantalla 
 ## Técnica: cómo añadir una lección
 
 En `js/data-tech-*.js`, `KD.add({ id, t, jp, sub, art, intro, why, steps, keys, errors, drills, check, terms })` genera automáticamente las secciones (cómo se hace, puntos clave, errores y cómo corregirlos, ejercicios, autoevaluación). Las ilustraciones salen de `KArt.get`: `seq:<clave>` (secuencias en `SEQ` de `js/art.js`, con `touch` para que el golpe alcance el blanco), `vs:<pose>`, `solo:<pose>`, `footwork:<tipo>`, `kirikaeshi`, etc. Después añade el id a su módulo al final de `data-tech-2.js`.
+
+## Funciones de la app
+
+- **Repaso espaciado:** cada pregunta guarda su "caja" (0–5) y la fecha de la última respuesta; el modo *Toca repasar* trae las que vencen según 0, 1, 3, 7, 14 y 30 días.
+- **Puntos débiles:** en Progreso, las lecciones con más fallos y el acierto por categoría.
+- **Pronunciación:** botón 🔊 en glosario y tarjetas, con la voz japonesa del dispositivo (Web Speech API).
+- **Plan de 12 semanas**, rutinas de técnica, cuerpo y combate, y diario de correcciones.

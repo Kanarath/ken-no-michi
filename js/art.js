@@ -88,7 +88,9 @@ window.KArt = (function () {
     haraiP: { head: [118, 50], sh: [114, 82], hip: [104, 128], L: [150, 116], ang: 2, ff: [140, 214], bf: [68, 206] },
     suriageP: { head: [118, 52], sh: [114, 84], hip: [104, 128], L: [150, 94], ang: -50, ff: [140, 214], bf: [68, 206] },
     blockP: { head: [118, 52], sh: [114, 84], hip: [104, 128], L: [136, 52], ang: -58, ff: [140, 214], bf: [68, 206] },
-    uchiotoshiP: { head: [120, 54], sh: [116, 86], hip: [106, 128], L: [160, 66], ang: 52, ff: [142, 212], bf: [70, 204] }
+    uchiotoshiP: { head: [120, 54], sh: [116, 86], hip: [106, 128], L: [160, 66], ang: 52, ff: [142, 212], bf: [70, 204] },
+    ukeKote: { head: [118, 54], sh: [114, 86], hip: [104, 128], L: [148, 118], ang: 48, ff: [140, 214], bf: [68, 206] },
+    ukeDo: { head: [118, 54], sh: [114, 86], hip: [104, 128], L: [150, 96], ang: 76, ff: [140, 214], bf: [68, 206] }
   };
 
   function figure(p, o) {
@@ -345,6 +347,10 @@ window.KArt = (function () {
     { figs: [A('chudan', { dx: 50 })], cap: '2 · Entras con okuri-ashi sin soltar la presión (seme)' },
     { figs: [O('koteUp', { dx: 30 }), A('chudan', { dx: 50 })], cap: '3 · El rival reacciona: empieza a subir el shinai' },
     { figs: [O('koteUp', { dx: 30 }), A('koteHi', { touch: 'kote' })], cap: '4 · Aprovechas su reacción y golpeas kote' }] };
+  SEQ.ukeru = { t: 'Recibir con el shinai', fr: [
+    { figs: [O('men', { touch: 'men', vs: { pose: 'blockP' } }), A('blockP')], cap: 'Recibir men: shinai en alto, kensen algo adelantado' },
+    { figs: [O('kote', { touch: 'kote', vs: { pose: 'ukeKote' } }), A('ukeKote')], cap: 'Recibir kote: manos al frente, kensen hacia abajo' },
+    { figs: [O('do', { touch: 'do', vs: { pose: 'ukeDo' } }), A('ukeDo')], cap: 'Recibir dō: shinai casi vertical ante el costado' }] };
   function seq(key) {
     const s = SEQ[key];
     if (!s) return '';
@@ -598,6 +604,7 @@ window.KArt = (function () {
     check: '<path d="M5 12l5 5 9-10"/>',
     lock: '<rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 018 0v3"/>',
     x: '<path d="M6 6l12 12M18 6L6 18"/>',
+    sound: '<path d="M4 9v6h4l5 4V5L8 9zM16.5 9a4 4 0 010 6M19 6.5a8 8 0 010 11"/>',
     chev: '<path d="M9 6l6 6-6 6"/>',
     down: '<path d="M6 9l6 6 6-6"/>',
     install: '<path d="M12 4v11M7 11l5 5 5-5M5 20h14"/>',
@@ -615,6 +622,7 @@ window.KArt = (function () {
       case 'logo': return logo(120, true);
       case 'strip': case 'seq': return seq(arg);
       case 'vs': return `<div class="art one">${scene([{ pose: arg }])}</div>`;
+      case 'duo': { const p = arg.split(','); return `<div class="art one">${scene([{ pose: p[0] }], { opp: { pose: p[1] } })}</div>`; }
       case 'centro': return `<div class="art one wide">${centro()}</div>`;
       case 'kirikaeshi': return `<div class="art one wide">${kirikaeshi()}</div>`;
       case 'frontchudan': return `<div class="art one small">${front('bogu')}</div>`;
