@@ -216,6 +216,36 @@ KD.quizCats = { vocab: 'Vocabulario', equipo: 'Equipo', postura: 'Postura y pies
   Q('tecnica', '¿Qué se hace en men-kaeshi-dō?', 'Se bloquea el men, se gira el shinai y se devuelve dō', ['Se esquiva y se corta men', 'Se golpea kote', 'Se retrocede'], '', 'men-kaeshi-do');
   Q('tecnica', '¿Qué familia incluye men-nuki-dō?', 'Nuki-waza', ['Suriage-waza', 'Kaeshi-waza', 'Harai-waza'], '', 'oji-waza');
   Q('tecnica', '¿Qué familia incluye dō-uchiotoshi-men?', 'Uchiotoshi-waza', ['Nuki-waza', 'Suriage-waza', 'Maki-waza'], '', 'do-uchiotoshi-men');
+  // Combate: seme, centro, patrones, shiai
+  Q('mente', '¿Qué es seme?', 'La presión que ejerces con el espíritu, la postura, el kensen y la distancia', ['Un tipo de golpe', 'Una guardia', 'Una falta'], '', 'seme');
+  Q('mente', '¿Qué es ken-zeme?', 'Presionar con el kensen apuntando a la garganta', ['Presionar solo con la voz', 'Golpear el shinai del rival', 'Retroceder'], '', 'seme');
+  Q('mente', '¿Qué es ki-zeme?', 'Presionar con el espíritu y la actitud', ['Presionar con el kensen', 'Un tipo de golpe', 'Una esquiva'], '', 'seme');
+  Q('mente', '¿Qué es tai-zeme?', 'Presionar con el cuerpo avanzando sin prisa', ['Chocar con el rival', 'Retroceder rápido', 'Gritar'], '', 'seme');
+  Q('mente', '¿Cuándo golpeas tras un buen seme?', 'Cuando el rival reacciona', ['Antes de que se mueva', 'Nunca', 'Cuando termina el combate'], '', 'seme');
+  Q('mente', '¿Qué es el nakasen?', 'La línea imaginaria entre tú y el rival', ['Un tipo de guardia', 'Un golpe', 'Una parte del shinai'], '', 'nakasen');
+  Q('mente', '¿Quién "tiene el centro"?', 'Quien mantiene el kensen apuntando a la garganta del otro', ['Quien grita más', 'Quien retrocede', 'Quien levanta el shinai'], '', 'nakasen');
+  Q('mente', '¿Cómo se recupera el centro si te desvían el shinai?', 'Con un movimiento corto de muñecas', ['Con un gran movimiento de hombros', 'Retrocediendo', 'Soltando el shinai'], '', 'nakasen');
+  Q('mente', '¿Qué es kake-hiki?', 'Entrar y salir de la distancia para leer al rival', ['Un golpe', 'Una guardia', 'Un saludo'], '', 'kake-hiki');
+  Q('mente', '¿Por qué conviene cambiar el ritmo de las entradas?', 'Porque lo predecible se lee', ['Para cansar al rival', 'Para hacer ruido', 'No conviene'], '', 'kake-hiki');
+  Q('tecnica', 'El rival sube los brazos para cubrir men. ¿Qué haces?', 'Men-dō: el dō queda abierto', ['Kote', 'Tsuki', 'Retrocedes'], '', 'patrones-combate');
+  Q('tecnica', 'El rival baja las manos para cubrir kote. ¿Qué haces?', 'Kote-men o men directo', ['Dō', 'Hiki-dō', 'Esperas'], '', 'patrones-combate');
+  Q('tecnica', 'El rival se mueve para atacar. ¿Qué haces?', 'Debana-kote o debana-men', ['Retrocedes', 'Saludas', 'Soltas el shinai'], '', 'patrones-combate');
+  Q('tecnica', 'El rival protege muy bien el centro. ¿Qué haces?', 'Harai-men o maki-waza', ['Insistes con el mismo golpe', 'Tsuki sin supervisión', 'Retrocedes siempre'], '', 'patrones-combate');
+  Q('tecnica', 'El rival se pega a ti en tsubazeriai. ¿Qué haces?', 'Hiki-dō o hiki-men al separar', ['Empujas con los brazos', 'Lo agarras', 'Sueltas el shinai'], '', 'patrones-combate');
+  Q('tecnica', 'El rival ataca kote. ¿Qué haces?', 'Kote-nuki-men o kote-suriage-men', ['Tsuki', 'Dō directo siempre', 'Nada'], '', 'patrones-combate');
+  Q('tecnica', '¿Cuántas técnicas necesitas para empezar a combatir?', 'Unas pocas, bien afianzadas', ['Todas las que conozcas', 'Cuarenta', 'Ninguna'], '', 'patrones-combate');
+  Q('shiai', '¿Qué llevas en la espalda para identificarte en el combate?', 'Una cinta (tasuki) roja o blanca', ['Un número', 'Tu nombre en un papel', 'Nada'], '', 'flujo-shiai');
+  Q('shiai', '¿Cuántos pasos se avanzan tras el saludo en el tachiai?', 'Tres', ['Uno', 'Cinco', 'Diez'], 'Confírmalo con tu sensei: puede variar.', 'flujo-shiai');
+  Q('shiai', '¿Qué haces cuando oyes "yame"?', 'Paras y vuelves a tu posición', ['Terminas el golpe', 'Sigues atacando', 'Te sientas'], '', 'flujo-shiai');
+  Q('shiai', '¿Qué puede pasar si celebras un punto?', 'Que se anule', ['Que te den otro', 'Nada', 'Que ganes el combate'], '', 'flujo-shiai');
+  Q('shiai', '¿Cómo termina el combate cuando alguien gana?', 'Con "shōbu-ari"', ['Con "hajime"', 'Con "mate"', 'Con "wakare"'], '', 'flujo-shiai');
+  Q('shiai', '¿Qué es osame-tō en el combate?', 'Guardar el shinai al terminar', ['Sacarlo', 'Golpear', 'Saludar'], '', 'flujo-shiai');
+  Q('shiai', '¿Qué hace "wakare"?', 'Separa a los combatientes', ['Termina el combate', 'Da un punto', 'Pide prórroga'], '', 'faltas-shiai');
+  Q('shiai', '¿Qué es jōgai?', 'Salir del área de combate', ['Un golpe', 'Un saludo', 'Una prórroga'], '', 'faltas-shiai');
+  Q('shiai', '¿Qué ocurre con un golpe sin zanshin?', 'Puede no contar', ['Cuenta doble', 'Siempre cuenta', 'Se repite el combate'], '', 'faltas-shiai');
+  Q('shiai', '¿Qué hay que revisar antes de un torneo?', 'Que el shinai cumple el reglamento y está en buen estado', ['Solo el color de la cinta', 'Nada', 'Que pese más'], '', 'preparacion-torneo');
+  Q('shiai', '¿Qué objetivo es mejor para tu primer torneo?', 'Atacar con claridad, con kiai y zanshin', ['Ganar a toda costa', 'No atacar', 'Evitar el contacto'], '', 'preparacion-torneo');
+  Q('shiai', '¿Cuándo conviene cambiar de equipo para un torneo?', 'Semanas antes, no el mismo día', ['El mismo día', 'En mitad del combate', 'Nunca'], '', 'preparacion-torneo');
   KD.quiz = out;
 })();
 
@@ -307,4 +337,17 @@ KD.routines.push(
     steps: [['Calentamiento', '2 min', ''], ['Kirikaeshi', '5 series', '4 yokomen adelante, 5 atrás, shōmen final.'], ['Descanso', '1 min entre series', ''], ['Estiramientos', '2 min', '']] },
   { id: 'tec-waza', t: 'Waza en la sombra', min: 15, desc: 'Iniciativa y respuesta, sin rival y a cámara lenta.',
     steps: [['Debana-kote', '10', 'Imagina el instante del rival.'], ['Harai-men', '10', 'Barrido corto.'], ['Hiki-men / hiki-dō', '10 + 10', ''], ['Men-nuki-dō', '10', 'Hiraki-ashi y corte.'], ['Kote-suriage-men', '10', 'Desvío y men en un gesto.']] }
+);
+
+KD.plan.push(
+  { n: 9, t: 'Semana 9 · Presión y centro', focus: 'Aprender a leer y presionar antes de golpear.',
+    lessons: ['seme', 'nakasen', 'kake-hiki', 'patrones-combate'],
+    tasks: ['Estudiar las lecciones de la semana.', 'Con compañero: 10 entradas a issoku-ittō-no-ma-ai sin atacar, observando su reacción.', 'Practicar harai-men y debana-kote en ji-geiko, una idea por práctica.', 'Elegir tus tres técnicas de confianza y anotarlas en el diario.', 'Hablar con tu sensei sobre cómo ves tu seme.'] },
+  { n: 10, t: 'Semana 10 · Tu primer shiai', focus: 'Protocolo, faltas y preparación.',
+    lessons: ['flujo-shiai', 'faltas-shiai', 'preparacion-torneo', 'reglas-shiai', 'mentalidad'],
+    tasks: ['Estudiar las lecciones de la semana.', 'Practicar la secuencia de entrada y salida (taitō, sonkyō, osame-tō) 5 veces.', 'Simular en el dōjō un combate corto con árbitro.', 'Revisar tu equipo y preparar la lista de repuestos.', 'Escribir tu objetivo de proceso para el primer torneo y comentarlo con tu sensei.'] }
+);
+KD.routines.push(
+  { id: 'tec-combate', t: 'Combate: seme y reacción', min: 15, desc: 'Ejercicios con compañero (o en la sombra) para presionar, leer y golpear.',
+    steps: [['Calentamiento', '3 min', ''], ['Entrar y salir (kake-hiki)', '2 min', 'Sin atacar; observa su reacción.'], ['Seme + debana-kote', '10', 'Golpea solo si hay reacción.'], ['Seme + men', '10', 'Con kiai y zanshin.'], ['Una sola técnica en ji-geiko', '3 min', 'Por ejemplo, solo kote-men.'], ['Anotar en el diario', '2 min', 'Qué funcionó y qué no.']] }
 );

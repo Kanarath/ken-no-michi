@@ -191,5 +191,15 @@ KD.glossary = [
   ['Debana-men', '出ばな面', 'Men en el inicio del movimiento del rival.', 'waza'],
   ['Men-suriage-men', '面すり上げ面', 'Desviar el men y devolver men.', 'waza'],
   ['Kote-suriage-men', '小手すり上げ面', 'Desviar el kote y golpear men.', 'waza'],
-  ['Dō-uchiotoshi-men', '胴打ち落とし面', 'Golpear hacia abajo el shinai del rival y responder con men.', 'waza']
+  ['Dō-uchiotoshi-men', '胴打ち落とし面', 'Golpear hacia abajo el shinai del rival y responder con men.', 'waza'],
+  ['Kake-hiki', '掛け引き', 'Entrar y salir de la distancia para leer al rival.', 'mente'],
+  ['Ken-zeme', '剣攻め', 'Presión con el kensen sobre la garganta del rival.', 'mente'],
+  ['Ki-zeme', '気攻め', 'Presión con el espíritu y la actitud.', 'mente'],
+  ['Tai-zeme', '体攻め', 'Presión con el cuerpo, avanzando sin prisa.', 'mente'],
+  ['Ukeru', '受ける', 'Recibir un golpe con el shinai (parar).', 'waza'],
+  ['Sanbon-shōbu', '三本勝負', 'Combate a tres puntos: gana quien consigue dos.', 'shiai'],
+  ['Ippon-shōbu', '一本勝負', 'Combate a un solo punto.', 'shiai'],
+  ['Aka / Shiro', '赤 / 白', 'Rojo / blanco: los colores de la cinta (tasuki) de cada combatiente.', 'shiai'],
+  ['Tasuki', '襷', 'Cinta de color que llevan los combatientes en la espalda.', 'shiai'],
+  ['Torikeshi', '取り消し', 'Anular una decisión de los árbitros.', 'shiai']
 ].map(x => ({ id: x[0].toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, ''), t: x[0], k: x[1], e: x[2], c: x[3] }));

@@ -336,6 +336,15 @@ window.KArt = (function () {
       { figs: [A('chudanLow')], cap: '✗ Kensen demasiado bajo' }] }
   };
   SEQ.kotemen = SEQ['kote-men'];
+  SEQ['men-do'] = { t: 'Men-dō', quiz: 1, fr: [
+    { figs: [A('chudan')], cap: '1 · Chūdan' },
+    { figs: [O('blockP'), A('men', { touch: 'men' })], cap: '2 · Atacas men y el rival sube los brazos para cubrirse' },
+    { figs: [O('blockP'), A('do', { touch: 'do' })], cap: '3 · Con sus brazos arriba el dō queda abierto: cortas sin parar' }] };
+  SEQ['seme-kote'] = { t: 'Seme y kote', quiz: 1, fr: [
+    { figs: [A('chudan')], cap: '1 · Chūdan: el kensen apunta a su garganta' },
+    { figs: [A('chudan', { dx: 50 })], cap: '2 · Entras con okuri-ashi sin soltar la presión (seme)' },
+    { figs: [O('koteUp', { dx: 30 }), A('chudan', { dx: 50 })], cap: '3 · El rival reacciona: empieza a subir el shinai' },
+    { figs: [O('koteUp', { dx: 30 }), A('koteHi', { touch: 'kote' })], cap: '4 · Aprovechas su reacción y golpeas kote' }] };
   function seq(key) {
     const s = SEQ[key];
     if (!s) return '';
@@ -344,6 +353,27 @@ window.KArt = (function () {
       `<figure>${scene(fr.figs, { solo: !!s.solo, label: fr.cap, arrows: fr.arrows })}<figcaption>${fr.cap}</figcaption></figure>`).join('')}</div>`;
   }
   const strip = seq;
+
+
+  /* ---------- Control del centro (vista cenital) ---------- */
+  function centro() {
+    const panel = (x0, title, aTip, bTip, note) => {
+      const ay = 70, by = 70, ax = x0 + 20, bx = x0 + 130;
+      let g = `<text x="${x0 + 75}" y="18" text-anchor="middle" font-size="11.5" font-weight="700" fill="${C.ink}" font-family="sans-serif">${title}</text>`;
+      g += `<line x1="${ax}" y1="${ay}" x2="${bx}" y2="${by}" stroke="${C.gray}" stroke-width="1.4" stroke-dasharray="4 4"/>`;
+      g += `<line x1="${ax}" y1="${ay}" x2="${ax + 62}" y2="${ay + aTip}" stroke="${C.indigo}" stroke-width="4.5" stroke-linecap="round"/>`;
+      g += `<line x1="${bx}" y1="${by}" x2="${bx - 62}" y2="${by + bTip}" stroke="${C.red}" stroke-width="4.5" stroke-linecap="round"/>`;
+      g += `<circle cx="${ax}" cy="${ay}" r="13" fill="${C.indigo}" stroke="${C.ink}"/><circle cx="${bx}" cy="${by}" r="13" fill="#6b7da8" stroke="${C.ink}"/>`;
+      g += `<text x="${ax}" y="${ay + 4}" text-anchor="middle" font-size="11" font-weight="700" fill="${C.white}" font-family="sans-serif">Tú</text><text x="${bx}" y="${by + 4}" text-anchor="middle" font-size="11" font-weight="700" fill="${C.white}" font-family="sans-serif">R</text>`;
+      g += `<text x="${x0 + 75}" y="124" text-anchor="middle" font-size="10" fill="${C.ink}" font-family="sans-serif">${note[0]}</text><text x="${x0 + 75}" y="138" text-anchor="middle" font-size="10" fill="${C.ink}" font-family="sans-serif">${note[1]}</text>`;
+      return g;
+    };
+    let g = `<rect width="480" height="150" rx="10" fill="${C.wood}" opacity=".3"/>`;
+    g += panel(6, 'Tienes el centro', 0, 22, ['Tu kensen apunta a su garganta;', 'el suyo está desviado']);
+    g += panel(162, 'Centro compartido', 4, 4, ['Ambos en la línea: se cruzan.', 'Gana quien presiona mejor']);
+    g += panel(318, 'Lo pierdes', -22, 0, ['Su kensen apunta a ti;', 'el tuyo está desviado']);
+    return `<svg viewBox="0 0 480 150" role="img" aria-label="Control del centro (nakasen)">${g}</svg>`;
+  }
 
   /* ---------- Kirikaeshi (vista cenital) ---------- */
   function kirikaeshi() {
@@ -585,6 +615,7 @@ window.KArt = (function () {
       case 'logo': return logo(120, true);
       case 'strip': case 'seq': return seq(arg);
       case 'vs': return `<div class="art one">${scene([{ pose: arg }])}</div>`;
+      case 'centro': return `<div class="art one wide">${centro()}</div>`;
       case 'kirikaeshi': return `<div class="art one wide">${kirikaeshi()}</div>`;
       case 'frontchudan': return `<div class="art one small">${front('bogu')}</div>`;
       case 'solo': return `<div class="art one">${solo(arg, arg)}</div>`;

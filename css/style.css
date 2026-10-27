@@ -274,3 +274,5 @@ footer.foot { margin-top: 36px; font-size: .8rem; color: var(--muted); text-alig
 .week h3 { margin: 0 0 2px; color: var(--ink); }
 .week .lk a { margin-right: 6px; }
 .week.done { border-color: var(--green); }
+.ifs b { color: var(--ink); }
+.ifs span { color: var(--green); }

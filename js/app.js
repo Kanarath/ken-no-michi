@@ -110,6 +110,7 @@
       if (b.p) h += [].concat(b.p).map(x => `<p>${x}</p>`).join('');
       if (b.ul) h += `<ul>${b.ul.map(x => `<li>${x}</li>`).join('')}</ul>`;
       if (b.ol) h += `<ol>${b.ol.map(x => `<li>${x}</li>`).join('')}</ol>`;
+      if (b.ifthen) h += `<ul class="errs ifs">${b.ifthen.map(e => `<li><b>Si ${e[0]}</b><span>→ ${e[1]}</span></li>`).join('')}</ul>`;
       if (b.err) h += `<ul class="errs">${b.err.map(e => `<li><b>✗ ${e[0]}</b><span>✓ ${e[1]}</span></li>`).join('')}</ul>`;
       if (b.check) h += `<ul class="checks">${b.check.map((c, i) => `<li class="${chk[i] ? 'on' : ''}" data-act="chk" data-l="${lid}" data-i="${i}"><span class="tick ${chk[i] ? 'on' : ''}">${chk[i] ? ico('check') : ''}</span><span>${c}</span></li>`).join('')}</ul>`;
       if (b.tip) h += `<aside class="note"><b>Consejo</b>${b.tip}</aside>`;
@@ -208,7 +209,7 @@
     const sp = [['tsuka', 'Tsuka'], ['tsuba', 'Tsuba'], ['tsuru', 'Tsuru'], ['nakayui', 'Nakayui'], ['sakigawa', 'Saki-gawa'], ['datotsubu', 'Datotsu-bu'], ['tsubadome', 'Tsuba-dome']];
     sp.forEach(b => out.push({ id: 'v-shinai-' + b[0], cat: 'visual', q: '¿Qué parte del shinai está resaltada?', a: [b[1]].concat(shuffle(sp.filter(x => x[0] !== b[0]).map(x => x[1])).slice(0, 3)), why: KD.parts.shinai[b[0]].d, lesson: 'shinai', fig: () => `<div class="art one qsel" data-sel='[data-part="${b[0]}"]'>${KArt.shinai()}</div>` }));
     // Secuencias de técnica: ¿qué técnica es?
-    const seqLesson = { men: 'men', yokomen: 'yokomen', kote: 'kote', do: 'do', tsuki: 'tsuki', 'kote-men': 'kote-men', 'debana-kote': 'debana-kote', 'debana-men': 'debana-men', 'harai-men': 'harai-men', 'hiki-men': 'hiki-men', 'hiki-do': 'hiki-do', 'men-nuki-do': 'men-nuki-do', 'kote-suriage-men': 'kote-suriage-men', 'men-kaeshi-do': 'men-kaeshi-do', 'dou-uchiotoshi-men': 'do-uchiotoshi-men' };
+    const seqLesson = { men: 'men', yokomen: 'yokomen', kote: 'kote', do: 'do', tsuki: 'tsuki', 'kote-men': 'kote-men', 'debana-kote': 'debana-kote', 'debana-men': 'debana-men', 'harai-men': 'harai-men', 'hiki-men': 'hiki-men', 'hiki-do': 'hiki-do', 'men-nuki-do': 'men-nuki-do', 'kote-suriage-men': 'kote-suriage-men', 'men-kaeshi-do': 'men-kaeshi-do', 'dou-uchiotoshi-men': 'do-uchiotoshi-men', 'men-do': 'patrones-combate', 'seme-kote': 'seme' };
     const sk = Object.keys(KArt.SEQ).filter(k => KArt.SEQ[k].quiz && seqLesson[k]);
     sk.forEach(k => out.push({ id: 'v-seq-' + k, cat: 'visual', q: '¿Qué técnica muestra esta secuencia? (desliza las imágenes)', a: [KArt.SEQ[k].t].concat(shuffle(sk.filter(x => x !== k).map(x => KArt.SEQ[x].t)).slice(0, 3)), why: 'Es ' + KArt.SEQ[k].t + '.', lesson: seqLesson[k], fig: () => KArt.get('seq:' + k) }));
     // Errores de chūdan

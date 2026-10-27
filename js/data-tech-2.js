@@ -347,7 +347,7 @@
     mod({ id: 'waza-medio', name: 'Waza · Iniciativa', jp: '応用技', seal: '応', icon: 'swords', desc: 'Contacto cuerpo a cuerpo, golpes al retirarse, apartar el shinai y golpear al inicio del rival.' },
       ['tai-atari', 'tsubazeriai', 'hiki-waza', 'hiki-men', 'hiki-do', 'hiki-kote', 'harai-debana', 'harai-men', 'debana-kote', 'debana-men', 'maki-waza', 'tipos-practica']),
     mod({ id: 'avanzado', name: 'Ōji-waza · Respuesta y estrategia', jp: '応じ技', seal: '極', icon: 'chart', desc: 'Esquivar, desviar y devolver golpes; iniciativa (sen), presión (seme) y kata.' },
-      ['oji-waza', 'men-nuki-do', 'kote-nuki-men', 'kote-suriage-men', 'men-suriage-men', 'men-kaeshi-do', 'do-uchiotoshi-men', 'sen', 'seme', 'kata']),
-    mod(old.shiai, ['reglas-shiai', 'arbitraje', 'mentalidad', 'grados', 'consejos'])
+      ['oji-waza', 'men-nuki-do', 'kote-nuki-men', 'kote-suriage-men', 'men-suriage-men', 'men-kaeshi-do', 'do-uchiotoshi-men', 'sen', 'seme', 'nakasen', 'kake-hiki', 'kata']),
+    mod(old.shiai, ['reglas-shiai', 'flujo-shiai', 'arbitraje', 'faltas-shiai', 'patrones-combate', 'preparacion-torneo', 'mentalidad', 'grados', 'consejos'])
   ];
 })();

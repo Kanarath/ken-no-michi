@@ -5,6 +5,7 @@ KD.pool = {};
 /* Plantilla: genera los bloques de una lección técnica a partir de campos fijos */
 KD.T = function (o) {
   const b = [];
+  (o.pre || []).forEach(x => b.push(x));
   if (o.why) b.push({ h: 'Para qué sirve', p: o.why });
   if (o.steps) b.push({ h: o.stepsH || 'Cómo se hace', ol: o.steps });
   if (o.keys) b.push({ h: 'Puntos clave', ul: o.keys });
