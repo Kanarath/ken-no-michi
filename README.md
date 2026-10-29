@@ -16,7 +16,8 @@ Web para aprender **kendō** de básico a avanzado: lecciones ilustradas, glosar
 | `js/art.js` | Motor de figuras y todas las ilustraciones |
 | `js/data-lessons-1.js`, `js/data-lessons-2.js` | Lecciones de la base (equipo, etiqueta, reglas…) |
 | `js/data-tech-1.js` … `js/data-tech-4.js` | Lecciones de técnica con plantilla (`KD.T`): guardias, pies, suburi, golpes, waza, ōji-waza, combate, práctica en pareja, cuerpo y kata |
-| `js/data-tech-2.js` | Se carga el último de los tech: define el orden final de los módulos |
+| `js/data-tech-2.js` | Se carga el último de los tech: define el orden final de los módulos de kendō |
+| `js/data-iai-1.js` … `js/data-iai-3.js` | Iaidō: lecciones (primeros pasos, equipo, fundamentos, seitei-gata, Musō Jikiden Eishin-ryū), módulos, partes de la katana, quiz, glosario, plan y rutinas |
 | `js/data-glossary.js` | Glosario (término, kanji, significado, categoría) |
 | `js/data-extra.js` | Quiz, partes interactivas, rutinas, consejos, niveles |
 | `js/app.js` | Router, estado, vistas, quiz, tarjetas, entrenar |
@@ -54,3 +55,9 @@ En `js/data-tech-*.js`, `KD.add({ id, t, jp, sub, art, intro, why, steps, keys, 
 - **Puntos débiles:** en Progreso, las lecciones con más fallos y el acierto por categoría.
 - **Pronunciación:** botón 🔊 en glosario y tarjetas, con la voz japonesa del dispositivo (Web Speech API).
 - **Plan de 12 semanas**, rutinas de técnica, cuerpo y combate, y diario de correcciones.
+
+## Dos disciplinas: kendō e iaidō
+
+Un selector arriba cambia toda la app (Camino, Repaso, Colección, Plan y rutinas). Cada módulo lleva `disc: 'iaido'` (si no, es kendō); las preguntas heredan la disciplina de su lección; el glosario usa `d: 'iaido'` y una lista de términos comunes (`SHARED` en `js/app.js`). El XP, el diario y la copia de seguridad son compartidos. El iaidō usa un color de acento azul.
+
+Las descripciones de los kata de seitei-gata y de las series de Eishin-ryū son resúmenes de fuentes públicas: cada lección avisa de lo que debe confirmarse con el sensei.

@@ -10,10 +10,18 @@
   /* ---------- Datos derivados ---------- */
   const LESSONS = {}, ORDER = [];
   KD.modules.forEach(m => m.lessons.forEach((l, i) => { l.mod = m; l.n = i; LESSONS[l.id] = l; ORDER.push(l); }));
+  /* Disciplina activa: kendō o iaidō */
+  const discOf = m => m.disc || 'kendo';
+  const DISC = () => (S && S.disc === 'iaido') ? 'iaido' : 'kendo';
+  const discMods = () => KD.modules.filter(m => discOf(m) === DISC());
+  const ORDERD = () => ORDER.filter(l => discOf(l.mod) === DISC());
+  const inDisc = q => (q.lesson && LESSONS[q.lesson]) ? discOf(LESSONS[q.lesson].mod) === DISC() : DISC() === 'kendo';
+  const SHARED = new Set(['rei', 'ritsurei', 'zarei', 'seiza', 'mokuso', 'shomen', 'shinzen', 'sensei', 'dojo', 'kata', 'shisei', 'metsuke', 'enzan-no-metsuke', 'tenouchi', 'hasuji', 'kiai', 'zanshin', 'ki-ken-tai-ichi', 'hakama', 'keikogi-dogi', 'himo', 'tsuba', 'tsuka', 'tsuka-gashira', 'kensen', 'sonkyo', 'jodan-no-kamae', 'chudan-no-kamae', 'gedan-no-kamae', 'hasso-no-kamae', 'waki-gamae', 'kamae', 'ma-ai', 'bokuto-bokken', 'shu-ha-ri', 'fudoshin', 'mushin', 'heijoshin', 'onegaishimasu', 'arigato-gozaimashita', 'nafuda', 'ashi-sabaki', 'shinogi', 'taito']);
+  const inGl = g => g.d === 'iaido' ? DISC() === 'iaido' : (DISC() === 'kendo' || SHARED.has(g.id));
 
   /* ---------- Estado (localStorage, con fallback en memoria) ---------- */
   const KEY = 'ken-no-michi-v1';
-  const def = () => ({ done: {}, q: {}, cards: {}, log: [], theme: 'auto', last: null, open: {}, checks: {} });
+  const def = () => ({ done: {}, q: {}, cards: {}, log: [], theme: 'auto', last: null, open: {}, checks: {}, disc: 'kendo' });
   function load() {
     try { const j = JSON.parse(localStorage.getItem(KEY)); return Object.assign(def(), j && typeof j === 'object' ? j : {}); } catch (e) { return def(); }
   }
@@ -71,14 +79,15 @@
   /* ---------- Cabecera y navegación ---------- */
   const NAV = [['inicio', 'Camino', 'torii'], ['quiz', 'Repaso', 'quiz'], ['atlas', 'Colección', 'book'], ['entrenar', 'Dōjō', 'swords']];
   const NAVMAP = { inicio: 'inicio', leccion: 'inicio', ruta: 'inicio', quiz: 'quiz', tarjetas: 'quiz', atlas: 'atlas', glosario: 'atlas', entrenar: 'entrenar', progreso: 'entrenar' };
-  const sealsDone = () => KD.modules.filter(m => m.lessons.every(l => S.done[l.id])).length;
+  const sealsDone = () => discMods().filter(m => m.lessons.every(l => S.done[l.id])).length;
   function paintTop() {
     const xp = xpParts().total, lv = levelOf(xp);
     const jp = lv.cur.jp.length > 2 ? lv.cur.jp.slice(0, 2) : lv.cur.jp;
     $('#top').innerHTML = `<div class="in"><a class="badge" href="#/progreso" aria-label="Tu nivel: ${esc(lv.cur.n)}">${esc(jp)}</a>` +
       `<a class="who" href="#/progreso"><b>${esc(lv.cur.n)}</b><small>Nivel de estudio</small></a>` +
       `<div class="xpbar"><div class="bar" role="progressbar" aria-valuenow="${lv.pct}" aria-valuemin="0" aria-valuemax="100"><i style="width:${lv.pct}%"></i></div><small>${xp}${lv.next ? ' / ' + lv.next.xp : ''} XP</small></div>` +
-      `<a class="sealpill" href="#/progreso" title="Sellos de módulo conseguidos">${ico('star')}${sealsDone()}/${KD.modules.length}</a></div>`;
+      `<a class="sealpill" href="#/progreso" title="Sellos de módulo conseguidos">${ico('star')}${sealsDone()}/${discMods().length}</a></div>` +
+      `<div class="in disc"><div class="dsw" role="tablist" aria-label="Disciplina"><button role="tab" class="${DISC() === 'kendo' ? 'on' : ''}" data-act="disc" data-d="kendo" aria-selected="${DISC() === 'kendo'}">Kendō 剣道</button><button role="tab" class="${DISC() === 'iaido' ? 'on' : ''}" data-act="disc" data-d="iaido" aria-selected="${DISC() === 'iaido'}">Iaidō 居合道</button></div></div>`;
   }
   function paintBottom() {
     $('#bottom').innerHTML = `<div class="in">${NAV.map(n => `<a href="#/${n[0]}" data-nav="${n[0]}">${ico(n[2])}<span>${n[1]}</span></a>`).join('')}</div>`;
@@ -136,19 +145,19 @@
   const foot = () => `<footer class="foot">Esta web es una ayuda para estudiar. No sustituye a tu sensei: si algo de aquí choca con lo que te enseñan en tu dōjō, manda tu dōjō.<br>Los niveles de la web (kyū y dan de estudio) no son grados oficiales.</footer>`;
 
   /* ---------- Vista: Camino (inicio) ---------- */
-  function nextLesson() { return (S.last && LESSONS[S.last] && !S.done[S.last]) ? LESSONS[S.last] : ORDER.find(l => !S.done[l.id]); }
+  function nextLesson() { return (S.last && LESSONS[S.last] && discOf(LESSONS[S.last].mod) === DISC() && !S.done[S.last]) ? LESSONS[S.last] : ORDERD().find(l => !S.done[l.id]); }
   function viewHome() {
     setTitle('');
     const next = nextLesson();
-    const tip = KD.tips[Math.floor(Math.random() * KD.tips.length)];
+    const tipsL = DISC() === 'iaido' ? KD.tipsIai : KD.tips; const tip = tipsL[Math.floor(Math.random() * tipsL.length)];
     const nextMod = next ? next.mod : null;
-    const isOpen = m => (S.open && S.open[m.id] !== undefined) ? S.open[m.id] : (m === nextMod || (!nextMod && m === KD.modules[KD.modules.length - 1]));
+    const isOpen = m => (S.open && S.open[m.id] !== undefined) ? S.open[m.id] : (m === nextMod || (!nextMod && m === discMods()[discMods().length - 1]));
     const installBox = (DEF && !standalone()) ? `<div class="install">${ico('install')}<p><b>Instala la app</b> en tu móvil: se abre a pantalla completa y funciona sin conexión.</p><button class="btn small" data-act="install">Instalar</button></div>` : '';
-    return `<div class="mascot-row">${KArt.mascot()}<div class="bubble">${esc(tip)}</div></div>
+    return `<div class="mascot-row">${KArt.mascot(DISC() === "iaido")}<div class="bubble">${esc(tip)}</div></div>
       <a class="card todo" href="#/quiz/jugar/all">${ico('cup', 'big')}<div><b>Repaso rápido</b><span class="muted small">10 preguntas cuando quieras. Sin límites.</span></div><span class="chev">${ico('chev')}</span></a>
       ${installBox}
-      ${next ? `<a class="card next" href="#/leccion/${next.id}"><span class="orb">${esc(next.jp.charAt(0))}</span><div><small>${S.last && S.done[ORDER[0].id] ? 'Siguiente lección' : 'Empieza aquí'}</small><b>${esc(next.t)}</b></div><span class="go">Ir ›</span></a>` : `<div class="card"><b>¡Has completado toda la ruta!</b><p class="muted">Repasa con quizzes y tarjetas, o entrena en el Dōjō.</p></div>`}
-      ${KD.modules.map(m => {
+      ${next ? `<a class="card next" href="#/leccion/${next.id}"><span class="orb">${esc(next.jp.charAt(0))}</span><div><small>${S.last && S.done[ORDERD()[0].id] ? 'Siguiente lección' : 'Empieza aquí'}</small><b>${esc(next.t)}</b></div><span class="go">Ir ›</span></a>` : `<div class="card"><b>¡Has completado toda la ruta!</b><p class="muted">Repasa con quizzes y tarjetas, o entrena en el Dōjō.</p></div>`}
+      ${discMods().map(m => {
       const d = modDone(m), t = m.lessons.length, open = isOpen(m);
       return `<section><button class="modhead" data-act="mod" data-m="${m.id}" aria-expanded="${open}"><div><h2>${m.jp} · ${esc(m.name.split('·')[1] ? m.name.split('·')[1].trim() : m.name)}</h2><p>${esc(m.name.split('·')[0].trim())}</p></div><span class="pill">${d}/${t} ${ico(open ? 'down' : 'chev')}</span></button>
         <div class="path" ${open ? '' : 'hidden'}>${m.lessons.map((l, i) => {
@@ -166,7 +175,8 @@
     if (!L) return `<h1>No encuentro esa lección</h1><p><a class="btn" href="#/inicio">Volver al camino</a></p>`;
     setTitle(L.t);
     S.last = id; save();
-    const idx = ORDER.indexOf(L), prev = ORDER[idx - 1], nextL = ORDER[idx + 1];
+    if (S.disc !== discOf(L.mod)) { S.disc = discOf(L.mod); save(); applyDisc(); paintTop(); }
+    const OD = ORDERD(), idx = OD.indexOf(L), prev = OD[idx - 1], nextL = OD[idx + 1];
     const done = !!S.done[id];
     const mpct = Math.round(100 * modDone(L.mod) / L.mod.lessons.length);
     return `<div class="lhead"><a class="x" href="#/inicio" aria-label="Volver al camino">${ico('x')}</a><div class="bar" aria-label="Progreso del módulo"><i style="width:${mpct}%"></i></div><span class="xpt">${done ? '✓ HECHA' : '+' + KD.XP.lesson + ' XP'}</span></div>
@@ -226,20 +236,27 @@
     const seqLesson = { men: 'men', yokomen: 'yokomen', kote: 'kote', do: 'do', tsuki: 'tsuki', 'kote-men': 'kote-men', 'debana-kote': 'debana-kote', 'debana-men': 'debana-men', 'harai-men': 'harai-men', 'hiki-men': 'hiki-men', 'hiki-do': 'hiki-do', 'men-nuki-do': 'men-nuki-do', 'kote-suriage-men': 'kote-suriage-men', 'men-kaeshi-do': 'men-kaeshi-do', 'dou-uchiotoshi-men': 'do-uchiotoshi-men', 'men-do': 'patrones-combate', 'seme-kote': 'seme' };
     const sk = Object.keys(KArt.SEQ).filter(k => KArt.SEQ[k].quiz && seqLesson[k]);
     sk.forEach(k => out.push({ id: 'v-seq-' + k, cat: 'visual', q: '¿Qué técnica muestra esta secuencia? (desliza las imágenes)', a: [KArt.SEQ[k].t].concat(shuffle(sk.filter(x => x !== k).map(x => KArt.SEQ[x].t)).slice(0, 3)), why: 'Es ' + KArt.SEQ[k].t + '.', lesson: seqLesson[k], fig: () => KArt.get('seq:' + k) }));
+    // Iaidō: partes de la katana y fases
+    const kp = [['kashira', 'Kashira'], ['tsuka', 'Tsuka'], ['tsuba', 'Tsuba'], ['habaki', 'Habaki'], ['kissaki', 'Kissaki'], ['saya', 'Saya'], ['koiguchi', 'Koiguchi'], ['kurikata', 'Kurikata'], ['sageo', 'Sageo'], ['kojiri', 'Kojiri']];
+    kp.forEach(b => out.push({ id: 'v-katana-' + b[0], cat: 'visual', q: '¿Qué parte de la katana o de la saya está resaltada?', a: [b[1]].concat(shuffle(kp.filter(x => x[0] !== b[0]).map(x => x[1])).slice(0, 3)), why: KD.parts.katana[b[0]].d, lesson: 'ia-katana', fig: () => `<div class="art one qsel" data-sel='[data-part="${b[0]}"]'>${KArt.katana()}</div>` }));
+    const ph = [['iaiNuki', 'Nukitsuke (desenvainar y cortar)'], ['iaiKiri', 'Kiritsuke (corte final)'], ['iaiChiburi', 'Chiburi (sacudida de la hoja)'], ['iaiNoto', 'Nōtō (envainar)'], ['iaiTachi', 'Taitō (espada en el obi)']];
+    ph.forEach(p => out.push({ id: 'v-iai-' + p[0], cat: 'visual', q: '¿Qué fase del iaidō muestra la figura?', a: [p[1]].concat(shuffle(ph.filter(x => x[0] !== p[0]).map(x => x[1])).slice(0, 3)), why: 'Es ' + p[1] + '.', lesson: 'ia-secuencia', fig: () => `<div class="art one small">${KArt.solo(p[0], 'Fase del iaidō')}</div>` }));
+    const po = [['iaiSeiza', 'Seiza'], ['iaiTatehiza', 'Tatehiza'], ['iaiTachi', 'De pie (tachi)']];
+    po.forEach(p => out.push({ id: 'v-iaipos-' + p[0], cat: 'visual', q: '¿Qué postura de iaidō es esta?', a: [p[1]].concat(shuffle(po.filter(x => x[0] !== p[0]).map(x => x[1]))).concat(['Sonkyō']), why: 'Es ' + p[1] + '.', lesson: 'ia-seiza', fig: () => `<div class="art one small">${KArt.solo(p[0], 'Postura')}</div>` }));
     // Errores de chūdan
     const errs = [['chudanLean', 'Cuerpo inclinado hacia delante'], ['chudanFlat', 'Talón izquierdo apoyado en el suelo'], ['chudanHigh', 'Kensen demasiado alto'], ['chudanLow', 'Kensen demasiado bajo']];
     errs.forEach(e => out.push({ id: 'v-err-' + e[0], cat: 'visual', q: '¿Qué error de chūdan se ve en la figura?', a: [e[1]].concat(shuffle(errs.filter(x => x[0] !== e[0]).map(x => x[1]))), why: 'Compáralo con tu chūdan frente al espejo.', lesson: 'chudan-ajustes', fig: () => `<div class="art one small">${KArt.solo(e[0], 'Error de chūdan')}</div>` }));
     return out;
   }
   KD.visual = buildVisual();
-  const ALLQ = () => KD.quiz.concat(KD.visual);
+  const ALLQ = () => KD.quiz.concat(KD.visual).filter(inDisc);
 
   function poolFor(mode) {
     const all = ALLQ();
     const [k, v] = mode.split(':');
     let p;
     if (k === 'cat') p = all.filter(q => q.cat === v);
-    else if (k === 'visual') p = KD.visual;
+    else if (k === 'visual') p = KD.visual.filter(inDisc);
     else if (k === 'fails') p = all.filter(q => S.q[q.id] && S.q[q.id].last === false);
     else if (k === 'due') p = all.filter(q => isDue(q));
     else if (k === 'lesson') { p = all.filter(q => q.lesson === v); if (p.length < 3) { const L = LESSONS[v]; p = all.filter(q => L && q.lesson && LESSONS[q.lesson] && LESSONS[q.lesson].mod === L.mod); } }
@@ -283,7 +300,7 @@
     const seen = all.filter(q => S.q[q.id] && S.q[q.id].ok > 0).length;
     const fails = all.filter(q => S.q[q.id] && S.q[q.id].last === false).length;
     const due = all.filter(q => isDue(q)).length;
-    const cats = Object.keys(KD.quizCats).filter(c => c !== 'visual');
+    const cats = Object.keys(KD.quizCats).filter(c => c !== 'visual' && all.some(q => q.cat === c));
     const mode = (href, icon, t, s, dim) => `<a class="card mode" href="${href}" ${dim ? 'style="opacity:.6"' : ''}><span class="orb">${ico(icon)}</span><div><b>${t}</b><small>${s}</small></div><span class="chev">${ico('chev')}</span></a>`;
     return `${segRepaso('quiz')}<h1>Repaso</h1><p class="muted">Rondas de 10 preguntas, sin límite de rondas ni de intentos. Salen primero las que aún no has acertado. Llevas ${seen} de ${all.length} preguntas acertadas (la primera vez que aciertas una, ganas ${KD.XP.quiz} XP).</p>
       <div class="grid">
@@ -293,7 +310,7 @@
         ${mode('#/quiz/jugar/fails', 'flag', 'Repasar fallos', fails ? fails + ' pregunta(s) pendientes' : 'Aún no tienes fallos que repasar', !fails)}
       </div>
       <h2>Por categoría</h2>
-      <div class="row">${cats.map(c => `<a class="chip" href="#/quiz/jugar/cat:${c}">${esc(KD.quizCats[c])} <small>${KD.quiz.filter(q => q.cat === c).length}</small></a>`).join('')}</div>${foot()}`;
+      <div class="row">${cats.map(c => `<a class="chip" href="#/quiz/jugar/cat:${c}">${esc(KD.quizCats[c])} <small>${all.filter(q => q.cat === c).length}</small></a>`).join('')}</div>${foot()}`;
   }
   function quizPlay() {
     setTitle('Repaso');
@@ -325,7 +342,7 @@
     const cats = Object.keys(KD.catNames);
     const cat = a || 'todas';
     if (!F || F.cat !== cat) {
-      const list = KD.glossary.filter(g => cat === 'todas' || g.c === cat);
+      const list = KD.glossary.filter(g => inGl(g) && (cat === 'todas' || g.c === cat));
       F = { cat, deck: shuffle(list).sort((x, y) => (S.cards[x.id] ? 1 : 0) - (S.cards[y.id] ? 1 : 0)), i: 0, flip: false };
     }
     const known = F.deck.filter(g => S.cards[g.id]).length;
@@ -349,7 +366,7 @@
       const norm = s => s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
       const upd = () => {
         const q = norm(inp.value.trim());
-        const rows = KD.glossary.filter(g => (cat === 'todas' || g.c === cat) && (!q || norm(g.t + ' ' + g.k + ' ' + g.e).indexOf(q) >= 0));
+        const rows = KD.glossary.filter(g => inGl(g) && (cat === 'todas' || g.c === cat) && (!q || norm(g.t + ' ' + g.k + ' ' + g.e).indexOf(q) >= 0));
         box.innerHTML = rows.length ? rows.map(g => `<div class="it"><b>${esc(g.t)} ${say(g)}</b><span class="k">${esc(g.k)}</span><p>${esc(g.e)}</p><span class="cat">${esc(KD.catNames[g.c])}</span></div>`).join('') : '<p class="muted">Nada coincide. Prueba otra palabra.</p>';
         $('#gcount').textContent = rows.length + ' término' + (rows.length === 1 ? '' : 's');
       };
@@ -367,13 +384,21 @@
   /* ---------- Colección: atlas ---------- */
   function viewAtlas() {
     setTitle('Atlas');
-    const items = [
+    const itemsK = [
       ['Zonas de golpeo', 'zones', 'datotsu-yuko'], ['El bōgu', 'bogu', 'bogu'], ['El shinai', 'shinai', 'shinai'], ['Keikogi y hakama', 'wear', 'keikogi-hakama'],
       ['Los cinco kamae', 'kamae5', 'kamae-5'], ['Saludos y posturas de etiqueta', 'rei', 'saludos'], ['El agarre (tenouchi)', 'grip', 'tenouchi'],
       ['Men-uchi', 'strip:men', 'men'], ['Kote-uchi', 'strip:kote', 'kote'], ['Dō-uchi', 'strip:do', 'do'], ['Tsuki', 'strip:tsuki', 'tsuki'],
       ['Okuri-ashi', 'footwork:okuri', 'ashi-sabaki'], ['Ayumi-ashi', 'footwork:ayumi', 'ashi-sabaki'], ['Hiraki-ashi', 'footwork:hiraki', 'ashi-sabaki'], ['Tsugi-ashi', 'footwork:tsugi', 'ashi-sabaki'], ['Fumikomi-ashi', 'footwork:fumikomi', 'ashi-sabaki'],
       ['Las tres distancias (ma-ai)', 'maai', 'maai'], ['Esquiva lateral (nuki-waza)', 'topview:nuki', 'oji-waza'], ['Jōdan', 'solo:jodan', 'jodan']
     ];
+    const itemsI = [
+      ['La katana y su funda', 'katana', 'ia-katana'], ['Posturas: seiza, tatehiza y de pie', 'seq:iai-seiza', 'ia-seiza'], ['La secuencia básica del iaidō', 'seq:iai-basico', 'ia-secuencia'],
+      ['Seitei 1 · Mae', 'kata:mae', 'ia-s1'], ['Seitei 2 · Ushiro', 'kata:ushiro', 'ia-s2'], ['Seitei 3 · Ukenagashi', 'kata:ukenagashi', 'ia-s3'], ['Seitei 4 · Tsuka-ate', 'kata:tsukaate', 'ia-s4'],
+      ['Seitei 5 · Kesagiri', 'kata:kesagiri', 'ia-s5'], ['Seitei 6 · Morote-tsuki', 'kata:morote', 'ia-s6'], ['Seitei 7 · Sanpōgiri', 'kata:sanpo', 'ia-s7'], ['Seitei 8 · Ganmen-ate', 'kata:ganmen', 'ia-s8'],
+      ['Seitei 9 · Soete-tsuki', 'kata:soete', 'ia-s9'], ['Seitei 10 · Shihōgiri', 'kata:shiho', 'ia-s10'], ['Seitei 11 · Sōgiri', 'kata:sogiri', 'ia-s11'], ['Seitei 12 · Nukiuchi', 'kata:nukiuchi', 'ia-s12'],
+      ['Shoden: las cuatro primeras direcciones', 'kata:mjer4', 'ia-mjer-shoden']
+    ];
+    const items = DISC() === 'iaido' ? itemsI : itemsK;
     return `${segColeccion('atlas')}<h1>Atlas visual</h1><p class="muted">Todas las ilustraciones en un solo sitio. En las interactivas, toca las partes para ver su nombre.</p>
       ${items.map(i => `<section><h2>${i[0]} <a class="small" href="#/leccion/${i[2]}">lección ›</a></h2>${KArt.get(i[1])}</section>`).join('')}${foot()}`;
   }
@@ -386,24 +411,26 @@
   function viewTrain(a) {
     setTitle('Dōjō');
     if (a) tab = a;
-    const tabs = [['plan', 'Plan de 8 semanas'], ['rutinas', 'Rutinas'], ['herramientas', 'Contador y metrónomo'], ['diario', 'Diario']];
+    const tabs = [['plan', 'Plan por semanas'], ['rutinas', 'Rutinas'], ['herramientas', 'Contador y metrónomo'], ['diario', 'Diario']];
     const body = tab === 'plan' ? trainPlan() : tab === 'rutinas' ? trainRoutines() : tab === 'herramientas' ? trainTools() : trainLog();
     return `${segDojo('entrenar')}<h1>Entrenar en casa</h1><p class="muted">Rutinas cortas, un contador, un metrónomo y un diario. Nada te obliga a entrenar todos los días: aquí solo se suma, nunca se resta.</p>
       <div class="note warn"><b>Antes de empezar</b>Espacio libre de al menos 3 × 3 m y techo alto (cuidado con lámparas). Descalzo o con calzado antideslizante. Calienta primero y, si algo duele, para. Enséñale a tu sensei lo que practicas: es mejor repetir poco y bien corregido que mucho con vicios.</div>
       <div class="tabs" role="tablist">${tabs.map(t => `<button role="tab" class="${tab === t[0] ? 'on' : ''}" data-act="tab" data-t="${t[0]}">${t[1]}</button>`).join('')}</div>${body}${foot()}`;
   }
+  const planL = () => DISC() === 'iaido' ? KD.planIai : KD.plan;
+  const routinesL = () => DISC() === 'iaido' ? KD.routinesIai : KD.routines;
   function trainPlan() {
-    return `<p class="muted small">Un camino de 8 semanas centrado en técnica. Sin fechas ni rachas: cada semana es un bloque, avanza a tu ritmo. Marca lo que vayas haciendo y toca los enlaces para estudiar la lección.</p>
-      ${KD.plan.map(w => {
-      const st = S.checks['plan:' + w.n] || {};
+    return `<p class="muted small">Un camino de ${planL().length} semanas centrado en técnica. Sin fechas ni rachas: cada semana es un bloque, avanza a tu ritmo. Marca lo que vayas haciendo y toca los enlaces para estudiar la lección.</p>
+      ${planL().map(w => {
+      const pk = (DISC() === 'iaido' ? 'planI:' : 'plan:') + w.n; const st = S.checks[pk] || {};
       const done = w.tasks.every((_, i) => st[i]);
       return `<section class="card week ${done ? 'done' : ''}"><h3>${esc(w.t)}</h3><p class="muted small" style="margin:0 0 6px">${esc(w.focus)}</p>
         <div class="lk small">${w.lessons.map(id => LESSONS[id] ? `<a class="chip" href="#/leccion/${id}">${esc(LESSONS[id].t)}</a>` : '').join('')}</div>
-        <ul class="checks">${w.tasks.map((x, i) => `<li class="${st[i] ? 'on' : ''}" data-act="chk" data-l="plan:${w.n}" data-i="${i}"><span class="tick ${st[i] ? 'on' : ''}">${st[i] ? ico('check') : ''}</span><span>${x}</span></li>`).join('')}</ul></section>`;
+        <ul class="checks">${w.tasks.map((x, i) => `<li class="${st[i] ? 'on' : ''}" data-act="chk" data-l="${pk}" data-i="${i}"><span class="tick ${st[i] ? 'on' : ''}">${st[i] ? ico('check') : ''}</span><span>${x}</span></li>`).join('')}</ul></section>`;
     }).join('')}`;
   }
   function trainRoutines() {
-    return `<div class="grid">${KD.routines.map(r => {
+    return `<div class="grid">${routinesL().map(r => {
       const st = RS[r.id] || (RS[r.id] = {});
       return `<section class="card routine"><div class="row" style="justify-content:space-between"><h3>${esc(r.t)}</h3><span class="pill">${r.min} min</span></div><p class="muted small">${esc(r.desc)}</p>
         <ul class="steps">${r.steps.map((s, i) => `<li class="${st[i] ? 'on' : ''}" data-act="step" data-r="${r.id}" data-i="${i}"><span class="tick ${st[i] ? 'on' : ''}">${st[i] ? ico('check') : ''}</span><span class="nm">${esc(s[0])}</span><span class="am">${esc(s[1])}</span>${s[2] ? `<span class="hn">${esc(s[2])}</span>` : ''}</li>`).join('')}</ul>
@@ -473,7 +500,7 @@
       <div class="card level"><span class="seal">${esc(lv.cur.jp.charAt(0))}</span><div class="xp"><div class="row" style="justify-content:space-between"><b class="serif" style="font-size:1.35rem">${esc(lv.cur.n)}</b><span class="small muted">${p.total} XP${lv.next ? ' · próximo: ' + esc(lv.next.n) + ' (' + lv.next.xp + ')' : ''}</span></div><div class="bar"><i style="width:${lv.pct}%"></i></div></div></div>
       <p class="small muted">Los niveles de estudio (kyū → dan) son solo una forma de seguir tu avance en esta web. No son grados oficiales ni sustituyen a un examen.</p>
       ${weakHtml()}
-      <h2>Sellos</h2><div class="grid">${KD.modules.map(m => { const d = modDone(m), ok = d === m.lessons.length; return `<div class="card sealrow"><span class="seal ${ok ? '' : 'off'}">${m.seal}</span><div><b>${esc(m.name.split('·')[0].trim())}</b><div class="small muted">${d}/${m.lessons.length} lecciones${ok ? ' · ¡completo!' : ''}</div></div></div>`; }).join('')}</div>
+      <h2>Sellos · ${DISC() === 'iaido' ? 'Iaidō' : 'Kendō'}</h2><div class="grid">${discMods().map(m => { const d = modDone(m), ok = d === m.lessons.length; return `<div class="card sealrow"><span class="seal ${ok ? '' : 'off'}">${m.seal}</span><div><b>${esc(m.name.split('·')[0].trim())}</b><div class="small muted">${d}/${m.lessons.length} lecciones${ok ? ' · ¡completo!' : ''}</div></div></div>`; }).join('')}</div>
       <h2>De dónde sale tu XP</h2>
       <div class="stats"><div class="card stat"><b>${p.lessons}/${ORDER.length}</b><span>lecciones (+${p.lessons * KD.XP.lesson})</span></div><div class="card stat"><b>${tr}/${all.length}</b><span>preguntas (+${p.quiz * KD.XP.quiz})</span></div><div class="card stat"><b>${p.cards}/${KD.glossary.length}</b><span>términos (+${p.cards * KD.XP.card})</span></div><div class="card stat"><b>${p.mods}/${KD.modules.length}</b><span>módulos (+${p.mods * KD.XP.module})</span></div><div class="card stat"><b>${p.logs}</b><span>prácticas (+${p.logs * KD.XP.log})</span></div></div>
       ${installCard}
@@ -509,6 +536,7 @@
         break;
       }
       case 'say': speak(t.dataset.t); break;
+      case 'disc': { const d = t.dataset.d; if (DISC() === d) break; S.disc = d; save(); applyDisc(); F = null; Z = null; paintTop(); if (route().v === 'leccion' || (route().v === 'quiz' && route().a.indexOf('jugar') === 0)) location.hash = '#/inicio'; else render(); break; }
       case 'chk': {
         const k = t.dataset.l, i = t.dataset.i;
         const st = S.checks[k] || (S.checks[k] = {});
@@ -533,7 +561,7 @@
       case 'tab': tab = t.dataset.t; redo(); break;
       case 'step': { const st = RS[t.dataset.r] || (RS[t.dataset.r] = {}); st[t.dataset.i] = !st[t.dataset.i]; redo(); break; }
       case 'routine-done': {
-        const r = KD.routines.find(x => x.id === t.dataset.r);
+        const r = routinesL().concat(KD.routines, KD.routinesIai || []).find(x => x.id === t.dataset.r);
         S.log.push({ id: Date.now(), date: new Date().toISOString().slice(0, 10), min: r.min, type: 'Rutina: ' + r.t, notes: '' }); save(); RS[r.id] = {};
         redo(); gain(before, 'Práctica anotada'); break;
       }
@@ -588,6 +616,7 @@
   }
 
   /* ---------- Arranque ---------- */
-  applyTheme(); paintTop(); paintBottom(); render();
+  function applyDisc() { document.documentElement.dataset.disc = DISC(); }
+  applyTheme(); applyDisc(); paintTop(); paintBottom(); render();
   if ('serviceWorker' in navigator && /^https?:$/.test(location.protocol)) navigator.serviceWorker.register('sw.js').catch(() => { });
 })();

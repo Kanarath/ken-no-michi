@@ -279,3 +279,12 @@ footer.foot { margin-top: 36px; font-size: .8rem; color: var(--muted); text-alig
 .say { background: var(--card2); border: 2px solid var(--line); border-radius: 12px; width: 34px; height: 34px; display: inline-grid; place-items: center; color: var(--red); vertical-align: middle; margin-left: 6px; padding: 0; }
 .say .ico { width: 18px; height: 18px; }
 .flash .say { margin: 10px 0 0; width: 44px; height: 44px; }
+
+/* ---------- Selector de disciplina (kendō / iaidō) ---------- */
+.top .disc { padding-top: 0; padding-bottom: 8px; }
+.dsw { display: flex; background: var(--card2); border-radius: 14px; padding: 3px; gap: 3px; width: 100%; }
+.dsw button { flex: 1; border: 0; background: none; padding: 8px 6px; border-radius: 11px; font-weight: 800; color: var(--muted); font-size: .86rem; }
+.dsw button.on { background: var(--card); color: var(--red); box-shadow: var(--shadow); }
+:root[data-disc="iaido"] { --red: #2f5fa8; --red-d: #1f4278; --green-bg: #dff3e7; }
+:root[data-disc="iaido"][data-theme="dark"] { --red: #6a96f0; --red-d: #2f4f93; }
+@media (prefers-color-scheme: dark) { :root[data-disc="iaido"]:not([data-theme="light"]) { --red: #6a96f0; --red-d: #2f4f93; } }

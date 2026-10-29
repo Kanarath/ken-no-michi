@@ -91,10 +91,19 @@ window.KArt = (function () {
     uchiotoshiP: { head: [120, 54], sh: [116, 86], hip: [106, 128], L: [160, 66], ang: 52, ff: [142, 212], bf: [70, 204] },
     ukeKote: { head: [118, 54], sh: [114, 86], hip: [104, 128], L: [148, 118], ang: 48, ff: [140, 214], bf: [68, 206] },
     ukeDo: { head: [118, 54], sh: [114, 86], hip: [104, 128], L: [150, 96], ang: 76, ff: [140, 214], bf: [68, 206] }
+,
+    iaiTachi: { iai: true, head: [108, 40], sh: [106, 72], hip: [104, 116], ff: [112, 214], bf: [94, 214], lh: [116, 120], rh: [112, 136], noShinai: true, saya: [[74, 120], [140, 104]] },
+    iaiSeiza: { iai: true, head: [108, 100], sh: [104, 130], hip: [96, 172], legs: { k: [150, 212], f: [100, 220] }, lh: [140, 168], rh: [134, 172], noShinai: true, saya: [[60, 166], [128, 150]] },
+    iaiTatehiza: { iai: true, head: [112, 92], sh: [108, 122], hip: [98, 170], legs: { k: [150, 146], f: [148, 220] }, legsB: { k: [132, 214], f: [92, 220] }, lh: [132, 160], rh: [142, 150], noShinai: true, saya: [[64, 166], [132, 150]] },
+    iaiNuki: { iai: true, head: [116, 42], sh: [112, 74], hip: [104, 118], ff: [132, 214], bf: [88, 212], L: [146, 100], ang: -8, rh: [112, 114], katana: true, blade: 74, saya: [[60, 128], [116, 114]], sayaNoTsuka: true },
+    iaiJodan: { iai: true, head: [118, 50], sh: [114, 82], hip: [104, 128], ff: [142, 214], bf: [70, 206], L: [132, 26], ang: 140, katana: true, saya: [[46, 126], [100, 118]], sayaNoTsuka: true },
+    iaiKiri: { iai: true, head: [124, 50], sh: [120, 82], hip: [108, 126], ff: [150, 212], bf: [84, 206], L: [158, 98], ang: 4, katana: true, saya: [[50, 126], [104, 118]], sayaNoTsuka: true },
+    iaiChiburi: { iai: true, head: [116, 46], sh: [112, 78], hip: [104, 122], ff: [138, 214], bf: [70, 206], L: [130, 112], ang: 36, rh: [120, 116], katana: true, saya: [[50, 128], [106, 120]], sayaNoTsuka: true },
+    iaiNoto: { iai: true, head: [116, 46], sh: [112, 78], hip: [104, 122], ff: [136, 214], bf: [72, 208], L: [152, 100], ang: 166, rh: [112, 118], katana: true, blade: 12, saya: [[52, 128], [112, 116]], sayaNoTsuka: true }
   };
 
   function figure(p, o) {
-    o = o || {};
+    o = Object.assign({}, o || {}); if (p.iai) o.noBogu = true;
     const dx = o.dx || 0, t = o.tint || {};
     const KEI = t.key || C.indigo, HAK = t.hak || C.indigoD, MEN = t.men || C.men;
     const S = a => [a[0] + dx, a[1]];
@@ -104,7 +113,8 @@ window.KArt = (function () {
     let legBack, legFront;
     if (p.legs) {
       const k = S(p.legs.k), ft = S(p.legs.f);
-      legBack = legFront = { k, a: ft, raw: true };
+      legFront = { k, a: ft, raw: true };
+      legBack = p.legsB ? { k: S(p.legsB.k), a: S(p.legsB.f), raw: true } : legFront;
     } else {
       const ff = S(p.ff), bf = S(p.bf);
       legFront = { k: ik(hip, ff, 53, 53, -1), a: ff };
@@ -155,6 +165,23 @@ window.KArt = (function () {
       out.push(`<circle cx="${f(head[0])}" cy="${f(head[1])}" r="15" fill="${C.skin}" stroke="${C.ink}"/>`);
     }
 
+    // Saya y katana (iaidō)
+    if (p.saya) {
+      const s1 = S(p.saya[0]), s2 = S(p.saya[1]);
+      out.push(`<path d="M${pt(s1)}L${pt(s2)}" stroke="${C.ink}" stroke-width="8" stroke-linecap="round"/><circle cx="${f(s1[0])}" cy="${f(s1[1])}" r="4.2" fill="${C.gold}"/>`);
+      if (!p.sayaNoTsuka) {
+        const dd = [s2[0] - s1[0], s2[1] - s1[1]], nn = Math.hypot(dd[0], dd[1]) || 1, te2 = [s2[0] + dd[0] / nn * 30, s2[1] + dd[1] / nn * 30];
+        out.push(`<path d="M${pt(s2)}L${pt(te2)}" stroke="#2a2a3a" stroke-width="7" stroke-linecap="round"/><path d="M${pt(s2)}L${pt(te2)}" stroke="${C.gold}" stroke-width="1.4" stroke-dasharray="3 4"/>`);
+      }
+    }
+    if (p.katana && tip) {
+      const b = [L[0] - u[0] * 9, L[1] - u[1] * 9], tb = [L[0] + u[0] * 26, L[1] + u[1] * 26];
+      const bl = p.blade || 100, te = [tb[0] + u[0] * bl, tb[1] + u[1] * bl];
+      const pn = [-u[1], u[0]];
+      out.push(`<path d="M${pt(tb)}L${pt(te)}" stroke="${C.ink}" stroke-width="6" stroke-linecap="round"/><path d="M${pt(tb)}L${pt(te)}" stroke="#eef1f6" stroke-width="3.4" stroke-linecap="round"/>`);
+      out.push(`<path d="M${pt(b)}L${pt(tb)}" stroke="${C.ink}" stroke-width="7" stroke-linecap="round"/><path d="M${pt(b)}L${pt(tb)}" stroke="#2a2a3a" stroke-width="4.6" stroke-linecap="round"/>`);
+      out.push(`<path d="M${pt([tb[0] - pn[0] * 7, tb[1] - pn[1] * 7])}L${pt([tb[0] + pn[0] * 7, tb[1] + pn[1] * 7])}" stroke="${C.gold}" stroke-width="3.6" stroke-linecap="round"/>`);
+    } else
     // Shinai
     if (hasS && tip) {
       const b = [L[0] - u[0] * 9, L[1] - u[1] * 9];
@@ -566,9 +593,10 @@ window.KArt = (function () {
   }
 
   /* ---------- Mascota ---------- */
-  function mascot() {
+  function mascot(iai) {
+    const BLADE = iai ? "#eef1f6" : C.bamb, GRIP = iai ? "#2a2a3a" : C.leather;
     let g = '';
-    g += `<path d="M104,132 L121,42" stroke="${C.ink}" stroke-width="8" stroke-linecap="round"/><path d="M106,120 L120,48" stroke="${C.bamb}" stroke-width="5" stroke-linecap="round"/><path d="M104,130 L108,110" stroke="${C.leather}" stroke-width="5.4" stroke-linecap="round"/><path d="M99,113 L113,116" stroke="${C.ink}" stroke-width="4" stroke-linecap="round"/>`;
+    g += `<path d="M104,132 L121,42" stroke="${C.ink}" stroke-width="8" stroke-linecap="round"/><path d="M106,120 L120,48" stroke="${BLADE}" stroke-width="5" stroke-linecap="round"/><path d="M104,130 L108,110" stroke="${GRIP}" stroke-width="5.4" stroke-linecap="round"/><path d="M99,113 L113,116" stroke="${C.ink}" stroke-width="4" stroke-linecap="round"/>`;
     g += `<path d="M40,104 h50 l9,36 h-68 z" fill="${C.indigoD}" stroke="${C.ink}" stroke-width="1.4"/>`;
     g += `<path d="M52,106 l-3,34 M65,106 v34 M78,106 l3,34" stroke="${C.indigoL}" stroke-width="1.2" opacity=".6"/>`;
     g += `<rect x="42" y="90" width="46" height="20" rx="8" fill="${C.indigo}" stroke="${C.ink}" stroke-width="1.2"/><rect x="41" y="104" width="48" height="6" rx="3" fill="${C.white}"/>`;
@@ -615,6 +643,65 @@ window.KArt = (function () {
     return `<svg class="ico ${cls || ''}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICONS[name] || ''}</svg>`;
   }
 
+  /* ---------- Iaidō ---------- */
+  SEQ['iai-basico'] = { t: 'La secuencia básica del iaidō', solo: 1, fr: [
+    { figs: [A('iaiTachi')], cap: '1 · Taitō: la espada en el obi, a la izquierda' },
+    { figs: [A('iaiNuki')], cap: '2 · Nukitsuke: sacas y cortas en un solo movimiento' },
+    { figs: [A('iaiJodan')], cap: '3 · Subes la espada sobre la cabeza' },
+    { figs: [A('iaiKiri')], cap: '4 · Kiritsuke: el corte final, con control' },
+    { figs: [A('iaiChiburi')], cap: '5 · Chiburi: sacudida simbólica de la hoja' },
+    { figs: [A('iaiNoto')], cap: '6 · Nōtō: envainas con calma, sin mirar' }] };
+  SEQ['iai-seiza'] = { t: 'Posturas del iaidō', solo: 1, fr: [
+    { figs: [A('iaiSeiza')], cap: 'Seiza: sentado sobre los talones' },
+    { figs: [A('iaiTatehiza')], cap: 'Tatehiza: una rodilla levantada' },
+    { figs: [A('iaiTachi')], cap: 'De pie (tachi)' }] };
+
+  const KT = {
+    mae: [[0, -1]], ushiro: [[0, 1]], ukenagashi: [[-1, 0]], tsukaate: [[0, -1], [0, 1]], kesagiri: [[0, -1]],
+    morote: [[-.55, -1], [.55, -1], [0, 1]], sanpo: [[0, -1], [1, 0], [-1, 0]], ganmen: [[0, -1], [0, 1]], soete: [[-1, 0]],
+    shiho: [[-.8, -.8], [.8, -.8], [-.8, .8], [.8, .8]], sogiri: [[0, -1]], nukiuchi: [[0, -1]],
+    mjer4: [[0, -1, 'Mae'], [1, 0, 'Migi'], [-1, 0, 'Hidari'], [0, 1, 'Ushiro']]
+  };
+  function kataTop(key) {
+    const o = KT[key] || [], cx = 120, cy = 118, R = 78;
+    let g = `<rect width="240" height="236" rx="10" fill="${C.wood}" opacity=".3"/>`;
+    g += `<circle cx="${cx}" cy="${cy}" r="${R}" fill="none" stroke="${C.gray}" stroke-width="1" stroke-dasharray="3 5"/>`;
+    g += `<text x="${cx}" y="16" text-anchor="middle" font-size="10.5" fill="${C.ink}" font-family="sans-serif">frente</text>`;
+    o.forEach((v, i) => {
+      const x = cx + v[0] * R, y = cy + v[1] * R, lab = v[2] || (i + 1);
+      g += `<line x1="${cx}" y1="${cy}" x2="${f(cx + v[0] * (R - 16))}" y2="${f(cy + v[1] * (R - 16))}" stroke="${C.red}" stroke-width="1.6" stroke-dasharray="4 4" opacity=".6"/>`;
+      g += `<circle cx="${f(x)}" cy="${f(y)}" r="${typeof lab === 'string' ? 17 : 12}" fill="#6b7da8" stroke="${C.ink}"/><text x="${f(x)}" y="${f(y + 4)}" text-anchor="middle" font-size="${typeof lab === 'string' ? 9.5 : 11}" font-weight="700" fill="${C.white}" font-family="sans-serif">${lab}</text>`;
+    });
+    g += `<circle cx="${cx}" cy="${cy}" r="14" fill="${C.indigo}" stroke="${C.ink}" stroke-width="1.4"/><path d="M${cx},${cy - 24}L${cx - 8},${cy - 12}L${cx + 8},${cy - 12}Z" fill="${C.ink}"/><text x="${cx}" y="${cy + 4}" text-anchor="middle" font-size="10" font-weight="700" fill="${C.white}" font-family="sans-serif">Tú</text>`;
+    g += `<text x="${cx}" y="230" text-anchor="middle" font-size="9.5" fill="${C.ink}" font-family="sans-serif">Oponentes imaginarios, vista desde arriba</text>`;
+    return `<svg viewBox="0 0 240 236" role="img" aria-label="Posición de los oponentes imaginarios">${g}</svg>`;
+  }
+
+  function katana() {
+    const y = 56;
+    let g = '';
+    g += `<g data-part="kashira"><rect x="12" y="${y - 11}" width="16" height="22" rx="4" fill="${C.gold}" stroke="${C.ink}"/></g>`;
+    g += `<g data-part="tsuka"><rect x="28" y="${y - 10}" width="146" height="20" rx="3" fill="#2a2a3a" stroke="${C.ink}"/>` +
+      Array.from({ length: 12 }, (_, i) => `<path d="M${40 + i * 12},${y - 10} l6,10 l-6,10 M${46 + i * 12},${y - 10} l-6,10 l6,10" stroke="${C.white}" stroke-width="1.1" fill="none" opacity=".55"/>`).join('') + `</g>`;
+    g += `<g data-part="fuchi"><rect x="174" y="${y - 12}" width="12" height="24" rx="3" fill="${C.gold}" stroke="${C.ink}"/></g>`;
+    g += `<g data-part="tsuba"><ellipse cx="194" cy="${y}" rx="8" ry="27" fill="${C.ink}" stroke="${C.gold}" stroke-width="2"/></g>`;
+    g += `<g data-part="habaki"><rect x="203" y="${y - 9}" width="16" height="18" rx="2" fill="${C.gold}" stroke="${C.ink}"/></g>`;
+    g += `<g data-part="ha"><path d="M219,${y + 8} L590,${y + 8} L620,${y - 4} L590,${y - 8} L219,${y - 8} Z" fill="#e9ecf2" stroke="${C.ink}"/></g>`;
+    g += `<g data-part="mune"><rect x="219" y="${y - 9}" width="371" height="4" fill="#9aa0ad" stroke="${C.ink}" stroke-width=".6"/></g>`;
+    g += `<g data-part="shinogi"><line x1="219" y1="${y - 2}" x2="600" y2="${y - 2}" stroke="#7d8493" stroke-width="1.4"/></g>`;
+    g += `<g data-part="hamon"><path d="M222,${y + 4}` + Array.from({ length: 22 }, (_, i) => ` q8,-5 17,0 t17,0`.slice(0, 0) + ` l${17},${i % 2 ? 2 : -2}`).join('') + `" fill="none" stroke="#9aa0ad" stroke-width="1.3"/></g>`;
+    g += `<g data-part="kissaki"><path d="M590,${y + 8} L620,${y - 4} L590,${y - 8} Z" fill="none" stroke="${C.red}" stroke-width="2.4"/></g>`;
+    // Saya
+    const sy = 140;
+    g += `<g data-part="saya"><rect x="40" y="${sy - 9}" width="470" height="18" rx="9" fill="${C.ink}"/><line x1="60" y1="${sy - 3}" x2="500" y2="${sy - 3}" stroke="#3a3a48" stroke-width="1.2"/></g>`;
+    g += `<g data-part="koiguchi"><rect x="40" y="${sy - 11}" width="18" height="22" rx="4" fill="${C.gold}" stroke="${C.ink}"/></g>`;
+    g += `<g data-part="kurikata"><rect x="120" y="${sy - 18}" width="16" height="10" rx="3" fill="#2a2a3a" stroke="${C.gold}"/></g>`;
+    g += `<g data-part="sageo"><path d="M128,${sy - 12} C150,${sy + 40} 220,${sy + 46} 280,${sy + 8}" fill="none" stroke="${C.red}" stroke-width="3.4"/></g>`;
+    g += `<g data-part="kojiri"><rect x="500" y="${sy - 10}" width="16" height="20" rx="6" fill="${C.gold}" stroke="${C.ink}"/></g>`;
+    g += `<g font-family="sans-serif" font-size="11" fill="${C.ink}"><text x="12" y="${y - 20}">kashira</text><text x="80" y="${y - 20}">tsuka</text><text x="166" y="${y - 32}">fuchi</text><text x="186" y="${y + 42}">tsuba</text><text x="300" y="${y - 18}">mune</text><text x="300" y="${y + 24}">ha (filo)</text><text x="560" y="${y + 24}">kissaki</text><text x="30" y="${sy + 30}">koiguchi</text><text x="100" y="${sy - 26}">kurikata</text><text x="230" y="${sy + 44}">sageo</text><text x="470" y="${sy + 30}">kojiri</text><text x="262" y="${sy - 18}">saya</text></g>`;
+    return `<svg viewBox="0 0 640 196" role="img" aria-label="Partes de la katana y su saya">${g}</svg>`;
+  }
+
   /* ---------- Registro ---------- */
   function get(spec) {
     const [k, arg] = spec.split(':');
@@ -623,6 +710,8 @@ window.KArt = (function () {
       case 'strip': case 'seq': return seq(arg);
       case 'vs': return `<div class="art one">${scene([{ pose: arg }])}</div>`;
       case 'duo': { const p = arg.split(','); return `<div class="art one">${scene([{ pose: p[0] }], { opp: { pose: p[1] } })}</div>`; }
+      case 'kata': return `<div class="art one small">${kataTop(arg)}</div>`;
+      case 'katana': return `<div class="art interactive wide" data-kind="katana">${katana()}</div>`;
       case 'centro': return `<div class="art one wide">${centro()}</div>`;
       case 'kirikaeshi': return `<div class="art one wide">${kirikaeshi()}</div>`;
       case 'frontchudan': return `<div class="art one small">${front('bogu')}</div>`;
@@ -642,5 +731,5 @@ window.KArt = (function () {
     }
   }
 
-  return { get, logo, icon, mitsudomoe, scene, solo, front, shinai, mascot, seq, SEQ, POSES, C };
+  return { get, logo, icon, mitsudomoe, scene, solo, front, shinai, katana, mascot, seq, SEQ, POSES, C };
 })();
