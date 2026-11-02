@@ -1,5 +1,5 @@
 /* Service worker: red primero, caché como respaldo (para usar sin conexión en el dōjō) */
-const CACHE = 'ken-no-michi-v7';
+const CACHE = 'ken-no-michi-v8';
 const SHELL = ['./', 'index.html', 'css/style.css', 'js/art.js', 'js/data-glossary.js', 'js/data-lessons-1.js', 'js/data-lessons-2.js', 'js/data-tech-1.js', 'js/data-tech-3.js', 'js/data-tech-4.js', 'js/data-exam.js', 'js/data-tech-2.js', 'js/data-iai-1.js', 'js/data-iai-2.js', 'js/data-iai-3.js', 'js/data-extra.js', 'js/app.js', 'favicon.svg', 'manifest.webmanifest', 'icons/icon-192.png', 'icons/icon-512.png', 'icons/icon-maskable-512.png', 'icons/apple-touch-icon.png'];
 
 self.addEventListener('install', e => {
@@ -13,7 +13,7 @@ self.addEventListener('fetch', e => {
   const url = new URL(e.request.url);
   if (url.origin !== location.origin) return;
   e.respondWith(
-    fetch(e.request).then(res => {
+    fetch(e.request, { cache: 'no-cache' }).then(res => {
       const copy = res.clone();
       caches.open(CACHE).then(c => c.put(e.request, copy));
       return res;
