@@ -289,6 +289,27 @@ KD.quizCats = { vocab: 'Vocabulario', equipo: 'Equipo', postura: 'Postura y pies
   Q('tecnica', '¿Qué técnica muestra el kata 7?', 'Men-nuki-dō', ['Kote-nuki-kote', 'Suriage-men', 'Maki-kaeshi'], '', 'kata-7');
   Q('tecnica', '¿Qué espada usa shidachi en las formas 8 a 10?', 'Kodachi (espada corta)', ['Tachi', 'Dos tachi', 'Ninguna'], '', 'kata-kodachi');
   Q('tecnica', '¿Qué es ukenagashi?', 'Un desvío flexible del corte, no un bloqueo', ['Un golpe fuerte', 'Un saludo', 'Una guardia'], '', 'kata-kodachi');
+  // Examen de kyū (programa estatal)
+  Q('shiai', '¿Cuál es el primer grado del programa oficial de kyū?', '5.º kyū', ['6.º kyū', '1.er dan', '3.er kyū'], '', 'ex-programa');
+  Q('shiai', '¿Qué kata pide el 5.º kyū?', 'El kata 1', ['Los kata 1 a 3', 'Ninguno', 'Los kata 1 a 5'], '', 'ex-5kyu');
+  Q('shiai', '¿Cuánto es la permanencia mínima orientativa entre 5.º y 4.º kyū?', '4 meses', ['1 mes', '1 año', '2 años'], '', 'ex-programa');
+  Q('shiai', '¿Exige el 5.º kyū bōgu completo?', 'No obligatoriamente', ['Sí, siempre', 'Solo el men', 'Solo el dō'], '', 'ex-5kyu');
+  Q('shiai', '¿Qué suburi pide el 5.º kyū?', 'Jōge-buri y naname-buri', ['Solo haya-suburi', 'Zenshin-kōtai y haya', 'Ninguno'], '', 'ex-5kyu');
+  Q('shiai', '¿Qué kata se piden para el 3.er kyū?', 'Del 1 al 3', ['Solo el 1', 'Del 1 al 5', 'Ninguno'], '', 'ex-3kyu');
+  Q('shiai', '¿Qué se añade en 4.º kyū?', 'Mantenimiento del equipo, motodachi y kakari, ma-ai, uchikomi y uke', ['Shiai completo', 'Kata 5', 'Jōdan'], '', 'ex-4kyu');
+  Q('shiai', '¿Qué se añade en 3.er kyū?', 'Yūkō-datotsu, ki-ken-tai-ichi, nidan y sandan-waza y tai-atari', ['Suriage', 'Kaeshi', 'Kata 7'], '', 'ex-3kyu');
+  Q('shiai', '¿Qué se añade en 2.º kyū?', 'Hiki-waza, harai, debana, kakari-geiko, ji-geiko y shiai inicial', ['Solo kata 1', 'Solo suburi', 'Kodachi'], '', 'ex-2kyu');
+  Q('shiai', '¿Qué se añade en 1.er kyū?', 'Tai-sabaki, suriage, kaeshi y nuki', ['Solo kirikaeshi', 'Solo jōdan', 'Solo kata 1'], '', 'ex-2kyu');
+  Q('shiai', '¿Cuántos ejercicios tiene el kihon-waza con bokutō del programa?', 'Nueve', ['Tres', 'Siete', 'Doce'], '', 'ex-bokuto');
+  Q('shiai', '¿Qué ejercicios con bokutō corresponden al 3.er kyū?', 'Del 1 al 3', ['Del 4 al 6', 'Del 7 al 9', 'Ninguno'], '', 'ex-bokuto');
+  Q('shiai', '¿Qué ejercicios con bokutō corresponden al 1.er kyū?', 'Del 7 al 9', ['Del 1 al 3', 'Del 4 al 6', 'Todos'], '', 'ex-bokuto');
+  Q('shiai', '¿Qué técnica es el ejercicio 5 con bokutō?', 'Men-nuki-dō', ['Debana-kote', 'Hiki-dō', 'Harai-men'], '', 'ex-bokuto');
+  Q('shiai', '¿Qué técnica es el ejercicio 7 con bokutō?', 'Debana-kote', ['Men-kaeshi-dō', 'Kote-suriage-men', 'Men-nuki-dō'], '', 'ex-bokuto');
+  Q('shiai', '¿Qué es "naname-buri"?', 'El suburi en diagonal (sayū-men)', ['El suburi rápido', 'El suburi hacia atrás', 'Un golpe a la garganta'], '', 'ex-5kyu');
+  Q('shiai', '¿Cuál es la edad mínima para examinarse de dan según la EKF?', '14 años', ['10 años', '18 años', '21 años'], '', 'ex-dan');
+  Q('shiai', '¿En qué consiste el examen de dan?', 'En dos combates y los kata correspondientes', ['Solo en kata', 'Solo en kirikaeshi', 'En un examen escrito'], '', 'ex-dan');
+  Q('shiai', '¿Qué debe requerir siempre un examen de kyū?', 'Protocolo y vestimenta, kata, kirikaeshi y uchikomi', ['Solo combate', 'Solo suburi', 'Solo kata'], '', 'ex-programa');
+  Q('shiai', '¿Qué se recomienda hacer con los ejercicios de bokutō desde el principio?', 'Ir intercalándolos aunque su dominio llegue más tarde', ['Dejarlos para el dan', 'No practicarlos', 'Practicarlos solo en combate'], '', 'ex-programa');
   KD.quiz = out;
 })();
 

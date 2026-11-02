@@ -333,6 +333,8 @@
 
   KD.modules = [
     mod(old.shoshin, ['que-es-kendo', 'etiqueta-dojo', 'saludos', 'clase-tipo']),
+    mod({ id: 'examen', name: 'Examen · Tu camino de kyū', jp: '級', seal: '級', icon: 'flag', desc: 'El programa oficial de kyū, qué se pide en tu primer examen y cómo prepararlo, y un plan para tener la mejor técnica posible.' },
+      ['ex-programa', 'ex-5kyu', 'ex-tus-kata', 'ex-mejor', 'ex-4kyu', 'ex-3kyu', 'ex-2kyu', 'ex-bokuto', 'ex-dia', 'ex-dan']),
     mod(old.kendogu, ['shinai', 'keikogi-hakama', 'bogu', 'vestirse', 'cuidado-equipo']),
     mod({ id: 'kihon', name: 'Kihon · Postura base', jp: '基本', seal: '基', icon: 'feet', desc: 'Postura, mirada, respiración, agarre y espíritu: lo que hay debajo de cada técnica.' },
       ['shisei', 'metsuke', 'respiracion', 'tenouchi', 'kiai-zanshin']),

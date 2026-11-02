@@ -215,5 +215,9 @@ KD.glossary = [
   ['Hanmi', '半身', 'Postura de medio cuerpo, de lado.', 'postura'],
   ['Irimi', '入身', 'Entrar en la distancia del atacante.', 'pies'],
   ['Omote / Ura', '表 / 裏', 'Lado frontal / lado posterior (por ejemplo, el lado izquierdo o derecho del shinai al hacer suriage).', 'waza'],
-  ['Katsugi', '担ぎ', 'Llevar el bokutō al hombro.', 'postura']
+  ['Katsugi', '担ぎ', 'Llevar el bokutō al hombro.', 'postura'],
+  ['Naname-buri', '斜め振り', 'Suburi en diagonal; equivale a sayū-men.', 'golpe'],
+  ['Keiko-hō', '稽古法', 'Método de práctica.', 'practica'],
+  ['Bokutō ni yoru kendō kihon-waza keiko-hō', '木刀による剣道基本技稽古法', 'Nueve ejercicios de técnica básica con bokutō, presentados por la AJKF en 2001.', 'practica'],
+  ['Shinsa', '審査', 'Examen de grado.', 'base']
 ].map(x => ({ id: x[0].toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, ''), t: x[0], k: x[1], e: x[2], c: x[3] }));
