@@ -139,7 +139,7 @@
 
   add({
     id: 'men-pasante', t: 'Men con pase y vuelta', jp: '面・抜けて残心', sub: 'Golpear, seguir hacia delante y girar',
-    art: ['seq:zanshin'],
+    art: ['anim:men-pasante', 'seq:zanshin'],
     intro: 'En el men "pasante" golpeas con fumikomi y no frenas: sigues avanzando unos pasos junto al compañero, te giras y vuelves a la guardia mirándole. Es la forma habitual de practicar el golpe en el dōjō y enseña a no detenerte tras el impacto.',
     why: 'Evita el error más común del principiante: frenar justo después de golpear. Seguir en movimiento da potencia al golpe, protege tu espalda y entrena el zanshin.',
     steps: ['Men con okuri-ashi, fumikomi y kiai, sin parar tras el impacto.', 'Sigues avanzando unos pasos pequeños y rápidos, pasando junto al compañero (tu sensei te indica por qué lado).', 'Mantén el shinai delante de ti y los brazos recogidos mientras pasas.', 'Cuando ya hay distancia, gírate hacia el compañero sin dar la espalda.', 'Vuelve a chūdan, mirando al compañero, con zanshin.'],

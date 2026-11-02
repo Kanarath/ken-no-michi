@@ -61,3 +61,7 @@ En `js/data-tech-*.js`, `KD.add({ id, t, jp, sub, art, intro, why, steps, keys, 
 Un selector arriba cambia toda la app (Camino, Repaso, Colección, Plan y rutinas). Cada módulo lleva `disc: 'iaido'` (si no, es kendō); las preguntas heredan la disciplina de su lección; el glosario usa `d: 'iaido'` y una lista de términos comunes (`SHARED` en `js/app.js`). El XP, el diario y la copia de seguridad son compartidos. El iaidō usa un color de acento azul.
 
 Las descripciones de los kata de seitei-gata y de las series de Eishin-ryū son resúmenes de fuentes públicas: cada lección avisa de lo que debe confirmarse con el sensei.
+
+## Técnica en movimiento
+
+`KArt.get('anim:<clave>')` inserta un reproductor en cámara lenta (0,25×, 0,5×, 1×) con línea de tiempo, saltos entre fases y **líneas guía** (trayectoria del kensen, recorrido de la mano izquierda, eje vertical del cuerpo y blanco). Las animaciones están en `js/data-anim.js` como fotogramas clave (`pose`, `dx`, `touch`, `cap`, `note`, `g`); el motor interpola entre poses en `js/art.js`. Hay animaciones de men, yokomen, kote, dō, tsuki, kote-men, men con pase, jōge-buri, okuri-ashi, fumikomi, kirikaeshi completo y los kata 1, 2 y 3.

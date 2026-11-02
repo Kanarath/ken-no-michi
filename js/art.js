@@ -90,7 +90,8 @@ window.KArt = (function () {
     blockP: { head: [118, 52], sh: [114, 84], hip: [104, 128], L: [136, 52], ang: -58, ff: [140, 214], bf: [68, 206] },
     uchiotoshiP: { head: [120, 54], sh: [116, 86], hip: [106, 128], L: [160, 66], ang: 52, ff: [142, 212], bf: [70, 204] },
     ukeKote: { head: [118, 54], sh: [114, 86], hip: [104, 128], L: [148, 118], ang: 48, ff: [140, 214], bf: [68, 206] },
-    ukeDo: { head: [118, 54], sh: [114, 86], hip: [104, 128], L: [150, 96], ang: 76, ff: [140, 214], bf: [68, 206] }
+    ukeDo: { head: [118, 54], sh: [114, 86], hip: [104, 128], L: [150, 96], ang: 76, ff: [140, 214], bf: [68, 206] },
+    passing: { head: [166, 54], sh: [160, 84], hip: [150, 126], L: [190, 52], ang: -8, ff: [200, 212], bf: [140, 206] }
 ,
     iaiTachi: { iai: true, head: [108, 40], sh: [106, 72], hip: [104, 116], ff: [112, 214], bf: [94, 214], lh: [116, 120], rh: [112, 136], noShinai: true, saya: [[74, 120], [140, 104]] },
     iaiSeiza: { iai: true, head: [108, 100], sh: [104, 130], hip: [96, 172], legs: { k: [150, 212], f: [100, 220] }, lh: [140, 168], rh: [134, 172], noShinai: true, saya: [[60, 166], [128, 150]] },
@@ -178,8 +179,8 @@ window.KArt = (function () {
       const b = [L[0] - u[0] * 9, L[1] - u[1] * 9], tb = [L[0] + u[0] * 26, L[1] + u[1] * 26];
       const bl = p.blade || 100, te = [tb[0] + u[0] * bl, tb[1] + u[1] * bl];
       const pn = [-u[1], u[0]];
-      out.push(`<path d="M${pt(tb)}L${pt(te)}" stroke="${C.ink}" stroke-width="6" stroke-linecap="round"/><path d="M${pt(tb)}L${pt(te)}" stroke="#eef1f6" stroke-width="3.4" stroke-linecap="round"/>`);
-      out.push(`<path d="M${pt(b)}L${pt(tb)}" stroke="${C.ink}" stroke-width="7" stroke-linecap="round"/><path d="M${pt(b)}L${pt(tb)}" stroke="#2a2a3a" stroke-width="4.6" stroke-linecap="round"/>`);
+      out.push(`<path d="M${pt(tb)}L${pt(te)}" stroke="${C.ink}" stroke-width="6" stroke-linecap="round"/><path d="M${pt(tb)}L${pt(te)}" stroke="${p.wood ? C.bamb : "#eef1f6"}" stroke-width="3.4" stroke-linecap="round"/>`);
+      out.push(`<path d="M${pt(b)}L${pt(tb)}" stroke="${C.ink}" stroke-width="7" stroke-linecap="round"/><path d="M${pt(b)}L${pt(tb)}" stroke="${p.wood ? C.leather : "#2a2a3a"}" stroke-width="4.6" stroke-linecap="round"/>`);
       out.push(`<path d="M${pt([tb[0] - pn[0] * 7, tb[1] - pn[1] * 7])}L${pt([tb[0] + pn[0] * 7, tb[1] + pn[1] * 7])}" stroke="${C.gold}" stroke-width="3.6" stroke-linecap="round"/>`);
     } else
     // Shinai
@@ -204,7 +205,7 @@ window.KArt = (function () {
 
   /* Anclajes de un figurín (para que un golpe "toque" el blanco del otro) */
   function geom(key, dx, flip) {
-    const p = POSES[key], S = a => [a[0] + dx, a[1]], F = a => flip ? [W - a[0], a[1]] : a;
+    const p = typeof key === "string" ? POSES[key] : key, S = a => [a[0] + dx, a[1]], F = a => flip ? [W - a[0], a[1]] : a;
     const head = F(S(p.head)), sh = F(S(p.sh)), hip = F(S(p.hip)), s = flip ? -1 : 1;
     let L = p.L ? S(p.L) : S(p.lh), R;
     if (p.L) { const a = p.ang * Math.PI / 180; R = p.rh ? S(p.rh) : [L[0] + Math.cos(a) * 14, L[1] + Math.sin(a) * 14]; } else R = S(p.rh);
@@ -707,6 +708,138 @@ window.KArt = (function () {
     return `<svg viewBox="0 0 640 196" role="img" aria-label="Partes de la katana y su saya">${g}</svg>`;
   }
 
+  /* ---------- Animación paso a paso (cámara lenta con líneas guía) ---------- */
+  const ANIM = {};
+  const FIELDS = ['head', 'sh', 'hip', 'L', 'ff', 'bf', 'rh'];
+  const ease = u => (u < .5 ? 2 * u * u : 1 - Math.pow(-2 * u + 2, 2) / 2);
+  const lp = (a, b, u) => a + (b - a) * u;
+  function mixPose(a, b, u) {
+    const r = Object.assign({}, b);
+    FIELDS.forEach(k => { const A = a[k] || b[k], B = b[k] || a[k]; if (A && B) r[k] = [lp(A[0], B[0], u), lp(A[1], B[1], u)]; });
+    if (typeof a.ang === 'number' && typeof b.ang === 'number') r.ang = lp(a.ang, b.ang, u);
+    return r;
+  }
+  const poseOf = s => Object.assign({}, POSES[s.pose], s.over || {});
+  const reachX = (p, len) => p.L[0] + Math.cos(p.ang * Math.PI / 180) * len;
+  function compile(def) {
+    const ks = [];
+    let prev = { A: poseOf({ pose: 'chudan' }), O: poseOf({ pose: 'chudan' }), dxA: 0, dxO: 0, fx: 1, cam: 0 };
+    let t = 0;
+    (def.keys || []).forEach((k, i) => {
+      const s = { A: prev.A, O: prev.O, dxA: prev.dxA, dxO: prev.dxO, fx: prev.fx, cam: prev.cam };
+      if (k.a && k.a.pose) s.A = poseOf(k.a);
+      if (k.o && k.o.pose) s.O = poseOf(k.o);
+      if (k.a && k.a.dx !== undefined) s.dxA = k.a.dx;
+      if (k.a && k.a.dxr !== undefined) s.dxA = prev.dxA + k.a.dxr;
+      if (k.o && k.o.dx !== undefined) s.dxO = k.o.dx;
+      if (k.o && k.o.dxr !== undefined) s.dxO = prev.dxO + k.o.dxr;
+      if (k.fx !== undefined) s.fx = k.fx;
+      if (k.cam !== undefined) s.cam = k.cam;
+      if (k.o && k.o.touch) {
+        const tg = k.o.vs ? { p: poseOf(k.o.vs), dx: k.o.vs.dx || 0 } : { p: s.A, dx: s.dxA };
+        const tp = geom(tg.p, tg.dx, false)[k.o.touch];
+        s.dxO = W - tp[0] - reachX(s.O, k.o.len || (s.O.katana ? 98 : 83));
+      }
+      if (k.a && k.a.touch) {
+        const tg = k.a.vs ? { p: poseOf(k.a.vs), dx: k.a.vs.dx || 0 } : { p: s.O, dx: s.dxO };
+        const tp = geom(tg.p, tg.dx, true)[k.a.touch];
+        s.dxA = tp[0] - reachX(s.A, k.a.len || (s.A.katana ? 98 : 83));
+      }
+      const dur = i === 0 ? 0 : (k.dur || 500), hold = k.hold !== undefined ? k.hold : 250;
+      ks.push(Object.assign({}, s, { dur, hold, tStart: t, tEnd: t + dur + hold, cap: k.cap || '', note: k.note || '', g: k.g || [], tg: k.target !== undefined ? k.target : def.target }));
+      t += dur + hold;
+      prev = s;
+    });
+    return { keys: ks, total: t, def };
+  }
+  function stateAt(c, tt) {
+    const ks = c.keys, k0 = ks[0];
+    if (tt <= k0.tEnd) return { i: 0, A: k0.A, O: k0.O, dxA: k0.dxA, dxO: k0.dxO, fx: k0.fx, cam: k0.cam };
+    for (let i = 1; i < ks.length; i++) {
+      const k = ks[i];
+      if (tt < k.tEnd) {
+        const p = ks[i - 1], u = tt < k.tStart + k.dur ? ease((tt - k.tStart) / k.dur) : 1;
+        return { i, A: mixPose(p.A, k.A, u), O: mixPose(p.O, k.O, u), dxA: lp(p.dxA, k.dxA, u), dxO: lp(p.dxO, k.dxO, u), fx: lp(p.fx, k.fx, u), cam: lp(p.cam, k.cam, u) };
+      }
+    }
+    const k = ks[ks.length - 1];
+    return { i: ks.length - 1, A: k.A, O: k.O, dxA: k.dxA, dxO: k.dxO, fx: k.fx, cam: k.cam };
+  }
+  function drawState(c, st, guides, idx) {
+    const def = c.def;
+    let g = FLOOR;
+    if (!def.solo) g += `<g transform="translate(${W} 0) scale(-1 1)">${figure(st.O, { dx: st.dxO, tint: OPP_TINT })}</g>`;
+    const px = st.A.hip[0] + st.dxA, figA = figure(st.A, { dx: st.dxA });
+    g += Math.abs(st.fx - 1) > 0.001 ? `<g transform="translate(${f(px)} 0) scale(${f(st.fx)} 1) translate(${f(-px)} 0)">${figA}</g>` : figA;
+    if (guides) {
+      g += `<line x1="${f(px)}" y1="-34" x2="${f(px)}" y2="226" stroke="#6b6b7a" stroke-width="1" stroke-dasharray="4 5" opacity=".5"/>`;
+      if (c.trail) {
+        const pts = a => a.map(p => f(p[0]) + ',' + f(p[1])).join(' ');
+        g += `<polyline points="${pts(c.trail.tip)}" fill="none" stroke="${C.red}" stroke-width="1.4" stroke-dasharray="3 4" opacity=".3"/>`;
+        g += `<polyline points="${pts(c.trail.tip.slice(0, idx + 1))}" fill="none" stroke="${C.red}" stroke-width="2.6" stroke-linecap="round" opacity=".85"/>`;
+        g += `<polyline points="${pts(c.trail.hand.slice(0, idx + 1))}" fill="none" stroke="${C.gold}" stroke-width="2" stroke-linecap="round" opacity=".9"/>`;
+      }
+      const k = c.keys[st.i];
+      if (!def.solo && k.tg) {
+        const tp = geom(st.O, st.dxO, true)[k.tg];
+        if (tp) g += `<circle cx="${f(tp[0])}" cy="${f(tp[1])}" r="15" fill="${C.red}" fill-opacity=".22" stroke="${C.red}" stroke-width="2" stroke-dasharray="4 3"/>`;
+      }
+      (k.g || []).forEach(l => {
+        const x0 = 48 + st.cam + 4;
+        if (l.h !== undefined) g += `<line x1="${x0 - 10}" y1="${l.h}" x2="${x0 + 460}" y2="${l.h}" stroke="${C.indigo}" stroke-width="1.2" stroke-dasharray="6 4" opacity=".75"/><text x="${x0}" y="${l.h - 4}" font-size="10.5" fill="${C.indigo}" font-family="sans-serif" font-weight="700">${l.label || ''}</text>`;
+      });
+    }
+    return `<svg viewBox="${f(48 + st.cam)} -42 452 284" role="img" aria-label="${def.t}">${g}</svg>`;
+  }
+  function animShell(key) {
+    const d = ANIM[key];
+    if (!d) return '';
+    return `<div class="anim" data-anim="${key}"><div class="atitle"><b>${d.t}</b><span>en movimiento</span></div><div class="stage"></div>` +
+      `<div class="acap"><b class="ct"></b><p class="cn"></p></div>` +
+      `<div class="ctl"><button type="button" class="abtn" data-a="prev" aria-label="Fase anterior">‹</button><button type="button" class="abtn play" data-a="play" aria-label="Pausar">❚❚</button><button type="button" class="abtn" data-a="next" aria-label="Fase siguiente">›</button>` +
+      `<input type="range" min="0" max="1000" value="0" aria-label="Línea de tiempo"><div class="spd"><button type="button" data-s=".25">0,25×</button><button type="button" data-s=".5" class="on">0,5×</button><button type="button" data-s="1">1×</button></div>` +
+      `<label class="gl"><input type="checkbox" checked data-a="guides"> Líneas guía</label></div></div>`;
+  }
+  function animMount(el) {
+    const def = ANIM[el.dataset.anim];
+    if (!def || el.__mounted) return;
+    el.__mounted = true;
+    const c = compile(def);
+    const tip = [], hand = [], STEP = 30;
+    for (let tt = 0; tt <= c.total + STEP; tt += STEP) {
+      const st = stateAt(c, Math.min(tt, c.total)), p = st.A, a = p.ang * Math.PI / 180, len = p.katana ? 26 + (p.blade || 100) : 127;
+      hand.push([p.L[0] + st.dxA, p.L[1]]);
+      tip.push([p.L[0] + st.dxA + Math.cos(a) * len, p.L[1] + Math.sin(a) * len]);
+    }
+    c.trail = { tip, hand };
+    const stage = el.querySelector('.stage'), ct = el.querySelector('.ct'), cn = el.querySelector('.cn'), rng = el.querySelector('input[type=range]'), bp = el.querySelector('[data-a=play]');
+    let t = 0, speed = .5, playing = !(window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches), guides = true, last = 0, visible = true;
+    const draw = () => {
+      const st = stateAt(c, t), k = c.keys[st.i];
+      stage.innerHTML = drawState(c, st, guides, Math.min(Math.floor(t / STEP), tip.length - 1));
+      ct.textContent = k.cap; cn.textContent = k.note;
+      rng.value = Math.round(1000 * t / c.total);
+    };
+    const setPlay = v => { playing = v; bp.textContent = v ? '❚❚' : '▶'; bp.setAttribute('aria-label', v ? 'Pausar' : 'Reproducir'); };
+    const tick = ts => {
+      if (!el.isConnected) return;
+      if (playing && visible) { t += (ts - last) * speed; if (t >= c.total) t = 0; draw(); }
+      last = ts; requestAnimationFrame(tick);
+    };
+    if ('IntersectionObserver' in window) new IntersectionObserver(es => { visible = es[0].isIntersecting; }).observe(el);
+    el.addEventListener('click', e => {
+      const b = e.target.closest('button'); if (!b) return;
+      const ends = c.keys.map(k => k.tStart + k.dur);
+      if (b.dataset.a === 'play') { if (!playing && t >= c.total - 1) t = 0; setPlay(!playing); }
+      else if (b.dataset.a === 'next') { const n = ends.find(x => x > t + 12); t = n !== undefined ? n : ends[ends.length - 1]; setPlay(false); draw(); }
+      else if (b.dataset.a === 'prev') { const p = ends.filter(x => x < t - 12); t = p.length ? p[p.length - 1] : 0; setPlay(false); draw(); }
+      else if (b.dataset.s) { speed = +b.dataset.s; el.querySelectorAll('[data-s]').forEach(x => x.classList.toggle('on', x === b)); }
+    });
+    rng.addEventListener('input', () => { t = rng.value / 1000 * c.total; setPlay(false); draw(); });
+    el.querySelector('[data-a=guides]').addEventListener('change', e => { guides = e.target.checked; draw(); });
+    setPlay(playing); draw(); requestAnimationFrame(ts => { last = ts; requestAnimationFrame(tick); });
+  }
+
   /* ---------- Registro ---------- */
   function get(spec) {
     const [k, arg] = spec.split(':');
@@ -717,6 +850,7 @@ window.KArt = (function () {
       case 'duo': { const p = arg.split(','); return `<div class="art one">${scene([{ pose: p[0] }], { opp: { pose: p[1] } })}</div>`; }
       case 'kata': return `<div class="art one small">${kataTop(arg)}</div>`;
       case 'katana': return `<div class="art interactive wide" data-kind="katana">${katana()}</div>`;
+      case 'anim': return animShell(arg);
       case 'centro': return `<div class="art one wide">${centro()}</div>`;
       case 'kirikaeshi': return `<div class="art one wide">${kirikaeshi()}</div>`;
       case 'frontchudan': return `<div class="art one small">${front('bogu')}</div>`;
@@ -736,5 +870,5 @@ window.KArt = (function () {
     }
   }
 
-  return { get, logo, icon, mitsudomoe, scene, solo, front, shinai, katana, mascot, seq, SEQ, POSES, C };
+  return { get, logo, icon, mitsudomoe, scene, solo, front, shinai, katana, mascot, seq, SEQ, ANIM, animMount, POSES, C };
 })();

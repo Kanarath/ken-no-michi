@@ -154,7 +154,7 @@ KD.add({
 
 KD.add({
   id: 'okuri-ashi', t: 'Okuri-ashi', jp: '送り足', sub: 'El desplazamiento principal',
-  art: ['seq:okuri', 'footwork:okuri'],
+  art: ['anim:okuri-ashi', 'seq:okuri', 'footwork:okuri'],
   intro: 'En okuri-ashi el pie delantero sale primero y el trasero le sigue de inmediato, de modo que la distancia entre los pies se mantiene. Casi todos los golpes del kendō se hacen con él.',
   why: 'Te permite avanzar, retroceder y moverte lateralmente sin perder la guardia ni abrir los pies. Es la base de todo el trabajo de pies.',
   steps: ['Desde chūdan, empuja con el pie izquierdo y desliza el pie derecho hacia delante, con la planta rozando el suelo.', 'Inmediatamente, el pie izquierdo avanza y se coloca a su distancia habitual detrás del derecho.', 'El pie izquierdo nunca pasa al derecho ni se cruza con él.', 'Al terminar, vuelves a chūdan: talón izquierdo ligeramente levantado y peso centrado.', 'Para retroceder: el pie izquierdo sale primero hacia atrás y el derecho le sigue.', 'Lateralmente: sale primero el pie del lado hacia el que te mueves y el otro le sigue.'],
@@ -206,7 +206,7 @@ KD.add({
 
 KD.add({
   id: 'fumikomi-ashi', t: 'Fumikomi-ashi', jp: '踏み込み足', sub: 'La pisada del golpe',
-  art: ['seq:fumikomi', 'footwork:fumikomi'],
+  art: ['anim:fumikomi-ashi', 'seq:fumikomi', 'footwork:fumikomi'],
   intro: 'Fumikomi-ashi es la pisada que acompaña al golpe: el pie delantero cae plano y firme en el mismo instante en que el shinai impacta, y el pie trasero llega de inmediato.',
   why: 'Une el cuerpo y la espada (ki-ken-tai-ichi), da potencia al golpe y marca el momento de impacto con un sonido seco. Sin fumikomi, el golpe suele no ser válido.',
   steps: ['Desde la posición de furikaburi, el pie derecho avanza con un paso corto y bajo (no un salto).', 'En el instante del golpe, el pie derecho aterriza con la planta entera: no con el talón.', 'El pie izquierdo llega muy rápido tras el derecho (hikitsuke) y vuelve a su posición, con el talón ligeramente alto.', 'Las rodillas amortiguan: no te quedas rígido.', 'Después del golpe sigues avanzando y pasas por el lado del rival.'],
@@ -241,7 +241,7 @@ KD.add({
 
 KD.add({
   id: 'joge-buri', t: 'Jōge-buri', jp: '上下振り', sub: 'Arriba y abajo',
-  art: ['seq:joge'],
+  art: ['anim:joge-buri', 'seq:joge'],
   intro: 'Jōge-buri es el suburi más básico y el que mejor te enseña el recorrido del shinai: sube por el centro hasta sobre la cabeza y baja hasta la altura de chūdan.',
   why: 'Enseña a mover el shinai por el centro con la mano izquierda, a frenar el golpe a la altura correcta y a coordinar respiración y kiai.',
   steps: ['Desde chūdan, sube el shinai por el centro del cuerpo, con las manos al frente y los codos estirándose.', 'Llega hasta sobre la cabeza con los brazos casi estirados; el kensen cae hacia atrás sobre un ángulo de unos 45°.', 'Baja el shinai de golpe hasta que el kensen quede a la altura de chūdan (la garganta del rival).', 'Aprieta tenouchi justo al llegar y haz kiai ("men!"); luego relaja.', 'Para sin pasar de esa altura: el control forma parte del golpe.', 'Repite con el mismo ritmo: subir inspirando, bajar espirando.'],

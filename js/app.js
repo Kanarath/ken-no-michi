@@ -198,6 +198,7 @@
 
   /* ---------- Ilustraciones interactivas ---------- */
   function wireInteractive(root) {
+    $$('.anim', root).forEach(el => KArt.animMount(el));
     $$('.art.interactive', root).forEach(box => {
       const kind = box.dataset.kind, info = KD.parts[kind];
       if (!info) return;
@@ -385,6 +386,7 @@
   function viewAtlas() {
     setTitle('Atlas');
     const itemsK = [
+      ['Men en movimiento', 'anim:men', 'men'], ['Kote en movimiento', 'anim:kote', 'kote'], ['Dō en movimiento', 'anim:do', 'do'], ['Yokomen en movimiento', 'anim:yokomen', 'yokomen'], ['Kirikaeshi completo', 'anim:kirikaeshi', 'kirikaeshi'], ['Men con pase y vuelta', 'anim:men-pasante', 'men-pasante'], ['Kata 1 en movimiento', 'anim:kata1', 'kata-1'], ['Kata 2 en movimiento', 'anim:kata2', 'kata-2'], ['Kata 3 en movimiento', 'anim:kata3', 'kata-3'],
       ['Zonas de golpeo', 'zones', 'datotsu-yuko'], ['El bōgu', 'bogu', 'bogu'], ['El shinai', 'shinai', 'shinai'], ['Keikogi y hakama', 'wear', 'keikogi-hakama'],
       ['Los cinco kamae', 'kamae5', 'kamae-5'], ['Saludos y posturas de etiqueta', 'rei', 'saludos'], ['El agarre (tenouchi)', 'grip', 'tenouchi'],
       ['Men-uchi', 'strip:men', 'men'], ['Kote-uchi', 'strip:kote', 'kote'], ['Dō-uchi', 'strip:do', 'do'], ['Tsuki', 'strip:tsuki', 'tsuki'],

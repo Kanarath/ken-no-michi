@@ -180,7 +180,7 @@
 
   add({
     id: 'kata-1', t: 'Kata 1 · Ippon-me', jp: '一本目', sub: 'Jōdan contra jōdan: men-nuki-men',
-    art: ['duo:jodan,jodan'],
+    art: ['anim:kata1', 'duo:jodan,jodan'],
     intro: 'La primera forma muestra el principio del kata: dos jōdan, un men decidido de uchidachi y una respuesta de shidachi que evita el golpe y gana el men. Es el nivel de entrada, pero contiene casi todo.',
     steps: ['Uchidachi toma hidari-jōdan y shidachi migi-jōdan. Ambos dan tres pasos grandes.', 'Uchidachi da un paso con el pie derecho y corta men.', 'Shidachi da un paso atrás con el pie izquierdo, sube ligeramente las manos para evitar el corte (nuki) y avanza con el pie derecho cortando men.', 'Uchidachi retrocede un pequeño paso mientras shidachi baja el bokutō hacia el puente de la nariz.', 'Uchidachi da otro pequeño paso atrás y shidachi extiende los brazos como empujándolo con el kensen.', 'Shidachi sube a hidari-jōdan (zanshin), uchidachi sube el bokutō y levanta la cabeza.', 'Ambos vuelven a chūdan, kamae wo toku y cinco pasos pequeños atrás.'],
     keys: ['El corte de uchidachi es completo; el de shidachi, preciso.', 'No flexiones las rodillas al cortar: mantenlas firmes.', 'El pie trasero llega rápido, como en el kendō normal.', 'El kata muestra lo fina que es la línea entre ganar y perder.'],
@@ -193,7 +193,7 @@
 
   add({
     id: 'kata-2', t: 'Kata 2 · Nihon-me', jp: '二本目', sub: 'Chūdan contra chūdan: kote-nuki-kote',
-    art: ['duo:chudan,chudan'],
+    art: ['anim:kata2', 'duo:chudan,chudan'],
     intro: 'En la segunda forma, shidachi podría ganar con un golpe mortal, pero elige dejar sin acción la mano del atacante. Es una lección de contención.',
     steps: ['Ambos parten de chūdan y dan tres pasos grandes hacia delante.', 'Uchidachi da un paso con el pie derecho y corta kote.', 'Shidachi baja el bokutō para evitar el corte, retrocede en diagonal hacia la izquierda con el pie izquierdo y, al pasar el golpe, corta el kote derecho de uchidachi avanzando con el pie derecho.', 'Uchidachi retrocede hacia el centro, y shidachi se mueve a la derecha hacia el centro, manteniendo contacto visual.', 'Ambos vuelven a chūdan; kamae wo toku y cinco pasos atrás.'],
     keys: ['El kote de uchidachi es real: debe llegar al kote de shidachi.', 'Shidachi corta cuando el golpe ya ha pasado.', 'La enseñanza: se puede vencer sin acabar con el rival.'],
@@ -206,7 +206,7 @@
 
   add({
     id: 'kata-3', t: 'Kata 3 · Sanbon-me', jp: '三本目', sub: 'Gedan contra gedan: tsuki y presión',
-    art: ['duo:gedan,gedan'],
+    art: ['anim:kata3', 'duo:gedan,gedan'],
     intro: 'La tercera forma es un duelo de presión: ambos parten en gedan, hay estocadas y desvíos, y shidachi gana sin golpear, avanzando con su presión (kurai-zeme).',
     steps: ['Ambos toman gedan y dan tres pasos grandes.', 'Ambos suben el bokutō hacia chūdan; shidachi lo mantiene ligeramente por debajo del de uchidachi.', 'Uchidachi lanza una estocada al plexo de shidachi; shidachi la desvía con nayashi retrocediendo con el pie izquierdo y responde con otra estocada al pecho avanzando con el pie derecho.', 'Uchidachi retrocede y bloquea alrededor del bokutō de shidachi; shidachi mantiene el bokutō y lo empuja hacia atrás, sin estocar de nuevo.', 'Shidachi avanza tres pasos aplicando presión (kurai-zeme): la punta apunta primero al pecho, después a la garganta y por último al puente de la nariz.', 'Shidachi retrocede tres pasos, baja el bokutō a la derecha mostrando la derrota de uchidachi y muestra zanshin.', 'Ambos vuelven a chūdan; kamae wo toku y cinco pasos pequeños atrás.'],
     keys: ['La presión de shidachi viene del ki, no de la fuerza.', 'No se aplasta el bokutō de uchidachi durante el nayashi.', 'En kurai-zeme no se golpea: se presiona.', 'Ninguno golpea ni es golpeado: es la meta del kendō.'],
