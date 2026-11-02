@@ -775,9 +775,10 @@ window.KArt = (function () {
       g += `<line x1="${f(px)}" y1="-34" x2="${f(px)}" y2="226" stroke="#6b6b7a" stroke-width="1" stroke-dasharray="4 5" opacity=".5"/>`;
       if (c.trail) {
         const pts = a => a.map(p => f(p[0]) + ',' + f(p[1])).join(' ');
-        g += `<polyline points="${pts(c.trail.tip)}" fill="none" stroke="${C.red}" stroke-width="1.4" stroke-dasharray="3 4" opacity=".3"/>`;
-        g += `<polyline points="${pts(c.trail.tip.slice(0, idx + 1))}" fill="none" stroke="${C.red}" stroke-width="2.6" stroke-linecap="round" opacity=".85"/>`;
-        g += `<polyline points="${pts(c.trail.hand.slice(0, idx + 1))}" fill="none" stroke="${C.gold}" stroke-width="2" stroke-linecap="round" opacity=".9"/>`;
+        const n0 = def.trailWin ? Math.max(0, idx - Math.round(def.trailWin / 30)) : 0;
+        if (!def.trailWin) g += `<polyline points="${pts(c.trail.tip)}" fill="none" stroke="${C.red}" stroke-width="1.4" stroke-dasharray="3 4" opacity=".3"/>`;
+        g += `<polyline points="${pts(c.trail.tip.slice(n0, idx + 1))}" fill="none" stroke="${C.red}" stroke-width="2.6" stroke-linecap="round" opacity=".85"/>`;
+        g += `<polyline points="${pts(c.trail.hand.slice(n0, idx + 1))}" fill="none" stroke="${C.gold}" stroke-width="2" stroke-linecap="round" opacity=".9"/>`;
       }
       const k = c.keys[st.i];
       if (!def.solo && k.tg) {
@@ -789,7 +790,7 @@ window.KArt = (function () {
         if (l.h !== undefined) g += `<line x1="${x0 - 10}" y1="${l.h}" x2="${x0 + 460}" y2="${l.h}" stroke="${C.indigo}" stroke-width="1.2" stroke-dasharray="6 4" opacity=".75"/><text x="${x0}" y="${l.h - 4}" font-size="10.5" fill="${C.indigo}" font-family="sans-serif" font-weight="700">${l.label || ''}</text>`;
       });
     }
-    return `<svg viewBox="${f(48 + st.cam)} -42 452 284" role="img" aria-label="${def.t}">${g}</svg>`;
+    return `<svg viewBox="${f(48 + st.cam)} -42 ${def.vw || 452} 284" role="img" aria-label="${def.t}">${g}</svg>`;
   }
   function animShell(key) {
     const d = ANIM[key];
