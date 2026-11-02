@@ -61,7 +61,7 @@ window.KArt = (function () {
     koteUp: { head: [118, 52], sh: [116, 84], hip: [106, 128], L: [150, 62], ang: -42, ff: [140, 214], bf: [68, 204] },
     men: { head: [166, 54], sh: [160, 84], hip: [150, 126], L: [200, 30], ang: 6, ff: [188, 208], bf: [118, 198] },
     kote: { head: [160, 60], sh: [152, 90], hip: [140, 128], L: [186, 76], ang: 24, ff: [178, 210], bf: [108, 200] },
-    do: { head: [160, 60], sh: [152, 90], hip: [148, 130], L: [172, 100], ang: 4, ff: [184, 210], bf: [116, 200] },
+    do: { head: [160, 60], sh: [152, 90], hip: [148, 130], L: [194, 98], ang: 4, ff: [184, 210], bf: [116, 200] },
     tsukiPrep: { head: [124, 56], sh: [120, 88], hip: [108, 130], L: [132, 100], ang: -8, ff: [142, 214], bf: [70, 206] },
     tsuki: { head: [166, 58], sh: [158, 88], hip: [150, 128], L: [196, 78], ang: 0, ff: [190, 208], bf: [120, 198] },
     rei15: { head: [128, 50], sh: [116, 76], hip: [104, 116], ff: [112, 214], bf: [94, 214], lh: [116, 122], rh: [114, 138], noShinai: true },
@@ -163,7 +163,7 @@ window.KArt = (function () {
       out.push(g);
       out.push(`<path d="M${pt([head[0] - 18, head[1] - 6])}Q${pt([head[0] - 4, head[1] - 22])} ${pt([head[0] + 12, head[1] - 17])}" stroke="${C.gray}" stroke-width="1" fill="none"/>`);
     } else {
-      out.push(`<circle cx="${f(head[0])}" cy="${f(head[1])}" r="15" fill="${C.skin}" stroke="${C.ink}"/>`);
+      out.push(`<circle cx="${f(head[0])}" cy="${f(head[1])}" r="15" fill="${C.skin}" stroke="${C.ink}"/><circle cx="${f(head[0] + 7)}" cy="${f(head[1] - 3)}" r="2.2" fill="${C.ink}"/><path d="M${f(head[0] + 11)},${f(head[1] + 1)} l3,3 l-3,1" fill="none" stroke="${C.ink}" stroke-width="1.2"/><path d="M${f(head[0] + 3)},${f(head[1] + 8)} q4,3 8,0" fill="none" stroke="${C.ink}" stroke-width="1.2"/><path d="M${f(head[0] - 14)},${f(head[1] - 2)} q4,-14 18,-14" fill="none" stroke="${C.ink}" stroke-width="3" stroke-linecap="round"/>`);
     }
 
     // Saya y katana (iaidō)
@@ -380,6 +380,11 @@ window.KArt = (function () {
     { figs: [A('chudan', { dx: 50 })], cap: '2 · Entras con okuri-ashi sin soltar la presión (seme)' },
     { figs: [O('koteUp', { dx: 30 }), A('chudan', { dx: 50 })], cap: '3 · El rival reacciona: empieza a subir el shinai' },
     { figs: [O('koteUp', { dx: 30 }), A('koteHi', { touch: 'kote' })], cap: '4 · Aprovechas su reacción y golpeas kote' }] };
+  SEQ.kirikaeshi = { t: 'Kirikaeshi', fr: [
+    { figs: [A('furikaburi', { dx: 20 }), O('chudan')], cap: '1 · Shōmen: un men completo para empezar; el compañero (motodachi) te ofrece el men' },
+    { figs: [A('yokomen', { touch: 'yokomen' }), O('chudan')], cap: '2 · Avanzas golpeando yokomen izquierda-derecha: 4 golpes, cada uno con su kiai' },
+    { figs: [A('yokomen', { dx: -34 }), O('chudan', { dx: 20 })], cap: '3 · Retrocedes golpeando yokomen: 5 golpes, el compañero avanza y los recibe' },
+    { figs: [O('chudan', { flip: false }), A('chudan', { flip: true })], cap: '4 · Shōmen final, pasas de largo y te giras en zanshin, de cara al compañero' }] };
   SEQ.ukeru = { t: 'Recibir con el shinai', fr: [
     { figs: [O('men', { touch: 'men', vs: { pose: 'blockP' } }), A('blockP')], cap: 'Recibir men: shinai en alto, kensen algo adelantado' },
     { figs: [O('kote', { touch: 'kote', vs: { pose: 'ukeKote' } }), A('ukeKote')], cap: 'Recibir kote: manos al frente, kensen hacia abajo' },
@@ -432,7 +437,7 @@ window.KArt = (function () {
   }
 
   /* ---------- Figura frontal: bogu, zonas, keikogi ---------- */
-  function front(mode) {
+  function front(mode, only) {
     // mode: 'bogu' | 'zones' | 'wear'
     const bogu = mode !== 'wear';
     const z = mode === 'zones';
@@ -483,12 +488,15 @@ window.KArt = (function () {
     }
     // zonas
     if (z) {
-      const hl = (shape) => shape.replace('<', '<').replace('/>', ` class="zone" fill="${C.red}" fill-opacity=".34" stroke="${C.red}" stroke-width="2"/>`);
-      g += hl('<rect data-zone="men" x="104" y="9" width="52" height="19" rx="8"/>');
-      g += hl('<rect data-zone="yokomen" x="84" y="24" width="22" height="40" rx="9"/>') + hl('<rect data-zone="yokomen" x="154" y="24" width="22" height="40" rx="9"/>');
-      g += hl('<rect data-zone="kote" x="104" y="160" width="34" height="30" rx="10"/>') + `<rect data-zone="kote" class="zone2" x="128" y="164" width="34" height="30" rx="10" fill="none" stroke="${C.red}" stroke-width="1.6" stroke-dasharray="4 3"/>`;
-      g += hl('<rect data-zone="do" x="82" y="148" width="22" height="48" rx="8"/>') + hl('<rect data-zone="do" x="156" y="148" width="22" height="48" rx="8"/>');
-      g += hl('<circle data-zone="tsuki" cx="130" cy="88" r="13"/>');
+      const hl = (shape) => shape.replace('/>', ` class="zone" fill="${C.red}" fill-opacity=".34" stroke="${C.red}" stroke-width="2"/>`);
+      const Z = {
+        men: () => hl('<rect data-zone="men" x="104" y="9" width="52" height="19" rx="8"/>'),
+        yokomen: () => hl('<rect data-zone="yokomen" x="84" y="24" width="22" height="40" rx="9"/>') + hl('<rect data-zone="yokomen" x="154" y="24" width="22" height="40" rx="9"/>'),
+        kote: () => hl('<rect data-zone="kote" x="104" y="160" width="34" height="30" rx="10"/>') + `<rect data-zone="kote" class="zone2" x="128" y="164" width="34" height="30" rx="10" fill="none" stroke="${C.red}" stroke-width="1.6" stroke-dasharray="4 3"/>`,
+        do: () => hl('<rect data-zone="do" x="82" y="148" width="22" height="48" rx="8"/>') + hl('<rect data-zone="do" x="156" y="148" width="22" height="48" rx="8"/>'),
+        tsuki: () => hl('<circle data-zone="tsuki" cx="130" cy="88" r="13"/>')
+      };
+      Object.keys(Z).forEach(k => { if (!only || only === k) g += Z[k](); });
     }
     return `<svg viewBox="40 0 180 340" role="img" aria-label="${z ? 'Zonas válidas de golpeo' : bogu ? 'Armadura de kendo (bogu)' : 'Keikogi y hakama'}">${g}</svg>`;
   }
@@ -765,15 +773,15 @@ window.KArt = (function () {
     const k = ks[ks.length - 1];
     return { i: ks.length - 1, A: k.A, O: k.O, dxA: k.dxA, dxO: k.dxO, fx: k.fx, cam: k.cam };
   }
-  function drawState(c, st, guides, idx) {
-    const def = c.def;
+  function drawState(c, st, guides, idx, vx, vw) {
+    const def = c.def, X0 = vx !== undefined ? vx : 48 + st.cam;
     let g = FLOOR;
     if (!def.solo) g += `<g transform="translate(${W} 0) scale(-1 1)">${figure(st.O, { dx: st.dxO, tint: OPP_TINT })}</g>`;
     const px = st.A.hip[0] + st.dxA, figA = figure(st.A, { dx: st.dxA });
     g += Math.abs(st.fx - 1) > 0.001 ? `<g transform="translate(${f(px)} 0) scale(${f(st.fx)} 1) translate(${f(-px)} 0)">${figA}</g>` : figA;
     if (guides) {
-      g += `<line x1="${f(px)}" y1="-34" x2="${f(px)}" y2="226" stroke="#6b6b7a" stroke-width="1" stroke-dasharray="4 5" opacity=".5"/>`;
-      if (c.trail) {
+      if (guides !== 2) g += `<line x1="${f(px)}" y1="-34" x2="${f(px)}" y2="226" stroke="#6b6b7a" stroke-width="1" stroke-dasharray="4 5" opacity=".5"/>`;
+      if (c.trail && guides !== 2) {
         const pts = a => a.map(p => f(p[0]) + ',' + f(p[1])).join(' ');
         const n0 = def.trailWin ? Math.max(0, idx - Math.round(def.trailWin / 30)) : 0;
         if (!def.trailWin) g += `<polyline points="${pts(c.trail.tip)}" fill="none" stroke="${C.red}" stroke-width="1.4" stroke-dasharray="3 4" opacity=".3"/>`;
@@ -786,11 +794,23 @@ window.KArt = (function () {
         if (tp) g += `<circle cx="${f(tp[0])}" cy="${f(tp[1])}" r="15" fill="${C.red}" fill-opacity=".22" stroke="${C.red}" stroke-width="2" stroke-dasharray="4 3"/>`;
       }
       (k.g || []).forEach(l => {
-        const x0 = 48 + st.cam + 4;
+        const x0 = X0 + 4;
         if (l.h !== undefined) g += `<line x1="${x0 - 10}" y1="${l.h}" x2="${x0 + 460}" y2="${l.h}" stroke="${C.indigo}" stroke-width="1.2" stroke-dasharray="6 4" opacity=".75"/><text x="${x0}" y="${l.h - 4}" font-size="10.5" fill="${C.indigo}" font-family="sans-serif" font-weight="700">${l.label || ''}</text>`;
       });
+      // quién es quién y mini figura con el blanco
+      if (!def.solo) {
+        const tag = (x, y, txt) => `<g><rect x="${f(x - txt.length * 3.3 - 6)}" y="${f(y - 11)}" width="${f(txt.length * 6.6 + 12)}" height="16" rx="8" fill="#fffdf5" stroke="#bfb08a"/><text x="${f(x)}" y="${f(y + 1)}" text-anchor="middle" font-size="10.5" font-weight="700" fill="#2b2018" font-family="sans-serif">${txt}</text></g>`;
+        if (Math.abs(st.fx - 1) < 0.001) g += tag(st.A.head[0] + st.dxA, st.A.head[1] - 34, (def.roles && def.roles.a) || 'Tú');
+        g += tag(W - (st.O.head[0] + st.dxO), st.O.head[1] - 34, (def.roles && def.roles.o) || 'Compañero');
+        if (k.tg) {
+          const h = 96, w = h * 180 / 340, x = X0 + 10, y = -38;
+          g += `<rect x="${f(x - 4)}" y="${f(y - 2)}" width="${f(w + 8)}" height="${f(h + 16)}" rx="8" fill="#fffdf5" stroke="#bfb08a" opacity=".96"/>` +
+            front('zones', k.tg).replace(/^<svg [^>]*>/, `<svg x="${f(x)}" y="${f(y)}" width="${f(w)}" height="${f(h)}" viewBox="40 0 180 340">`) +
+            `<text x="${f(x + w / 2)}" y="${f(y + h + 10)}" text-anchor="middle" font-size="9.5" font-weight="700" fill="#b3261e" font-family="sans-serif">blanco</text>`;
+        }
+      }
     }
-    return `<svg viewBox="${f(48 + st.cam)} -42 ${def.vw || 452} 284" role="img" aria-label="${def.t}">${g}</svg>`;
+    return `<svg viewBox="${f(X0)} -42 ${vw || def.vw || 452} 284" role="img" aria-label="${def.t}">${g}</svg>`;
   }
   function animShell(key) {
     const d = ANIM[key];
@@ -801,18 +821,35 @@ window.KArt = (function () {
       `<input type="range" min="0" max="1000" value="0" aria-label="Línea de tiempo"><div class="spd"><button type="button" data-s=".25">0,25×</button><button type="button" data-s=".5" class="on">0,5×</button><button type="button" data-s="1">1×</button></div>` +
       `<label class="gl"><input type="checkbox" checked data-a="guides"> Líneas guía</label></div></div>`;
   }
-  function animMount(el) {
-    const def = ANIM[el.dataset.anim];
-    if (!def || el.__mounted) return;
-    el.__mounted = true;
-    const c = compile(def);
-    const tip = [], hand = [], STEP = 30;
+  function animPrep(def) {
+    const c = compile(def), tip = [], hand = [], STEP = 30;
     for (let tt = 0; tt <= c.total + STEP; tt += STEP) {
       const st = stateAt(c, Math.min(tt, c.total)), p = st.A, a = p.ang * Math.PI / 180, len = p.katana ? 26 + (p.blade || 100) : 127;
       hand.push([p.L[0] + st.dxA, p.L[1]]);
       tip.push([p.L[0] + st.dxA + Math.cos(a) * len, p.L[1] + Math.sin(a) * len]);
     }
     c.trail = { tip, hand };
+    return c;
+  }
+  // Secuencia de fotogramas fijos (una viñeta por fase) a partir de una animación
+  function animStrip(key) {
+    const def = ANIM[key];
+    if (!def) return '';
+    const c = animPrep(def), n = c.keys.length;
+    
+    return `<div class="strip anim-strip c${Math.min(n, 4)}">${c.keys.map((k, i) => {
+      const tt = Math.max(0, k.tStart + k.dur - 1), st = stateAt(c, tt);
+      const xa = st.A.head[0] + st.dxA, xo = W - (st.O.head[0] + st.dxO), wd = Math.max(290, Math.abs(xa - xo) + 170), lo = (xa + xo) / 2 - wd / 2;
+      const svg = drawState(c, st, 2, Math.min(Math.floor(tt / 30), c.trail.tip.length - 1), lo, wd);
+      return `<figure>${svg}<figcaption><b>${/^[0-9]/.test(k.cap) ? k.cap : (i + 1) + ' · ' + k.cap}</b><br>${k.note}</figcaption></figure>`;
+    }).join('')}</div>`;
+  }
+
+  function animMount(el) {
+    const def = ANIM[el.dataset.anim];
+    if (!def || el.__mounted) return;
+    el.__mounted = true;
+    const c = animPrep(def), tip = c.trail.tip, STEP = 30;
     const stage = el.querySelector('.stage'), ct = el.querySelector('.ct'), cn = el.querySelector('.cn'), rng = el.querySelector('input[type=range]'), bp = el.querySelector('[data-a=play]');
     let t = 0, speed = .5, playing = !(window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches), guides = true, last = 0, visible = true;
     const draw = () => {
@@ -841,6 +878,27 @@ window.KArt = (function () {
     setPlay(playing); draw(); requestAnimationFrame(ts => { last = ts; requestAnimationFrame(tick); });
   }
 
+  /* ---------- Dirección del corte (rival visto de frente) ---------- */
+  const CUTS = {
+    men: { t: 'Men: de arriba, recto al centro de la cabeza', a: [['M130 8 L130 46', 1]], tag: [130, 62, 'recto, sin torcer'] },
+    yokomen: { t: 'Yokomen: en diagonal al lateral de la cabeza', a: [['M206 6 L166 52', 1], ['M54 6 L94 52', 0]], tag: [130, 62, 'a las dos sienes (45°)'] },
+    kote: { t: 'Kote: a la muñeca adelantada, pequeño y rápido', a: [['M96 118 L118 170', 1]], tag: [130, 100, 'solo baja la punta'] },
+    do: { t: 'Dō: de lado, al costado derecho del rival', a: [['M52 124 L90 172', 1], ['M208 124 L170 172', 0]], tag: [130, 140, 'entra de lado y barre el costado'] },
+    tsuki: { t: 'Tsuki: recto hacia delante, a la garganta', a: [], tag: [130, 62, '● la punta va hacia ti'] }
+  };
+  function cut(key) {
+    const c = CUTS[key];
+    if (!c) return '';
+    const w = 260, h = 350;
+    let g = `<rect width="${w}" height="${h}" rx="12" fill="#fffdf5" stroke="#bfb08a"/>`;
+    g += `<text x="${w / 2}" y="24" text-anchor="middle" font-size="13" font-weight="700" fill="#2b2018" font-family="sans-serif">${c.t.split(':')[0]}</text>`;
+    g += `<text x="${w / 2}" y="41" text-anchor="middle" font-size="10" fill="#2b2018" font-family="sans-serif">${c.t.split(':')[1]}</text>`;
+    g += front('zones', key).replace(/^<svg [^>]*>/, `<svg x="20" y="48" width="220" height="300" viewBox="50 -20 160 230">`);
+    g += `<g transform="translate(16 48) scale(1.3) translate(-50 20)" fill="none" stroke="#b3261e" stroke-width="3.4" stroke-linecap="round">${c.a.map(([d, main]) => `<path d="${d}" ${main ? '' : 'stroke-dasharray="6 5" opacity=".6"'} marker-end="url(#cutar)"/>`).join('')}</g>`;
+    g += `<defs><marker id="cutar" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="4" markerHeight="4" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#b3261e"/></marker></defs>`;
+    return `<div class="art one small"><svg viewBox="0 0 ${w} ${h}" role="img" aria-label="${c.t}">${g}</svg></div>`;
+  }
+
   /* ---------- Registro ---------- */
   function get(spec) {
     const [k, arg] = spec.split(':');
@@ -852,6 +910,8 @@ window.KArt = (function () {
       case 'kata': return `<div class="art one small">${kataTop(arg)}</div>`;
       case 'katana': return `<div class="art interactive wide" data-kind="katana">${katana()}</div>`;
       case 'anim': return animShell(arg);
+      case 'cut': return cut(arg);
+      case 'astrip': return animStrip(arg);
       case 'centro': return `<div class="art one wide">${centro()}</div>`;
       case 'kirikaeshi': return `<div class="art one wide">${kirikaeshi()}</div>`;
       case 'frontchudan': return `<div class="art one small">${front('bogu')}</div>`;

@@ -76,14 +76,14 @@
     k.push({ a: { pose: 'furikaburi', dxr: 18, over: { ang: -210 } }, o: { dxr: -14 }, dur: 320, hold: 60, target: 'men', cap: '6 · Shōmen final: subes', note: 'Último golpe: sube por el centro.' });
     k.push({ a: { pose: 'men', touch: 'men' }, dur: 240, hold: 700, target: 'men', cap: '7 · Shōmen final y pase', note: 'Men al centro y sigues pasando junto al motodachi para terminar con zanshin.' });
     k.push({ a: { pose: 'passing', dxr: 100 }, dur: 600, hold: 900, cap: '8 · Sigues y terminas con zanshin', note: 'Pasas, te giras de cara al motodachi y vuelves a chūdan.' });
-    A.kirikaeshi = { t: 'Kirikaeshi completo', target: 'men', trailWin: 700, keys: k };
+    A.kirikaeshi = { t: 'Kirikaeshi completo', target: 'men', trailWin: 700, roles: { a: 'Tú (kakarite)', o: 'Motodachi' }, keys: k };
   })();
 
   /* Kata (con bokutō, sin bōgu): shidachi a la izquierda (azul), uchidachi a la derecha (claro) */
   const B = (pose, over) => ({ pose, over: Object.assign({ iai: true, katana: true, wood: true, blade: 96 }, over || {}) });
   const both = (pa, po, o) => Object.assign({ a: pa, o: po }, o || {});
 
-  A.kata1 = { t: 'Kata 1 · Ippon-me (men-nuki-men)', vw: 570, keys: [
+  A.kata1 = { t: 'Kata 1 · Ippon-me (men-nuki-men)', vw: 570, roles: { a: 'Shidachi', o: 'Uchidachi' }, keys: [
     both(Object.assign(B('jodan', { ang: -222 }), { dx: -36 }), Object.assign(B('jodan', { ang: -222 }), { dx: -36 }), { hold: 900, cam: -76, cap: '1 · Kamae inicial: ambos en jōdan', note: 'Uchidachi (claro) en hidari-jōdan; shidachi (azul) en migi-jōdan.' }),
     both({ dx: 0 }, { dx: 0 }, { dur: 1400, hold: 300, cap: '2 · Tres pasos grandes hacia delante', note: 'Acabas sobre el pie delantero, con el bokutō arriba.' }),
     both(Object.assign(B('jodan', { ang: -222, L: [128, -2] }), { dx: -48 }), { pose: 'men', over: { iai: true, katana: true, wood: true, blade: 96 }, touch: 'men', vs: { pose: 'jodan', dx: 0 } }, { dur: 450, hold: 700, cap: '3 · Uchidachi corta men; shidachi retrocede y sube las manos (nuki)', note: 'El corte de uchidachi pasa de largo. El bokutō baja recto, sin girar el filo; shidachi lo evita sin bloquear.' }),
@@ -96,7 +96,7 @@
     both(B('gedan', { ang: 52 }), B('gedan', { ang: 52 }), { dur: 700, hold: 600, cap: '10 · Kamae wo toku', note: 'Bajan el bokutō girándolo a la derecha: el kensen queda aproximadamente delante de la rodilla derecha.' }),
     both({ dx: -52 }, { dx: -52 }, { dur: 1300, hold: 900, cap: '11 · Cinco pasos pequeños hacia atrás', note: 'Empiezas con el pie izquierdo. Después, chūdan para el siguiente kata.' })] };
 
-  A.kata2 = { t: 'Kata 2 · Nihon-me (kote-nuki-kote)', vw: 570, keys: [
+  A.kata2 = { t: 'Kata 2 · Nihon-me (kote-nuki-kote)', vw: 570, roles: { a: 'Shidachi', o: 'Uchidachi' }, keys: [
     both(Object.assign(B('chudan'), { dx: -36 }), Object.assign(B('chudan'), { dx: -36 }), { hold: 900, cam: -76, cap: '1 · Kamae inicial: ambos en chūdan', note: 'Los dos con el kensen en la garganta del otro.' }),
     both({ dx: 0 }, { dx: 0 }, { dur: 1400, hold: 300, cap: '2 · Tres pasos grandes hacia delante', note: 'Acabas sobre el pie delantero.' }),
     both(Object.assign(B('gedan', { ang: 36 }), { dx: -40 }), { pose: 'kote', over: { iai: true, katana: true, wood: true, blade: 96 }, touch: 'kote', vs: { pose: 'chudan', dx: 0 } }, { dur: 450, hold: 700, cap: '3 · Uchidachi corta kote; shidachi baja el bokutō y retrocede en diagonal', note: 'El kote de uchidachi es un corte real. Shidachi lo evita bajando el bokutō y retrocediendo en diagonal hacia la izquierda.' }),
@@ -105,7 +105,7 @@
     both(B('gedan', { ang: 52 }), B('gedan', { ang: 52 }), { dur: 700, hold: 600, cap: '6 · Kamae wo toku', note: 'Bokutō girado a la derecha, kensen aproximadamente delante de la rodilla derecha.' }),
     both({ dx: -52 }, { dx: -52 }, { dur: 1300, hold: 900, cap: '7 · Cinco pasos pequeños hacia atrás', note: 'Con el pie izquierdo primero.' })] };
 
-  A.kata3 = { t: 'Kata 3 · Sanbon-me (gedan: tsuki y presión)', vw: 570, keys: [
+  A.kata3 = { t: 'Kata 3 · Sanbon-me (gedan: tsuki y presión)', vw: 570, roles: { a: 'Shidachi', o: 'Uchidachi' }, keys: [
     both(Object.assign(B('gedan'), { dx: -36 }), Object.assign(B('gedan'), { dx: -36 }), { hold: 900, cam: -76, cap: '1 · Kamae inicial: ambos en gedan', note: 'Los dos con el kensen hacia las rodillas del compañero.' }),
     both({ dx: 0 }, { dx: 0 }, { dur: 1400, hold: 300, cap: '2 · Tres pasos grandes hacia delante', note: 'Acabas sobre el pie delantero.' }),
     both(B('chudan', { L: [148, 118], ang: -10 }), B('chudan'), { dur: 900, hold: 400, cap: '3 · Ambos suben a chūdan; shidachi ligeramente por debajo', note: 'El bokutō de shidachi queda un poco por debajo del de uchidachi: su espíritu es más fuerte.' }),
@@ -119,4 +119,49 @@
     both(Object.assign(B('chudan'), { dx: 0 }), Object.assign(B('chudan'), { dx: 0 }), { dur: 900, hold: 500, cap: '11 · Ambos vuelven a chūdan', note: 'En el centro, con el kensen en la garganta.' }),
     both(B('gedan', { ang: 52 }), B('gedan', { ang: 52 }), { dur: 700, hold: 600, cap: '12 · Kamae wo toku', note: 'Bokutō a la derecha, kensen delante de la rodilla derecha.' }),
     both({ dx: -52 }, { dx: -52 }, { dur: 1300, hold: 900, cap: '13 · Cinco pasos pequeños hacia atrás', note: 'Con el pie izquierdo primero.' })] };
+
+  /* Kata 4 a 7 (resumen visual de los pasos del texto; confirma detalles con tu sensei) */
+  const OB = { iai: true, katana: true, wood: true, blade: 96 };
+  const tail = (n0) => [
+    both(Object.assign(B('chudan'), { dx: 0 }), Object.assign(B('chudan'), { dx: 0 }), { dur: 900, hold: 500, target: null, cap: n0 + ' · Ambos vuelven a chūdan en el centro', note: 'Con el kensen en la garganta del compañero.' }),
+    both(B('gedan', { ang: 52 }), B('gedan', { ang: 52 }), { dur: 700, hold: 600, cap: (n0 + 1) + ' · Kamae wo toku', note: 'Bokutō girado a la derecha: el kensen queda delante de la rodilla derecha.' }),
+    both({ dx: -52 }, { dx: -52 }, { dur: 1300, hold: 900, cap: (n0 + 2) + ' · Cinco pasos pequeños hacia atrás', note: 'Empiezas con el pie izquierdo.' })];
+  const steps3 = (n, note) => both({ dx: 0 }, { dx: 0 }, { dur: 1400, hold: 300, cap: n + ' · Tres pasos hacia delante', note: note || 'Acabas sobre el pie delantero.' });
+  const hit = (pose, target, extra) => Object.assign({ pose, over: OB, touch: target }, extra || {});
+
+  A.kata4 = { t: 'Kata 4 · Yonhon-me (maki-kaeshi)', vw: 570, roles: { a: 'Shidachi', o: 'Uchidachi' }, keys: [
+    both(Object.assign(B('waki'), { dx: -36 }), Object.assign(B('hasso'), { dx: -36 }), { hold: 900, cam: -76, cap: '1 · Kamae inicial: uchidachi en hassō, shidachi en waki-gamae', note: 'Hassō: tsuba a la altura de la boca. Waki-gamae: el bokutō oculto detrás del cuerpo.' }),
+    steps3(2, 'Pasos más cortos de lo normal.'),
+    both(Object.assign(B('waki'), { dx: -30 }), hit('men', 'men', { vs: { pose: 'waki', dx: 0 } }), { dur: 450, hold: 700, cap: '3 · Uchidachi sube y corta shōmen', note: 'Shidachi se aparta con hiraki-ashi y el golpe pasa de largo.' }),
+    both(Object.assign(B('waki'), { dx: -30 }), hit('tsuki', 'do', { len: 122, vs: { pose: 'waki', dx: 0 } }), { dur: 420, hold: 700, cap: '4 · Uchidachi baja a chūdan y estoca al pulmón derecho', note: 'Con un grito.' }),
+    both(hit('men', 'men', { dx: -20 }), {}, { dur: 380, hold: 800, target: 'men', cap: '5 · Shidachi desvía con maki-kaeshi y corta shōmen', note: 'Avanza en diagonal con hiraki-ashi; parada y golpe son un solo movimiento.' }),
+    both(Object.assign(B('chudan'), { dxr: 20 }), { dxr: -22 }, { dur: 800, hold: 500, target: null, cap: '6 · Zanshin y vuelta a chūdan', note: 'Uchidachi vuelve al centro; shidachi mantiene la alerta.' })].concat(tail(7)) };
+
+  A.kata5 = { t: 'Kata 5 · Gohon-me (suriage-men)', vw: 570, roles: { a: 'Shidachi', o: 'Uchidachi' }, keys: [
+    both(Object.assign(B('chudan', { L: [150, 100], ang: -8 }), { dx: -36 }), Object.assign(B('jodan', { ang: -222 }), { dx: -36 }), { hold: 900, cam: -76, cap: '1 · Kamae inicial: uchidachi en jōdan, shidachi en hiraseigan', note: 'Hiraseigan: chūdan con la punta hacia la mano izquierda de uchidachi.' }),
+    steps3(2),
+    both(Object.assign(B('suriageP'), { dx: -30 }), hit('men', 'men', { vs: { pose: 'suriageP', dx: 0 } }), { dur: 450, hold: 700, cap: '3 · Uchidachi corta men, solo hasta la cara', note: 'No atraviesa la cabeza: así shidachi puede desviar.' }),
+    both(Object.assign(B('suriageP'), { dx: -22 }), hit('men', 'men', { nohl: 1, vs: { pose: 'suriageP', dx: 0 } }), { dur: 380, hold: 800, cap: '4 · Shidachi desvía hacia arriba con suriage', note: 'Con el lado izquierdo del bokutō (shinogi).' }),
+    both(Object.assign(B('jodan', { ang: -222, L: [128, 0] }), { dxr: 10 }), {}, { dur: 700, hold: 800, cap: '5 · Furiage: sube sin dejar caer el kensen', note: 'Las manos suben en diagonal hacia atrás, a unos 45°. Los pasos finales confírmalos con tu sensei.' })] };
+
+  A.kata6 = { t: 'Kata 6 · Roppon-me (kote-suriage-kote)', vw: 570, roles: { a: 'Shidachi', o: 'Uchidachi' }, keys: [
+    both(Object.assign(B('gedan'), { dx: -36 }), Object.assign(B('chudan'), { dx: -36 }), { hold: 900, cam: -76, cap: '1 · Kamae inicial: uchidachi en chūdan, shidachi en gedan', note: 'Tres pasos grandes después.' }),
+    steps3(2),
+    both(B('chudan', { L: [150, 108], ang: -12 }), B('chudan', { L: [160, 118], ang: 4 }), { dur: 800, hold: 400, cap: '3 · Shidachi sube y presiona la empuñadura; uchidachi la baja', note: 'Uchidachi impide que el bokutō de shidachi suba.' }),
+    both(B('chudan', { L: [150, 100], ang: -8 }), Object.assign(B('jodan', { ang: -222 }), { dxr: -26 }), { dur: 800, hold: 400, cap: '4 · Uchidachi retrocede a hidari-jōdan; shidachi toma hiraseigan', note: 'Shidachi avanza frente a su jōdan.' }),
+    both(Object.assign(B('chudan'), { dx: 0 }), Object.assign(B('chudan'), { dxr: -20 }), { dur: 800, hold: 400, cap: '5 · Ambos bajan a chūdan', note: 'Uchidachi retrocede con el pie izquierdo.' }),
+    both(Object.assign(B('suriageP'), { dx: -30 }), hit('kote', 'kote', { vs: { pose: 'suriageP', dx: 0 } }), { dur: 420, hold: 700, cap: '6 · Uchidachi corta un kote pequeño; shidachi desvía con suriage', note: 'Suriage con el lado derecho del bokutō.' }),
+    both(hit('kote', 'kote'), {}, { dur: 320, hold: 900, target: 'kote', cap: '7 · Shidachi corta el kote de uchidachi', note: 'Pequeño: no sube por encima de la altura de los ojos.' }),
+    both(Object.assign(B('jodan', { ang: -222 }), { dxr: 16 }), { dxr: -26 }, { dur: 800, hold: 600, target: null, cap: '8 · Uchidachi retrocede en diagonal; shidachi toma hidari-jōdan', note: 'Empujando con el kensen. Algunos pasos de pies varían entre fuentes: confírmalo con tu sensei.' })].concat(tail(9)) };
+
+  A.kata7 = { t: 'Kata 7 · Nanahon-me (men-nuki-dō)', vw: 570, roles: { a: 'Shidachi', o: 'Uchidachi' }, keys: [
+    both(Object.assign(B('gedan'), { dx: -36 }), Object.assign(B('chudan'), { dx: -36 }), { hold: 900, cam: -76, cap: '1 · Kamae inicial: uchidachi en chūdan, shidachi en gedan', note: 'Tres pasos grandes después.' }),
+    steps3(2),
+    both(Object.assign(B('chudan', { L: [150, 100], ang: -4 }), { dx: -24 }), hit('tsuki', 'do', { len: 122, vs: { pose: 'chudan', dx: 0 } }), { dur: 420, hold: 700, cap: '3 · Uchidachi estoca al pecho; shidachi lo contiene', note: 'Extiende los brazos y gira el bokutō.' }),
+    both(Object.assign(B('chudan'), { dx: 0 }), Object.assign(B('chudan'), { dx: 0 }), { dur: 800, hold: 400, target: null, cap: '4 · Ambos vuelven a chūdan', note: 'Antes de la segunda parte.' }),
+    both(Object.assign(B('hasso'), { dx: 6 }), B('jodan', { ang: -222 }), { dur: 800, hold: 500, cap: '5 · Uchidachi sube sobre la cabeza y grita; shidachi sube al hombro izquierdo', note: 'Shidachi desliza el pie derecho ligeramente en diagonal.' }),
+    both(hit('do', 'do', { dx: -10 }), { pose: 'men', over: OB }, { dur: 380, hold: 800, target: 'do', cap: '6 · Uchidachi da un gran paso; shidachi corta el dō derecho', note: 'Shidachi mantiene la mirada en uchidachi durante el corte.' }),
+    both(B('waki', { dxr: 20 }), { pose: 'men', over: OB }, { dur: 900, hold: 700, target: null, cap: '7 · Shidachi se arrodilla sobre la rodilla derecha y toma waki-gamae', note: 'La posición exacta de las rodillas se discute: confírmala con tu sensei.' }),
+    both(Object.assign(B('chudan'), { dx: 0 }), Object.assign(B('chudan'), { dx: 0 }), { dur: 900, hold: 500, cap: '8 · Uchidachi se gira; ambos suben a chūdan y vuelven al centro', note: 'Shidachi se levanta con todo su ki.' }),
+    both({ dx: -52 }, { dx: -52 }, { dur: 1300, hold: 900, cap: '9 · Cinco pasos pequeños hacia atrás', note: 'Empiezas con el pie izquierdo.' })] };
 })();

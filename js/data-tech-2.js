@@ -5,7 +5,7 @@
   /* ---------- Golpes básicos ---------- */
   add({
     id: 'men', t: 'Men-uchi', jp: '面打ち', sub: 'El golpe principal',
-    art: ['anim:men', 'seq:men'],
+    art: ['seq:men', 'cut:men', 'anim:men'],
     intro: 'Men es el golpe más importante: el más usado y el que más se practica. Si lo haces bien, todos los demás golpes mejoran.',
     why: 'Concentra todo el kendō: guardia, distancia, pies, golpe, kiai y zanshin. Es la base de kirikaeshi, uchikomi y de casi todas las combinaciones.',
     steps: ['Chūdan a distancia de issoku-ittō-no-ma-ai (los kensen apenas se cruzan).', 'Haz seme: entra un poco con okuri-ashi y presiona con el kensen y la mirada.', 'Sube el shinai por el centro (furikaburi) hasta sobre la cabeza; las manos pasan por encima de la frente con los brazos estirándose.', 'Cuando el pie derecho sale, el shinai baja; extiende los brazos hacia delante y golpea con el monouchi sobre el centro de la cabeza (shōmen).', 'El golpe, el kiai ("men!") y la pisada (fumikomi) ocurren a la vez; aprieta tenouchi al impactar.', 'El pie izquierdo llega rápido (hikitsuke). Pasa junto al rival (tu sensei te dirá por qué lado) y gira para terminar en chūdan con zanshin.'],
@@ -18,7 +18,7 @@
 
   add({
     id: 'yokomen', t: 'Yokomen-uchi', jp: '横面打ち', sub: 'El golpe en diagonal',
-    art: ['anim:yokomen', 'seq:yokomen'],
+    art: ['seq:yokomen', 'cut:yokomen', 'anim:yokomen'],
     intro: 'Yokomen es el golpe a los laterales de la cabeza, izquierdo o derecho, en diagonal. Es el que se practica en kirikaeshi y sayū-men.',
     why: 'Entrena el filo en diagonal y el control del shinai. También es una opción de ataque cuando el rival protege el centro.',
     steps: ['Chūdan a issoku-ittō-no-ma-ai.', 'Furikaburi como en men: sube por el centro.', 'Al bajar, rota el shinai en diagonal hacia el lateral de la cabeza del rival (a unos 45°).', 'El monouchi corta el lateral de la cabeza, con el filo bien orientado (hasuji).', 'Kiai ("men!"), fumikomi y hikitsuke igual que en men.', 'Termina en zanshin.'],
@@ -31,7 +31,7 @@
 
   add({
     id: 'kote', t: 'Kote-uchi', jp: '小手打ち', sub: 'Pequeño, rápido y limpio',
-    art: ['anim:kote', 'seq:kote'],
+    art: ['seq:kote', 'cut:kote', 'anim:kote'],
     intro: 'Kote es un golpe corto a la muñeca del rival. Es más rápido que men porque el recorrido es menor, y es la base de debana-kote y kote-men.',
     why: 'Es el golpe más económico: pocos centímetros de recorrido y mucho efecto. Enseña a golpear sin telegrafiar la subida.',
     steps: ['Chūdan a issoku-ittō-no-ma-ai.', 'Haz seme y, cuando el rival se mueva o se distraiga, sube el shinai solo lo justo (hasta la altura de la frente, no hasta atrás).', 'Avanza con okuri-ashi y corta hacia abajo con el monouchi sobre la muñeca derecha del rival (la más cercana a ti).', 'Kiai ("kote!"), fumikomi y hikitsuke a la vez.', 'Sigue avanzando y recupera chūdan con zanshin.'],
@@ -44,7 +44,7 @@
 
   add({
     id: 'do', t: 'Dō-uchi', jp: '胴打ち', sub: 'Un corte al costado',
-    art: ['anim:do', 'seq:do'],
+    art: ['seq:do', 'cut:do', 'anim:do'],
     intro: 'Dō se golpea en el costado del torso del rival. Es un golpe de corte, no de empuje: el filo recorre la zona de lado a lado.',
     why: 'Aprovecha el hueco que deja el rival cuando levanta los brazos para atacar men. Enseña a controlar el filo en un plano distinto al de men y kote.',
     steps: ['Chūdan a issoku-ittō-no-ma-ai.', 'Sube el shinai (furikaburi), algo menos que en men.', 'Al bajar, lleva el shinai en diagonal hacia el costado derecho del rival (migi-dō) con el filo orientado hacia el golpe.', 'El monouchi corta la zona del dō; las manos terminan delante de tu cuerpo, sin que el shinai pase de largo.', 'Kiai ("dō!"), fumikomi y hikitsuke.', 'Sigue avanzando (tu sensei te indicará el lado) y vuelve a chūdan con zanshin.'],
@@ -57,7 +57,7 @@
 
   add({
     id: 'tsuki', t: 'Tsuki', jp: '突き', sub: 'La estocada a la garganta',
-    art: ['anim:tsuki', 'seq:tsuki'],
+    art: ['seq:tsuki', 'cut:tsuki', 'anim:tsuki'],
     intro: 'Tsuki es una estocada a la garganta. Es el golpe más delicado: solo se practica con supervisión y cuando tu sensei lo indique.',
     why: 'Es una opción clave contra jōdan y cuando el rival levanta mucho el shinai. Enseña a empujar con la mano izquierda de forma recta.',
     steps: ['Chūdan, con la mirada en el tsuki-dare del rival.', 'Recoge ligeramente el shinai sin subirlo y avanza con okuri-ashi.', 'Empuja el kensen en línea recta hacia la garganta: la mano izquierda empuja y la derecha guía.', 'Los brazos se extienden; el golpe termina con el kensen sobre el tsuki-dare, nunca más alto ni de lado.', 'Kiai ("tsuki!"), fumikomi y retirada inmediata del shinai.', 'Mantén zanshin.'],
@@ -71,7 +71,7 @@
 
   add({
     id: 'kirikaeshi', t: 'Kirikaeshi', jp: '切り返し', sub: 'El ejercicio completo',
-    art: ['anim:kirikaeshi', 'kirikaeshi'],
+    art: ['seq:kirikaeshi', 'kirikaeshi', 'anim:kirikaeshi'],
     intro: 'Kirikaeshi es una serie de golpes alternos a yokomen avanzando y retrocediendo, con un shōmen al principio y otro al final. Combina pies, golpe, kiai y resistencia.',
     why: 'Entrena la postura, el filo en diagonal, la distancia, la respiración y el kiai continuo. Es el ejercicio de calentamiento de los veteranos.',
     steps: ['Saludo, sonkyō y chūdan frente al motodachi.', 'Shōmen inicial: el motodachi abre el men y tú golpeas.', 'Avanzas golpeando 4 yokomen alternos (izquierdo, derecho…), un golpe por paso, con kiai.', 'Sin parar, retrocedes golpeando 5 yokomen alternos.', 'Terminas con un shōmen y pasas junto al motodachi.', 'Zanshin, vuelta a chūdan y saludo.'],

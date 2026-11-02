@@ -180,7 +180,7 @@
 
   add({
     id: 'kata-1', t: 'Kata 1 · Ippon-me', jp: '一本目', sub: 'Jōdan contra jōdan: men-nuki-men',
-    art: ['anim:kata1', 'duo:jodan,jodan'],
+    art: ['astrip:kata1', 'anim:kata1', 'duo:jodan,jodan'],
     intro: 'La primera forma muestra el principio del kata: dos jōdan, un men decidido de uchidachi y una respuesta de shidachi que evita el golpe y gana el men. Es el nivel de entrada, pero contiene casi todo.',
     steps: ['Uchidachi toma hidari-jōdan y shidachi migi-jōdan. Ambos dan tres pasos grandes.', 'Uchidachi da un paso con el pie derecho y corta men.', 'Shidachi da un paso atrás con el pie izquierdo, sube ligeramente las manos para evitar el corte (nuki) y avanza con el pie derecho cortando men.', 'Uchidachi retrocede un pequeño paso mientras shidachi baja el bokutō hacia el puente de la nariz.', 'Uchidachi da otro pequeño paso atrás y shidachi extiende los brazos como empujándolo con el kensen.', 'Shidachi sube a hidari-jōdan (zanshin), uchidachi sube el bokutō y levanta la cabeza.', 'Ambos vuelven a chūdan, kamae wo toku y cinco pasos pequeños atrás.'],
     keys: ['El corte de uchidachi es completo; el de shidachi, preciso.', 'No flexiones las rodillas al cortar: mantenlas firmes.', 'El pie trasero llega rápido, como en el kendō normal.', 'El kata muestra lo fina que es la línea entre ganar y perder.'],
@@ -193,7 +193,7 @@
 
   add({
     id: 'kata-2', t: 'Kata 2 · Nihon-me', jp: '二本目', sub: 'Chūdan contra chūdan: kote-nuki-kote',
-    art: ['anim:kata2', 'duo:chudan,chudan'],
+    art: ['astrip:kata2', 'anim:kata2', 'duo:chudan,chudan'],
     intro: 'En la segunda forma, shidachi podría ganar con un golpe mortal, pero elige dejar sin acción la mano del atacante. Es una lección de contención.',
     steps: ['Ambos parten de chūdan y dan tres pasos grandes hacia delante.', 'Uchidachi da un paso con el pie derecho y corta kote.', 'Shidachi baja el bokutō para evitar el corte, retrocede en diagonal hacia la izquierda con el pie izquierdo y, al pasar el golpe, corta el kote derecho de uchidachi avanzando con el pie derecho.', 'Uchidachi retrocede hacia el centro, y shidachi se mueve a la derecha hacia el centro, manteniendo contacto visual.', 'Ambos vuelven a chūdan; kamae wo toku y cinco pasos atrás.'],
     keys: ['El kote de uchidachi es real: debe llegar al kote de shidachi.', 'Shidachi corta cuando el golpe ya ha pasado.', 'La enseñanza: se puede vencer sin acabar con el rival.'],
@@ -206,7 +206,7 @@
 
   add({
     id: 'kata-3', t: 'Kata 3 · Sanbon-me', jp: '三本目', sub: 'Gedan contra gedan: tsuki y presión',
-    art: ['anim:kata3', 'duo:gedan,gedan'],
+    art: ['astrip:kata3', 'anim:kata3', 'duo:gedan,gedan'],
     intro: 'La tercera forma es un duelo de presión: ambos parten en gedan, hay estocadas y desvíos, y shidachi gana sin golpear, avanzando con su presión (kurai-zeme).',
     steps: ['Ambos toman gedan y dan tres pasos grandes.', 'Ambos suben el bokutō hacia chūdan; shidachi lo mantiene ligeramente por debajo del de uchidachi.', 'Uchidachi lanza una estocada al plexo de shidachi; shidachi la desvía con nayashi retrocediendo con el pie izquierdo y responde con otra estocada al pecho avanzando con el pie derecho.', 'Uchidachi retrocede y bloquea alrededor del bokutō de shidachi; shidachi mantiene el bokutō y lo empuja hacia atrás, sin estocar de nuevo.', 'Shidachi avanza tres pasos aplicando presión (kurai-zeme): la punta apunta primero al pecho, después a la garganta y por último al puente de la nariz.', 'Shidachi retrocede tres pasos, baja el bokutō a la derecha mostrando la derrota de uchidachi y muestra zanshin.', 'Ambos vuelven a chūdan; kamae wo toku y cinco pasos pequeños atrás.'],
     keys: ['La presión de shidachi viene del ki, no de la fuerza.', 'No se aplasta el bokutō de uchidachi durante el nayashi.', 'En kurai-zeme no se golpea: se presiona.', 'Ninguno golpea ni es golpeado: es la meta del kendō.'],
@@ -219,7 +219,7 @@
 
   add({
     id: 'kata-4', t: 'Kata 4 · Yonhon-me', jp: '四本目', sub: 'Hassō contra waki-gamae: maki-kaeshi',
-    art: ['duo:hasso,waki'],
+    art: ['astrip:kata4', 'anim:kata4', 'duo:hasso,waki'],
     intro: 'La cuarta forma usa dos guardias que ya no se emplean en combate pero conservan los orígenes del kendō: hassō para uchidachi y waki-gamae derecho para shidachi.',
     steps: ['Uchidachi avanza con el pie izquierdo y toma hassō (tsuba a la altura de la boca). Shidachi retrocede con el pie derecho y toma waki-gamae derecho.', 'Ambos avanzan tres pasos, más cortos de lo normal.', 'Uchidachi sube el bokutō sobre la cabeza, de cara a shidachi, y corta shōmen con un paso del pie derecho.', 'Uchidachi baja a chūdan luchando por el centro y lanza una estocada al pulmón derecho de shidachi con un grito.', 'Shidachi desvía con maki-kaeshi, avanza en diagonal hacia delante-izquierda subiendo la mano izquierda sobre la cabeza y corta shōmen con hiraki-ashi; parada y golpe son un solo movimiento.', 'Uchidachi vuelve al centro; shidachi muestra zanshin y baja a chūdan.', 'Kamae wo toku y cinco pasos pequeños atrás, empezando por el pie izquierdo.'],
     keys: ['Uchidachi debe juzgar la distancia del men.', 'Shidachi usa hiraki-ashi para recibir el golpe en el monouchi.', 'Esconde el bokutō detrás del cuerpo en la aproximación, con el hombro izquierdo hacia uchidachi.', 'Maki-kaeshi desarrolla la flexibilidad de las muñecas.'],
@@ -232,7 +232,7 @@
 
   add({
     id: 'kata-5', t: 'Kata 5 · Gohon-me', jp: '五本目', sub: 'Jōdan contra hiraseigan: suriage-men',
-    art: ['duo:jodan,chudan'],
+    art: ['astrip:kata5', 'anim:kata5', 'duo:jodan,chudan'],
     intro: 'En la quinta forma uchidachi toma hidari-jōdan y shidachi hiraseigan (una chūdan con la punta dirigida a la mano izquierda de uchidachi). Shidachi desvía el men con suriage y sube sin dejar caer el kensen (furiage).',
     steps: ['Uchidachi toma hidari-jōdan; shidachi toma hiraseigan.', 'Uchidachi corta men, solo hasta la cara (no atraviesa la cabeza como en la primera forma), de manera que shidachi pueda hacer el suriage.', 'Shidachi desvía el corte hacia arriba con suriage, usando el lado izquierdo del bokutō (shinogi).', 'Tras el suriage, shidachi sube el bokutō sobre la cabeza sin dejar caer el kensen, subiendo las manos en diagonal hacia atrás a unos 45° (furiage).'],
     keys: ['El men de uchidachi debe permitir el suriage.', 'Furiage es un punto que los jueces miran: el kensen no cae.', 'El kata no es una competición: es respiración, distancia y tiempo.'],
@@ -245,7 +245,7 @@
 
   add({
     id: 'kata-6', t: 'Kata 6 · Roppon-me', jp: '六本目', sub: 'Chūdan contra gedan: kote-suriage-kote',
-    art: ['duo:chudan,gedan'],
+    art: ['astrip:kata6', 'anim:kata6', 'duo:chudan,gedan'],
     intro: 'La sexta forma es la versión pequeña de la quinta: uchidachi parte en chūdan, shidachi en gedan, y shidachi gana con un kote tras desviar con suriage.',
     steps: ['Uchidachi toma chūdan; shidachi toma gedan. Ambos dan tres pasos grandes.', 'Shidachi sube el bokutō y presiona el centro de la empuñadura de uchidachi; este lo baja ligeramente para impedir que suba.', 'Uchidachi retrocede a hidari-jōdan para evitar el bokutō que sube; shidachi avanza y toma hiraseigan frente a hidari-jōdan.', 'Uchidachi baja a chūdan retrocediendo con el pie izquierdo; shidachi baja de hiraseigan a chūdan.', 'Uchidachi corta un kote pequeño; shidachi desvía con suriage (usando el lado derecho del bokutō) y corta el kote de uchidachi.', 'Uchidachi retrocede en diagonal con un paso grande y baja el kensen; shidachi toma hidari-jōdan empujando con el kensen.', 'Ambos vuelven a chūdan; kamae wo toku y cinco pasos atrás.'],
     keys: ['Ambos kote son pequeños: ninguno sube por encima de la altura de los ojos.', 'El kote de uchidachi debe ser un corte real, no demasiado pequeño ni rápido.', 'En los kata 5 y 6 se hace suriage con el shinogi: izquierdo en el 5 y derecho en el 6.'],
@@ -258,7 +258,7 @@
 
   add({
     id: 'kata-7', t: 'Kata 7 · Nanahon-me', jp: '七本目', sub: 'Men-nuki-dō con rodilla al suelo',
-    art: ['duo:chudan,gedan'],
+    art: ['astrip:kata7', 'anim:kata7', 'duo:chudan,gedan'],
     intro: 'La última forma con tachi comienza con una estocada y su desvío, y termina con shidachi cortando el dō de uchidachi y arrodillándose en waki-gamae.',
     steps: ['Ambos parten de chūdan y avanzan tres pasos grandes. Uchidachi se mantiene en chūdan y shidachi baja a gedan.', 'Uchidachi lanza una estocada al pecho de shidachi; este extiende los brazos y gira el bokutō para contener la estocada.', 'Ambos vuelven a chūdan.', 'Uchidachi avanza con el pie izquierdo, sube el bokutō sobre la cabeza y grita; shidachi sube el bokutō hacia el hombro izquierdo y desliza el pie derecho ligeramente en diagonal.', 'Uchidachi da un gran paso con el pie derecho; shidachi avanza con el izquierdo y corta el dō derecho de uchidachi, manteniendo la mirada.', 'Uchidachi corta hacia abajo; shidachi da un gran paso con el pie derecho, se arrodilla sobre la rodilla derecha girando el cuerpo hacia uchidachi y toma waki-gamae.', 'Uchidachi se gira para mirar a shidachi; ambos suben a chūdan, shidachi se levanta con todo su ki empujando a uchidachi, y vuelven al centro.', 'Cinco pasos pequeños atrás, empezando por el pie izquierdo.'],
     keys: ['Shidachi mantiene la mirada durante el corte.', 'Shidachi espera el movimiento de uchidachi antes de seguir.', 'La subida final se hace con ki.', 'La posición exacta de la rodilla en el suelo se discute: pregunta a tu sensei.'],
