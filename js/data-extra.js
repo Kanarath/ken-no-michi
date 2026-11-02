@@ -310,6 +310,12 @@ KD.quizCats = { vocab: 'Vocabulario', equipo: 'Equipo', postura: 'Postura y pies
   Q('shiai', '¿En qué consiste el examen de dan?', 'En dos combates y los kata correspondientes', ['Solo en kata', 'Solo en kirikaeshi', 'En un examen escrito'], '', 'ex-dan');
   Q('shiai', '¿Qué debe requerir siempre un examen de kyū?', 'Protocolo y vestimenta, kata, kirikaeshi y uchikomi', ['Solo combate', 'Solo suburi', 'Solo kata'], '', 'ex-programa');
   Q('shiai', '¿Qué se recomienda hacer con los ejercicios de bokutō desde el principio?', 'Ir intercalándolos aunque su dominio llegue más tarde', ['Dejarlos para el dan', 'No practicarlos', 'Practicarlos solo en combate'], '', 'ex-programa');
+  Q('tecnica', '¿Qué es el "men con pase"?', 'Un men tras el cual sigues avanzando junto al compañero, te giras y vuelves a chūdan', ['Un men sin fumikomi', 'Un men con un paso atrás', 'Un men desde jōdan'], '', 'men-pasante');
+  Q('tecnica', '¿Cómo te giras tras pasar al compañero?', 'Mirándole, sin darle la espalda', ['Dándole la espalda', 'Sin girarte', 'Corriendo'], '', 'men-pasante');
+  Q('tecnica', '¿Cuál es el error más común tras el men?', 'Frenar justo después del impacto', ['Hacer demasiado kiai', 'Mirar al rival', 'Subir mucho el shinai'], '', 'men-pasante');
+  Q('tecnica', '¿Cómo se llama la secuencia men, choque de cuerpo y men al retroceder?', 'Men, tai-atari y hiki-men', ['Kote-men', 'Men-nuki-dō', 'Harai-men'], '', 'men-tai-hiki');
+  Q('tecnica', '¿Con qué se empuja en el tai-atari?', 'Con la cadera', ['Con los brazos', 'Con los hombros', 'Con la cabeza'], '', 'men-tai-hiki');
+  Q('tecnica', '¿Cuándo sube el shinai para el hiki-men?', 'Cuando el compañero cede o reacciona al empuje', ['Antes del choque', 'Al terminar', 'Nunca'], '', 'men-tai-hiki');
   KD.quiz = out;
 })();
 

@@ -369,6 +369,11 @@ window.KArt = (function () {
     { figs: [A('chudan')], cap: '1 · Chūdan' },
     { figs: [O('blockP'), A('men', { touch: 'men' })], cap: '2 · Atacas men y el rival sube los brazos para cubrirse' },
     { figs: [O('blockP'), A('do', { touch: 'do' })], cap: '3 · Con sus brazos arriba el dō queda abierto: cortas sin parar' }] };
+  SEQ['men-tai-hiki'] = { t: 'Men, tai-atari y hiki-men', quiz: 1, fr: [
+    { figs: [A('men', { touch: 'men' })], cap: '1 · Men con fumikomi, sin frenar' },
+    { figs: [O('tsuba', { dx: 77 }), A('tsuba', { dx: 77 })], cap: '2 · Sigues hacia delante: tai-atari, y los shinai se cruzan junto a las manos (tsubazeriai)' },
+    { figs: [O('tsuba', { dx: 77 }), A('hikiUp', { dx: 60 })], cap: '3 · Empujas, subes el shinai y empiezas a retroceder' },
+    { figs: [O('tsuba', { dx: 77 }), A('hikiMen', { touch: 'men' })], cap: '4 · Hiki-men: golpeas men mientras te echas hacia atrás' }] };
   SEQ['seme-kote'] = { t: 'Seme y kote', quiz: 1, fr: [
     { figs: [A('chudan')], cap: '1 · Chūdan: el kensen apunta a su garganta' },
     { figs: [A('chudan', { dx: 50 })], cap: '2 · Entras con okuri-ashi sin soltar la presión (seme)' },

@@ -136,4 +136,33 @@
     check: ['Reviso mi postura al empezar cada práctica.', 'Hago suburi con calidad cada día que puedo.', 'Anoto las correcciones de mi sensei.', 'Me grabo cada dos semanas.'],
     tip: 'No hay atajos, pero sí un orden: postura, agarre, pies, corte. Si algo falla, casi siempre es el eslabón anterior.'
   });
+
+  add({
+    id: 'men-pasante', t: 'Men con pase y vuelta', jp: '面・抜けて残心', sub: 'Golpear, seguir hacia delante y girar',
+    art: ['seq:zanshin'],
+    intro: 'En el men "pasante" golpeas con fumikomi y no frenas: sigues avanzando unos pasos junto al compañero, te giras y vuelves a la guardia mirándole. Es la forma habitual de practicar el golpe en el dōjō y enseña a no detenerte tras el impacto.',
+    why: 'Evita el error más común del principiante: frenar justo después de golpear. Seguir en movimiento da potencia al golpe, protege tu espalda y entrena el zanshin.',
+    steps: ['Men con okuri-ashi, fumikomi y kiai, sin parar tras el impacto.', 'Sigues avanzando unos pasos pequeños y rápidos, pasando junto al compañero (tu sensei te indica por qué lado).', 'Mantén el shinai delante de ti y los brazos recogidos mientras pasas.', 'Cuando ya hay distancia, gírate hacia el compañero sin dar la espalda.', 'Vuelve a chūdan, mirando al compañero, con zanshin.'],
+    keys: ['El golpe no termina en el impacto: termina cuando recuperas la guardia.', 'Pasar junto al compañero (sin chocar) exige un buen control de la línea.', 'Los pasos tras el golpe son cortos y rápidos, sin saltos.', 'Mantén los ojos en el compañero al girar.'],
+    errors: [['Frenas tras el golpe', 'Sigue avanzando: el golpe se acompaña con el cuerpo.'], ['Chocas con el compañero', 'Mantén tu línea y pasa a su lado, sin cruzar su espacio.'], ['Te giras dando la espalda', 'Gira mirando hacia el compañero.'], ['Pierdes la guardia al girar', 'Recoge el shinai y termina en chūdan.']],
+    drills: ['10 men con pase y vuelta con motodachi, sin prisa, cuidando el giro.', 'En casa: golpe, 4 pasos pequeños, giro y chūdan, 10 repeticiones.'],
+    check: ['No freno tras el golpe.', 'Paso sin chocar.', 'Me giro mirando al compañero.', 'Termino en chūdan con zanshin.'],
+    warn: 'En combate real no siempre se puede pasar de largo (el rival puede estar en medio). El detalle de hacia qué lado se pasa depende de tu sensei.',
+    terms: [['Zanshin', 'alerta tras el golpe']]
+  });
+
+  add({
+    id: 'men-tai-hiki', t: 'Men, tai-atari y hiki-men', jp: '面・体当たり・引き面', sub: 'Golpear, chocar y golpear de nuevo al retroceder',
+    art: ['seq:men-tai-hiki'],
+    intro: 'Es una secuencia clásica de práctica: haces un men, sigues hacia delante hasta el choque de cuerpo (tai-atari), los shinai quedan cruzados junto a las manos (tsubazeriai) y al echarte hacia atrás golpeas otro men (hiki-men).',
+    why: 'Une tres cosas que se usan mucho: el golpe, el contacto cuerpo a cuerpo y el golpe al retirarse. También enseña a no quedarte parado en la distancia corta.',
+    steps: ['Men con fumikomi y kiai, sin frenar.', 'Sigue avanzando con la cadera hasta el contacto: tai-atari. Los kote y los shinai quedan cruzados delante de ti.', 'Mantén la espalda recta, los codos pegados y el centro; empuja con la cadera, no con los brazos.', 'Cuando el compañero cede o reacciona, sube el shinai y empieza a retroceder con okuri-ashi.', 'Golpea men mientras te echas hacia atrás (hiki-men), con kiai.', 'Sigue retrocediendo unos pasos con la guardia y el zanshin.'],
+    keys: ['Se suele llamar "men – tai-atari – hiki-men" (en el dōjō también "men, tsubazeriai y hiki-men").', 'El golpe de hiki-men termina antes de que los pies se detengan.', 'La cadera empuja; las manos solo sostienen.', 'Espalda recta durante el retroceso: no te dejes caer hacia atrás.'],
+    errors: [['Empujas con los brazos en el choque', 'Empuja con la cadera, con los codos pegados.'], ['Bajas la cabeza en el contacto', 'Mentón recogido y mirada al frente.'], ['Subes tarde y el hiki-men sale flojo', 'Sube justo cuando el compañero reacciona al empuje.'], ['Te quedas pegado sin golpear', 'No te quedes en la distancia corta: golpea o sepárate.']],
+    drills: ['En el aire: golpe, un paso de empuje y hiki-men, 10 repeticiones.', 'Con motodachi y a cámara lenta primero, luego a velocidad normal.'],
+    check: ['Mi men inicial no frena.', 'Empujo con la cadera en el tai-atari.', 'Mi hiki-men sale mientras retrocedo.', 'Mantengo la espalda recta.'],
+    extra: [{ h: 'Lecciones relacionadas', ul: [L('men', 'Men'), L('tai-atari', 'Tai-atari'), L('tsubazeriai', 'Tsubazeriai'), L('hiki-men', 'Hiki-men')] }],
+    warn: 'Los nombres y los detalles (cuándo se empuja, cuántos pasos) varían según el dōjō. Confirma con tu sensei.',
+    terms: [['Tai-atari', 'choque de cuerpo'], ['Tsubazeriai', 'empuje con las guardas'], ['Hiki-men', 'men al retirarse']]
+  });
 })();
